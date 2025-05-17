@@ -2,42 +2,54 @@
     <h2 class="text-2xl text-center mb-2">Proyectos destacados</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <article>
-            <img src="" alt="">
-            <div><ul>
+            <img class="w-full h-full object-cover rounded-t-lg" src="src/assets/Rooftop-Rush.png" alt="Rooftopimg">
+            <div class="tech"><ul class="flex gap-1">
+                <li><img src="src/assets/brand-html5.svg" alt="code"></li>
+                <li><img src="src/assets/brand-css3.svg" alt="code"></li>
+                <li><img src="src/assets/brand-javascript.svg" alt="code"></li>
+                <li><img src="src/assets/brand-git.svg" alt="code"></li>
                 </ul></div>
-                <div>
-                    <h3></h3>
-                    <p></p>
+                <div class="m-2">
+                    <h3 class="text-lg font-bold" >Rooftop Rush</h3>
+                    <p class="text-sm">proyecto colaborativo mi mayor aporte es la parte visual y el movimiento de las plataformas</p>
                 </div>
-                <div>
-                    <button></button>
-                    <a href="">Ver Proyecto</a>
+                <div class="m-2 flex justify-between items-center">
+                    <a href=""><img src="src/assets/code.svg" alt="code"></a>
+                    <a class="show-proyect" href="">Ver Proyecto</a>
                 </div>
         </article>
         <article>
-            <img src="" alt="">
-            <div><ul>
+            <img class="w-full h-full object-cover rounded-t-lg" src="src/assets/Rooftop-Rush.png" alt="Rooftopimg">
+            <div class="tech"><ul class="flex gap-1">
+                <li><img src="src/assets/brand-html5.svg" alt="code"></li>
+                <li><img src="src/assets/brand-css3.svg" alt="code"></li>
+                <li><img src="src/assets/brand-javascript.svg" alt="code"></li>
+                <li><img src="src/assets/brand-git.svg" alt="code"></li>
                 </ul></div>
-                <div>
-                    <h3></h3>
-                    <p></p>
+                <div class="m-2">
+                    <h3 class="text-lg font-bold" >Rooftop Rush</h3>
+                    <p class="text-sm">proyecto colaborativo mi mayor aporte es la parte visual y el movimiento de las plataformas</p>
                 </div>
-                <div>
-                    <button></button>
-                    <a href="">Ver Proyecto</a>
+                <div class="m-2 flex justify-between items-center">
+                    <a href=""><img src="src/assets/code.svg" alt="code"></a>
+                    <a class="show-proyect" href="">Ver Proyecto</a>
                 </div>
         </article>
         <article>
-            <img src="" alt="">
-            <div><ul>
+            <img class="w-full h-full object-cover rounded-t-lg" src="src/assets/image.png" alt="Rooftopimg">
+            <div class="tech"><ul class="flex gap-1">
+                <li><img src="src/assets/brand-html5.svg" alt="code"></li>
+                <li><img src="src/assets/brand-css3.svg" alt="code"></li>
+                <li><img src="src/assets/brand-javascript.svg" alt="code"></li>
+                <li><img src="src/assets/brand-git.svg" alt="code"></li>
                 </ul></div>
-                <div>
-                    <h3></h3>
-                    <p></p>
+                <div class="m-2">
+                    <h3 class="text-lg font-bold" >Rooftop Rush</h3>
+                    <p class="text-sm">proyecto colaborativo mi mayor aporte es la parte visual y el movimiento de las plataformas</p>
                 </div>
-                <div>
-                    <button></button>
-                    <a href="">Ver Proyecto</a>
+                <div class="m-2 flex justify-between items-center">
+                    <a href=""><img src="src/assets/code.svg" alt="code"></a>
+                    <a class="show-proyect" href="">Ver Proyecto</a>
                 </div>
         </article>
     </div>
@@ -46,13 +58,39 @@
 <style>
     section{
         margin-top: 2em;
-        width: 40vw;
+        width: 50vw;
     }
     article{
-        width: 100%;
+        width: 15vw;
         height: 20em;
         background-color: #393d41;
         border-radius: 5px;
-        padding: 1em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
-</style>
+    .tech{
+        background-color: blueviolet;
+        padding: 0.4em;
+    }
+    li{
+        width: 25px;
+        height: 25px;
+    }
+    img[alt="code"]:hover{
+        scale: 1.2;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .show-proyect{
+        background-color: blueviolet;
+        padding: 0.1em;
+        border-radius: 5px;
+    }
+    .show-proyect:hover{
+        background-color: blueviolet;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: black;
+    }
+    </style>
