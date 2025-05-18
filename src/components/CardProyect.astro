@@ -1,5 +1,5 @@
 <section>
-    <h2 class="text-2xl text-center mb-2">Proyectos destacados</h2>
+    <h2 class="text-2xl text-center mb-10 font-bold">Proyectos destacados</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <article>
             <img class="w-full h-full object-cover rounded-t-lg" src="src/assets/Rooftop-Rush.png" alt="Rooftopimg">
@@ -94,5 +94,20 @@
         cursor: pointer;
         transition: all 0.3s ease;
         color: black;
+    }
+    @media (max-width: 639px) { /* sm breakpoint de Tailwind - 1px */
+        section {
+            width: 95vw; /* O el ancho que prefieras para móvil */
+        }
+        article{
+            width: 90%;
+            height: 20em;
+            background-color: #393d41;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin: auto;
+        }
     }
     </style>

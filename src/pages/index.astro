@@ -11,9 +11,9 @@ import Certificados from '../components/Certificados.astro';
 
 <Layout>
 	<SobreMi /><h2 class="text-2xl text-center mt-10 font-bold">Contribuciones</h2>
-  <div class="p-2 bg-[#393d41] mt-4 my-4 rounded w-[70vw]">
+  <div class=" cosas p-2 bg-[#393d41] mt-4 my-4 rounded w-[70vw]">
     
-    <img src="https://raw.githubusercontent.com/iDankest/iDankest/main/img/snake_dark.svg#gh-dark-mode-only)" alt="">
+    <img  class="cosas" src="https://raw.githubusercontent.com/iDankest/iDankest/main/img/snake_dark.svg#gh-dark-mode-only)" alt="">
   </div>
     <CardProyect />
     <Exp />
@@ -25,6 +25,14 @@ body {
 --tw-bg-opacity: 1;
   background-color: rgb(44 45 48/var(--tw-bg-opacity));
 }
+@media (max-width: 639px) { 
+        .cosas {
+            flex-direction: column;
+            align-items: stretch;
+            width:  95vw; 
+        }
+        
+    }
 </style>
 
 

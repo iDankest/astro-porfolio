@@ -1,49 +1,45 @@
+---
+const certificados = [
+    {
+        img: "src/assets/f2000.jpg",
+        title: "Aplicaciones web",
+        description: "SCE Certificado Nivel 3",
+        date: "Mar 2024",
+        link: "https://drive.google.com/file/d/1ld9HZJUF7_kOkroo8FXSWtdDuctyNeK5/view?usp=sharing"
+    },
+    {
+        img: "src/assets/Reboot.png",
+        title: "Ecommerce",
+        description: "Bootcamp Reboot Academy",
+        date: "Feb 2025",
+        link: "https://drive.google.com/file/d/1-NH-Ii4VJ2VzO6fgcEypirOJXkQseMtg/view?usp=sharing"
+    }
+];
+---
+
 <section class="w-[50vw]">
     <h2 class="text-2xl text-center mt-10 font-bold">Certificados</h2>
-    <main class="flex gap-10  justify-center my-10 items-center flex-wrap ">
-        <div class="flex gap-2 bg-[#393d41] rounded min-w-[22em]">
-            <img
-                class="rounded w-[7em] h-[7em]"
-                src="src/assets/f2000.jpg "
-                alt=""
-            />
-
-            <div class="flex flex-col gap-1">
-                <h4>Aplicaciones web</h4>
-                <p>SCE Certificado Nivel 3</p>
-                <p>Mar 2024</p>
-                <div>
-                    <a
-                        href="https://drive.google.com/file/d/1ld9HZJUF7_kOkroo8FXSWtdDuctyNeK5/view?usp=sharing"
-                        target="_blank"
-                        class="bg-violet-500 rounded px-2 text-end">Ver certificado</a
-                    >
-                </div>
-            </div>
-        </div>
-        <div>
+    <main class="flex gap-10 justify-center my-10 items-center flex-wrap">
+        {certificados.map((certificado) => (
             <div class="flex gap-2 bg-[#393d41] rounded min-w-[22em]">
-                    <img
-                        class="rounded w-[7em] h-[7em]"
-                        src="src/assets/Reboot.png"
-                        alt=""
-                    />
-
-                    <div class="flex flex-col gap-1">
-                        <h4>Ecommerce</h4>
-                        <p>Bootcamp Reboot Academy</p>
-                        <p>Feb 2025</p>
-                        <div>
-                            <a
-                                href="https://drive.google.com/file/d/1-NH-Ii4VJ2VzO6fgcEypirOJXkQseMtg/view?usp=sharing"
-                                target="_blank"
-                                class="bg-violet-500 rounded px-2"
-                                >Ver certificado</a
-                            >
-                        </div>
+                <img
+                    class="rounded w-[7em] h-[7em]"
+                    src={certificado.img}
+                    alt={certificado.title}
+                />
+                <div class="flex flex-col gap-1">
+                    <h4>{certificado.title}</h4>
+                    <p>{certificado.description}</p>
+                    <p>{certificado.date}</p>
+                    <div class="flex gap-2 bg-[#393d41] rounded min-w-[13em] justify-end">
+                        <a
+                            href={certificado.link}
+                            target="_blank"
+                            class="bg-violet-500 rounded px-2"
+                            >Ver certificado</a>
                     </div>
                 </div>
             </div>
-        
+        ))}
     </main>
 </section>
