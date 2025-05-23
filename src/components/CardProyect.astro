@@ -1,57 +1,61 @@
+---
+const tech = {
+    html: "./src/assets/brand-html5.svg",
+    css: "./src/assets/brand-css3.svg",
+    js: "./src/assets/brand-javascript.svg",
+    git: "./src/assets/brand-git.svg",
+    php: "./src/assets/brand-php.svg",
+    symfony: "./src/assets/brand-symfony.svg",
+    tailwind: "./src/assets/brand-tailwind.svg",
+    mysql: "./src/assets/brand-mysql.svg",
+    codeShow: "./src/assets/code.svg"
+}
+const proyects = [
+    {
+        name: "Rooftop Rush",
+        img: "/assets/Rooftop-Rush.png",
+        tech: [tech.html, tech.css, tech.js, tech.git],
+        description: "Proyecto colaborativo: mi mayor aporte es la parte visual y el movimiento de las plataformas",
+        github: "https://github.com/jlld47/Roof-Rush",
+        url: "https://jlld47.github.io/Roof-Rush/"
+    },
+    {
+        name: "GalaGame",
+        img: "/assets/galagame.png",
+        tech: ["/assets/brand-html5.svg", "/assets/brand-css3.svg", "/assets/brand-javascript.svg", "/assets/brand-git.svg"],
+        description: "Proyecto de juego gala realizado en solitario manejo de colisiones y movimiento de personajes",
+        github: "https://github.com/iDankest/GalaGame",
+        url: "https://mygalagame.netlify.app/"
+    },
+    {
+        name: "Game Finder",
+        img: "/assets/image.png",
+        tech: ["/assets/brand-html5.svg", "/assets/brand-css3.svg", "/assets/brand-javascript.svg", "/assets/brand-git.svg", "/assets/brand-php.svg", "/assets/brand-symfony.svg", "/assets/brand-tailwind.svg", "/assets/brand-mysql.svg"],
+        description: "Participación en proyecto web de búsqueda de videojuegos utilizando una API de Steam",
+        github: "https://github.com/iDankest/Proyecto-Symfony",
+        url: "https://mygalagame.netlify.app/"
+    }
+]
+---
+
 <section>
     <h2 class="text-2xl text-center mb-10 font-bold">Proyectos destacados</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <article>
             <img class="w-full h-full object-cover rounded-t-lg" src="/assets/Rooftop-Rush.png" alt="Imagen del proyecto Rooftop Rush">
             <div class="tech"><ul class="flex gap-1">
-                <li><img src="/assets/brand-html5.svg" alt="code"></li>
-                <li><img src="/assets/brand-css3.svg" alt="code"></li>
-                <li><img src="/assets/brand-javascript.svg" alt="code"></li>
-                <li><img src="/assets/brand-git.svg" alt="code"></li>
+                <li><img src={proyects[0].tech[0]} alt="code"></li>
+                <li><img src={proyects[0].tech[1]} alt="code"></li>
+                <li><img src={proyects[0].tech[2]} alt="code"></li>
+                <li><img src={proyects[0].tech[3]} alt="code"></li>
                 </ul></div>
                 <div class="m-2">
                     <h3 class="text-lg font-bold" >Rooftop Rush</h3>
-                    <p class="text-sm">Proyecto colaborativo: mi mayor aporte es la parte visual y el movimiento de las plataformas</p>
+                    <p class="text-sm">{proyects[0].description}</p>
                 </div>
                 <div class="m-2 flex justify-between items-center">
                     <a href="https://github.com/jlld47/Roof-Rush" target="_blank"><img src="/assets/code.svg" alt="code"></a>
                     <a class="show-proyect" href="https://jlld47.github.io/Roof-Rush/" target="_blank">Ver Proyecto</a>
-                </div>
-        </article>
-        <article>
-            <img class="w-full h-full object-cover rounded-t-lg" src="/assets/galagame.png" alt="Imagen del proyecto GalaGame">
-            <div class="tech"><ul class="flex gap-1">
-                <li><img src="/assets/brand-html5.svg" alt="code"></li>
-                <li><img src="/assets/brand-css3.svg" alt="code"></li>
-                <li><img src="/assets/brand-javascript.svg" alt="code"></li>
-                <li><img src="/assets/brand-git.svg" alt="code"></li>
-                </ul></div>
-                <div class="m-2">
-                    <h3 class="text-lg font-bold" >GalaGame</h3>
-                    <p class="text-sm">Proyecto de juego gala realizado en solitario manejo de colisiones y movimiento de personajes</p>
-                </div>
-                <div class="m-2 flex justify-between items-center">
-                    <a href="https://github.com/iDankest/GalaGame"><img src="/assets/code.svg" alt="code"></a>
-                    <a class="show-proyect" href="https://mygalagame.netlify.app/" target="_blank">Ver Proyecto</a>
-                </div>
-        </article>
-        <article>
-            <img class="w-full h-full object-cover rounded-t-lg" src="/assets/image.png" alt="Imagen del proyecto Game Finder">
-            <div class="tech"><ul class="flex gap-1">
-                <li><img src="/assets/brand-css3.svg" alt="code"></li>
-                <li><img src="/assets/brand-javascript.svg" alt="code"></li>
-                <li><img src="/assets/brand-git.svg" alt="code"></li>
-                <li><img src="/assets/brand-php.svg" alt="code"></li>
-                <li><img src="/assets/brand-symfony.svg" alt="code"></li>
-                <li><img src="/assets/brand-tailwind.svg" alt="code"></li>
-                <li><img src="/assets/brand-mysql.svg" alt="code"></li>
-                </ul></div>
-                <div class="m-2">
-                    <h3 class="text-lg font-bold" >Game Finder</h3>
-                    <p class="text-sm">Participación en proyecto web de búsqueda de videojuegos utilizando una API de Steam</p>
-                </div>
-                <div class="m-2 flex justify-center items-center">
-                    <a href="https://github.com/iDankest/Proyecto-Symfony" target="_blank"><img src="/assets/code.svg" alt="code" ></a>
                 </div>
         </article>
     </div>
