@@ -48,7 +48,7 @@ const proyects = [
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {proyects.map(proyecto => (
         <article>
-            <img class="w-full h-full object-cover rounded-t-lg" src={proyecto.img} alt="Imagen del proyecto Rooftop Rush">
+            <img class="w-full h-[10em] object-cover rounded-t-lg" src={proyecto.img} alt="Imagen del proyecto Rooftop Rush">
             <div class="tech"><ul class="flex gap-1">
                 {proyecto.tech.map(tech => (
                     <li><img src={tech} alt="code"></li>
@@ -73,13 +73,11 @@ const proyects = [
         width: 50vw;
     }
     article{
-        width: 15vw;
-        height: 20em;
+        
         background-color: #393d41;
         border-radius: 5px;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
     }
     .tech{
         background-color: blueviolet;
