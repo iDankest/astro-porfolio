@@ -62,34 +62,41 @@ const proyects = [
         display: "show-proyect"
     }
 ]
-
 ---
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const iconWrappers = document.querySelectorAll('.tech-icon-wrapper');
+        // Seleccionamos todos los elementos que tienen la clase 'group'.
+        // Esto incluirá tanto los <li> de las tecnologías como los <a> de 'Ver código'.
+        const elementsWithTooltips = document.querySelectorAll('.group');
     
-        iconWrappers.forEach(wrapper => {
+        elementsWithTooltips.forEach(wrapper => {
             const img = wrapper.querySelector('img');
             const tooltip = wrapper.querySelector('.custom-tooltip');
     
             if (img && tooltip) {
+                // Obtenemos el texto del tooltip desde el atributo data-tooltip-text de la imagen
                 tooltip.textContent = img.dataset.tooltipText;
             }
         });
     });
-    </script>
+</script>
 
 <section>
     <h2 class="text-2xl text-center mb-10 font-bold">Proyectos destacados</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {proyects.map(proyecto => (
         <article class="hover:scale-103 transition-all duration-500 ease-in-out">
-            <img class="w-full h-[10em] object-cover rounded-t-lg" src={proyecto.img} alt="Imagen del proyecto Rooftop Rush">
+            <img class="w-full h-[10em] object-cover rounded-t-lg" src={proyecto.img} alt={`Imagen del proyecto ${proyecto.name}`}>
             <div class="tech"><ul class="flex gap-1">
-                {proyecto.tech.map(tech => (
-                    <li class="tech-icon-wrapper">
-                        <img src={tech.img} alt={tech.name} data-tooltip-text={tech.name} class="code">
-                        <span class="custom-tooltip"></span>
+                {proyecto.tech.map(t => (
+                    <li class="relative group cursor-help w-[25px] h-[25px] flex items-center justify-center">
+                        <img src={t.img} alt={t.name} data-tooltip-text={t.name} class="code w-full h-full object-contain">
+                        <span class="custom-tooltip absolute bottom-[calc(100%+5px)] left-1/2 -translate-x-1/2 translate-y-1
+                                     bg-gray-800 text-white px-2 py-1 rounded-md whitespace-nowrap text-xs
+                                     shadow-md z-10
+                                     opacity-0 invisible transition-all duration-300 ease-in-out
+                                     group-hover:opacity-100 group-hover:visible group-hover:translate-y-0">
+                        </span>
                     </li>
                 ))}
             </ul></div>
@@ -98,8 +105,15 @@ const proyects = [
                     <p class="text-sm">{proyecto.description}</p>
                 </div>
                 <div class={proyecto.styleNone}>
-                    <a href={proyecto.github} target="_blank"><img src={tech.codeShow.img} title={tech.codeShow.name} data-tooltip-text="Ver código" class="code tech-icon-wrapper"></a>
-                    <span class="custom-tooltip"></span>
+                    <a href={proyecto.github} target="_blank" class="relative group cursor-help w-[25px] h-[25px] flex items-center justify-center">
+                        <img src={tech.codeShow.img} alt={tech.codeShow.name} data-tooltip-text={tech.codeShow.name} class="code w-full h-full object-contain">
+                        <span class="custom-tooltip absolute bottom-[calc(100%+5px)] left-1/2 -translate-x-1/2 translate-y-1
+                                     bg-gray-800 text-white px-2 py-1 rounded-md whitespace-nowrap text-xs
+                                     shadow-md z-10
+                                     opacity-0 invisible transition-all duration-300 ease-in-out
+                                     group-hover:opacity-100 group-hover:visible group-hover:translate-y-0">
+                        </span>
+                    </a>
                     <a class={`${proyecto.display}`} href={proyecto.url} target="_blank">Ver Proyecto</a>
                 </div>
         </article>
@@ -113,7 +127,6 @@ const proyects = [
         width: 50vw;
     }
     article{
-        
         background-color: #393d41;
         border-radius: 5px;
         display: flex;
@@ -123,10 +136,7 @@ const proyects = [
         background-color: blueviolet;
         padding: 0.4em;
     }
-    li{
-        width: 25px;
-        height: 25px;
-    }
+    /* Si quieres que el icono de código también tenga el efecto de escala al hacer hover, mantén esta regla */
     .code:hover{
         scale: 1.2;
         transition: all 0.3s ease;
@@ -148,41 +158,12 @@ const proyects = [
     }
     @media (max-width: 639px) { /* sm breakpoint de Tailwind - 1px */
         section {
-            width: 95vw; /* O el ancho que prefieras para móvil */
+            width: 95vw;
         }
         article{
             width: 90%;
-            height: auto; /* Ajustar altura automáticamente en móvil */
-            margin: 1em auto; /* Añadir margen superior e inferior para espaciado */
+            height: auto;
+            margin: 1em auto;
         }
     }
-    .tech-icon-wrapper {
-    position: relative;
-    display: inline-flex; /* o block si quieres que ocupe todo el ancho */
-}
-
-.custom-tooltip {
-    position: absolute;
-    bottom: calc(100% + 5px);
-    left: 50%;
-    transform: translateX(-50%) translateY(5px); /* Inicialmente un poco desplazado */
-    background-color: #333;
-    color: #fff;
-    padding: 5px 8px;
-    border-radius: 4px;
-    white-space: nowrap;
-    font-size: 0.8em;
-    z-index: 10;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    opacity: 0; /* Inicialmente invisible */
-    visibility: hidden; /* Oculto para accesibilidad */
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-}
-
-.tech-icon-wrapper:hover .custom-tooltip {
-    opacity: 1; /* Visible al pasar el ratón */
-    visibility: visible;
-    transform: translateX(-50%) translateY(0); /* Vuelve a su posición final */
-}
-    </style>
-    
+</style>
