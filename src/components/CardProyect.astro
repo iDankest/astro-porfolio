@@ -1,15 +1,15 @@
 ---
 const tech = {
-    html: "/assets/brand-html5.svg",
-    css: "/assets/brand-css3.svg",
-    js: "/assets/brand-javascript.svg",
-    vue: "./assets/vuejs-brands-solid.svg",
-    git: "/assets/brand-git.svg",
-    php: "/assets/brand-php.svg",
-    symfony: "/assets/brand-symfony.svg",
-    tailwind: "/assets/brand-tailwind.svg",
-    mysql: "/assets/brand-mysql.svg",
-    codeShow: "/assets/code.svg"
+    html: {name: "HTML", img: "/assets/brand-html5.svg"},
+    css: {name: "CSS", img: "/assets/brand-css3.svg"},
+    js: {name: "JavaScript", img: "/assets/brand-javascript.svg"},
+    vue: {name: "Vue", img: "./assets/vuejs-brands-solid.svg"},
+    git: {name: "Git", img: "/assets/brand-git.svg"},
+    php: {name: "PHP", img: "/assets/brand-php.svg"},
+    symfony: {name: "Symfony", img: "/assets/brand-symfony.svg"},
+    tailwind: {name: "Tailwind", img: "/assets/brand-tailwind.svg"},
+    mysql: {name: "MySQL", img: "/assets/brand-mysql.svg"},
+    codeShow: {name: "Ver código", img: "/assets/code.svg"}
 }
 const proyects = [
     {
@@ -25,7 +25,7 @@ const proyects = [
     {
         name: "GalaGame",
         img: "/assets/galagame.png",
-        tech: ["/assets/brand-html5.svg", "/assets/brand-css3.svg", "/assets/brand-javascript.svg", "/assets/brand-git.svg"],
+        tech: [tech.html, tech.css, tech.js, tech.git],
         description: "Proyecto de juego gala realizado en solitario manejo de colisiones y movimiento de personajes",
         github: "https://github.com/iDankest/GalaGame",
         url: "https://mygalagame.netlify.app/",
@@ -35,7 +35,7 @@ const proyects = [
     {
         name: "Game Finder",
         img: "/assets/image.png",
-        tech: ["/assets/brand-html5.svg", "/assets/brand-css3.svg", "/assets/brand-javascript.svg", "/assets/brand-git.svg", "/assets/brand-php.svg", "/assets/brand-symfony.svg", "/assets/brand-tailwind.svg", "/assets/brand-mysql.svg"],
+        tech: [tech.html, tech.css, tech.js, tech.git, tech.php, tech.symfony, tech.tailwind, tech.mysql],
         description: "Participación en proyecto web de búsqueda de videojuegos utilizando una API de Steam",
         github: "https://github.com/iDankest/Proyecto-Symfony",
         styleNone: "m-2 flex justify-center items-center",
@@ -72,7 +72,7 @@ const proyects = [
             <img class="w-full h-[10em] object-cover rounded-t-lg" src={proyecto.img} alt="Imagen del proyecto Rooftop Rush">
             <div class="tech"><ul class="flex gap-1">
                 {proyecto.tech.map(tech => (
-                    <li><img src={tech} alt="code"></li>
+                    <li><img src={tech.img} title={tech.name} alt="code"></li>
                 ))}
             </ul></div>
                 <div class="m-2">
@@ -80,7 +80,7 @@ const proyects = [
                     <p class="text-sm">{proyecto.description}</p>
                 </div>
                 <div class={proyecto.styleNone}>
-                    <a href={proyecto.github} target="_blank"><img src={tech.codeShow} alt="code"></a>
+                    <a href={proyecto.github} target="_blank"><img src={tech.codeShow.img} title={tech.codeShow.name} alt="code"></a>
                     <a class={`${proyecto.display}`} href={proyecto.url} target="_blank">Ver Proyecto</a>
                 </div>
         </article>
