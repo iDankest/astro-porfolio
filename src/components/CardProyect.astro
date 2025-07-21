@@ -55,24 +55,42 @@ const proyects = [
         name: "Admin Gastos",
         img: "/assets/adgastos.png",
         tech: [tech.html, tech.css, tech.js, tech.git, tech.vue],
-        description: "Proyecto frontend de administración de gastos poniendo a prueba la reactividad",
+        description: "Proyecto frontend de administración de gastos poniendo a prueba la reactividad de Vue.js",
         github: "https://github.com/iDankest/admin-gastos",
         url: "https://adgastos.netlify.app/",
         styleNone: "m-2 flex justify-between items-center",
         display: "show-proyect"
     }
 ]
+
 ---
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const iconWrappers = document.querySelectorAll('.tech-icon-wrapper');
+    
+        iconWrappers.forEach(wrapper => {
+            const img = wrapper.querySelector('img');
+            const tooltip = wrapper.querySelector('.custom-tooltip');
+    
+            if (img && tooltip) {
+                tooltip.textContent = img.dataset.tooltipText;
+            }
+        });
+    });
+    </script>
 
 <section>
     <h2 class="text-2xl text-center mb-10 font-bold">Proyectos destacados</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {proyects.map(proyecto => (
-        <article>
+        <article class="hover:scale-103 transition-all duration-500 ease-in-out">
             <img class="w-full h-[10em] object-cover rounded-t-lg" src={proyecto.img} alt="Imagen del proyecto Rooftop Rush">
             <div class="tech"><ul class="flex gap-1">
                 {proyecto.tech.map(tech => (
-                    <li><img src={tech.img} title={tech.name} alt="code"></li>
+                    <li class="tech-icon-wrapper">
+                        <img src={tech.img} alt={tech.name} data-tooltip-text={tech.name} class="code">
+                        <span class="custom-tooltip"></span>
+                    </li>
                 ))}
             </ul></div>
                 <div class="m-2">
@@ -80,7 +98,8 @@ const proyects = [
                     <p class="text-sm">{proyecto.description}</p>
                 </div>
                 <div class={proyecto.styleNone}>
-                    <a href={proyecto.github} target="_blank"><img src={tech.codeShow.img} title={tech.codeShow.name} alt="code"></a>
+                    <a href={proyecto.github} target="_blank"><img src={tech.codeShow.img} title={tech.codeShow.name} data-tooltip-text="Ver código" class="code tech-icon-wrapper"></a>
+                    <span class="custom-tooltip"></span>
                     <a class={`${proyecto.display}`} href={proyecto.url} target="_blank">Ver Proyecto</a>
                 </div>
         </article>
@@ -108,7 +127,7 @@ const proyects = [
         width: 25px;
         height: 25px;
     }
-    img[alt="code"]:hover{
+    .code:hover{
         scale: 1.2;
         transition: all 0.3s ease;
         cursor: pointer;
@@ -137,4 +156,33 @@ const proyects = [
             margin: 1em auto; /* Añadir margen superior e inferior para espaciado */
         }
     }
+    .tech-icon-wrapper {
+    position: relative;
+    display: inline-flex; /* o block si quieres que ocupe todo el ancho */
+}
+
+.custom-tooltip {
+    position: absolute;
+    bottom: calc(100% + 5px);
+    left: 50%;
+    transform: translateX(-50%) translateY(5px); /* Inicialmente un poco desplazado */
+    background-color: #333;
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    font-size: 0.8em;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    opacity: 0; /* Inicialmente invisible */
+    visibility: hidden; /* Oculto para accesibilidad */
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+}
+
+.tech-icon-wrapper:hover .custom-tooltip {
+    opacity: 1; /* Visible al pasar el ratón */
+    visibility: visible;
+    transform: translateX(-50%) translateY(0); /* Vuelve a su posición final */
+}
     </style>
+    
