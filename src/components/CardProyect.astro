@@ -1,78 +1,7 @@
 ---
-const tech = {
-    html: {name: "HTML", img: "/assets/brand-html5.svg"},
-    css: {name: "CSS", img: "/assets/brand-css3.svg"},
-    js: {name: "JavaScript", img: "/assets/brand-javascript.svg"},
-    vue: {name: "Vue", img: "./assets/vuejs-brands-solid.svg"},
-    git: {name: "Git", img: "/assets/brand-git.svg"},
-    php: {name: "PHP", img: "/assets/brand-php.svg"},
-    symfony: {name: "Symfony", img: "/assets/brand-symfony.svg"},
-    tailwind: {name: "Tailwind", img: "/assets/brand-tailwind.svg"},
-    mysql: {name: "MySQL", img: "/assets/brand-mysql.svg"},
-    codeShow: {name: "Ver código", img: "/assets/code.svg"}
-}
-const proyects = [
-    {
-        name: "Rooftop Rush",
-        img: "/assets/Rooftop-Rush.png",
-        tech: [tech.html, tech.css, tech.js, tech.git],
-        description: "Proyecto colaborativo: mi mayor aporte es la parte visual y el movimiento de las plataformas",
-        github: "https://github.com/jlld47/Roof-Rush",
-        url: "https://jlld47.github.io/Roof-Rush/",
-        styleNone: "m-2 flex justify-between items-center",
-        display: "show-proyect"
-    },
-    {
-        name: "GalaGame",
-        img: "/assets/galagame.png",
-        tech: [tech.html, tech.css, tech.js, tech.git],
-        description: "Proyecto de juego gala realizado en solitario manejo de colisiones y movimiento de personajes",
-        github: "https://github.com/iDankest/GalaGame",
-        url: "https://mygalagame.netlify.app/",
-        styleNone: "m-2 flex justify-between items-center",
-        display: "show-proyect"
-    },
-    {
-        name: "Game Finder",
-        img: "/assets/image.png",
-        tech: [tech.html, tech.css, tech.js, tech.git, tech.php, tech.symfony, tech.tailwind, tech.mysql],
-        description: "Participación en proyecto web de búsqueda de videojuegos utilizando una API de Steam",
-        github: "https://github.com/iDankest/Proyecto-Symfony",
-        styleNone: "m-2 flex justify-center items-center",
-        display: "show-proyect-none"
-    },
-    {
-        name: "Criptomoneda",
-        img: "/assets/crypto.png",
-        tech: [tech.html, tech.css, tech.js, tech.git, tech.vue],
-        description: "Proyecto donde principlamente es el manejo de APIs con Vue.js con composables",
-        github: "https://github.com/iDankest/crypto-vue",
-        url: "https://cryptovueapi.netlify.app/",
-        styleNone: "m-2 flex justify-between items-center",
-        display: "show-proyect"
-    },
-    {
-        name: "Admin Gastos",
-        img: "/assets/adgastos.png",
-        tech: [tech.html, tech.css, tech.js, tech.git, tech.vue],
-        description: "Proyecto frontend de administración de gastos poniendo a prueba la reactividad de Vue.js",
-        github: "https://github.com/iDankest/admin-gastos",
-        url: "https://adgastos.netlify.app/",
-        styleNone: "m-2 flex justify-between items-center",
-        display: "show-proyect"
-    },
-    {
-        name: "Tu Guitarra Online",
-        img: "/assets/guitarra.png",
-        tech: [tech.html, tech.css, tech.js, tech.git, tech.vue],
-        description: "Tienda Online de venta de guitarras con un carrito de compras, guardado en localStorage y trabajo frontend",
-        github: "https://github.com/iDankest/guitarla-vue",
-        url: "https://gitardankest.netlify.app/",
-        styleNone: "m-2 flex justify-between items-center",
-        display: "show-proyect"
-    }
+import { techs } from "../data/techs";
+import { projects } from "../data/proyects";
 
-]
 ---
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -95,13 +24,13 @@ const proyects = [
 <section>
     <h2 class="text-2xl text-center mb-10 font-bold" id="proyectos">Proyectos destacados</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {proyects.map(proyecto => (
+        {projects.map(proyecto => (
         <article class="hover:scale-103 transition-all duration-500 ease-in-out">
             <img class="w-full h-[10em] object-cover rounded-t-lg" src={proyecto.img} alt={`Imagen del proyecto ${proyecto.name}`}>
             <div class="tech"><ul class="flex gap-1">
                 {proyecto.tech.map(t => (
                     <li class="relative group cursor-help w-[25px] h-[25px] flex items-center justify-center">
-                        <img src={t.img} alt={t.name} data-tooltip-text={t.name} class="code w-full h-full object-contain">
+                        <img src={techs[t].img} alt={tech[t].name} data-tooltip-text={tech[t].name} class="code w-full h-full object-contain">
                         <span class="custom-tooltip absolute bottom-[calc(100%+5px)] left-1/2 -translate-x-1/2 translate-y-1
                                      bg-gray-800 text-white px-2 py-1 rounded-md whitespace-nowrap text-xs
                                      shadow-md z-10
