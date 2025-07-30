@@ -35,7 +35,7 @@ export const projects = [
         name: "Game Finder",
         img: "/assets/image.png",
         tech: ["html", "css", "js", "git", "php", "symfony", "tailwind", "mysql"],
-        description: "Participación en proyecto web de búsqueda de videojuegos utilizando una API de Steam",
+        description: "Participación en proyecto web de búsqueda de videojuegos utilizando una API de Steam con Symfony",
         github: "https://github.com/iDankest/Proyecto-Symfony",
         styleNone: "m-2 flex justify-center items-center",
         display: "show-proyect-none"
@@ -44,7 +44,7 @@ export const projects = [
         name: "Criptomoneda",
         img: "/assets/crypto.png",
         tech: ["html", "css", "js", "git", "vue"],
-        description: "Proyecto donde principlamente es el manejo de APIs con Vue.js con composables",
+        description: "Proyecto donde principlamente es el manejo de APIs con Vue.js con composables y manejo de datos",
         github: "https://github.com/iDankest/crypto-vue",
         url: "https://cryptovueapi.netlify.app/",
         styleNone: "m-2 flex justify-between items-center",
