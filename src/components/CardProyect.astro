@@ -1,7 +1,26 @@
 ---
-import { techs } from "../data/techs";
-import { projects } from "../data/proyects";
+// @ts-nocheck
+// Import projects data
+const { projects } = Astro.props;
 
+// Tech data
+const techs = {
+    html: { name: 'HTML', img: '/assets/brand-html5.svg' },
+    css: { name: 'CSS', img: '/assets/brand-css3.svg' },
+    js: { name: 'JavaScript', img: '/assets/brand-javascript.svg' },
+    vue: { name: 'Vue.js', img: '/assets/vuejs-brands-solid.svg' },
+    git: { name: 'Git', img: '/assets/brand-git.svg' },
+    php: { name: 'PHP', img: '/assets/brand-php.svg' },
+    symfony: { name: 'Symfony', img: '/assets/brand-symfony.svg' },
+    tailwind: { name: 'Tailwind CSS', img: '/assets/brand-tailwind.svg' },
+    mysql: { name: 'MySQL', img: '/assets/brand-mysql.svg' },
+    codeShow: { name: 'Ver código', img: '/assets/code.svg' }
+};
+
+// Helper function to get tech data
+function getTech(key) {
+    return techs[key] || { img: "", name: key };
+}
 ---
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -15,7 +34,7 @@ import { projects } from "../data/proyects";
     
             if (img && tooltip) {
                 // Obtenemos el texto del tooltip desde el atributo data-tooltip-text de la imagen
-                tooltip.textContent = img.dataset.tooltipText;
+                tooltip.textContent = img.dataset.tooltipText || '';
             }
         });
     });
@@ -24,13 +43,18 @@ import { projects } from "../data/proyects";
 <section>
     <h2 class="text-2xl text-center mb-10 font-bold" id="proyectos">Proyectos destacados</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {projects.map(proyecto => (
-        <article class="hover:scale-103 transition-all duration-500 ease-in-out">
+        {projects.map((proyecto) => (
+        <article class="hover:scale-103 transition-all duration-500 ease-in-out flex justify-between">
             <img class="w-full h-[10em] object-cover rounded-t-lg" src={proyecto.img} alt={`Imagen del proyecto ${proyecto.name}`}>
             <div class="tech"><ul class="flex gap-1">
-                {proyecto.tech.map(t => (
+                {proyecto.tech.map((t) => (
                     <li class="relative group cursor-help w-[25px] h-[25px] flex items-center justify-center">
-                        <img src={techs[t].img} alt={tech[t].name} data-tooltip-text={tech[t].name} class="code w-full h-full object-contain">
+                        <img 
+                          src={getTech(t).img} 
+                          alt={getTech(t).name} 
+                          data-tooltip-text={getTech(t).name} 
+                          class="code w-full h-full object-contain" 
+                        />
                         <span class="custom-tooltip absolute bottom-[calc(100%+5px)] left-1/2 -translate-x-1/2 translate-y-1
                                      bg-gray-800 text-white px-2 py-1 rounded-md whitespace-nowrap text-xs
                                      shadow-md z-10
@@ -46,7 +70,7 @@ import { projects } from "../data/proyects";
                 </div>
                 <div class={proyecto.styleNone}>
                     <a href={proyecto.github} target="_blank" class="relative group cursor-help w-[25px] h-[25px] flex items-center justify-center">
-                        <img src={tech.codeShow.img} alt={tech.codeShow.name} data-tooltip-text={tech.codeShow.name} class="code w-full h-full object-contain">
+                        <img src={techs.codeShow.img} alt={techs.codeShow.name} data-tooltip-text={techs.codeShow.name} class="code w-full h-full object-contain" />
                         <span class="custom-tooltip absolute bottom-[calc(100%+5px)] left-1/2 -translate-x-1/2 translate-y-1
                                      bg-gray-800 text-white px-2 py-1 rounded-md whitespace-nowrap text-xs
                                      shadow-md z-10

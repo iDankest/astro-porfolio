@@ -1,8 +1,20 @@
+// @ts-check
+
+/** @type {Array<{
+ *   name: string;
+ *   img: string;
+ *   tech: Array<keyof import('./techs').techs>;
+ *   description: string;
+ *   github: string;
+ *   url?: string;
+ *   styleNone: string;
+ *   display: string;
+ * }>} */
 export const projects = [
     {
         name: "Rooftop Rush",
         img: "/assets/Rooftop-Rush.png",
-        tech: [tech.html, tech.css, tech.js, tech.git],
+        tech: ["html", "css", "js", "git"],
         description: "Proyecto colaborativo: mi mayor aporte es la parte visual y el movimiento de las plataformas",
         github: "https://github.com/jlld47/Roof-Rush",
         url: "https://jlld47.github.io/Roof-Rush/",
@@ -12,7 +24,7 @@ export const projects = [
     {
         name: "GalaGame",
         img: "/assets/galagame.png",
-        tech: [tech.html, tech.css, tech.js, tech.git],
+        tech: ["html", "css", "js", "git"],
         description: "Proyecto de juego gala realizado en solitario manejo de colisiones y movimiento de personajes",
         github: "https://github.com/iDankest/GalaGame",
         url: "https://mygalagame.netlify.app/",
@@ -22,7 +34,7 @@ export const projects = [
     {
         name: "Game Finder",
         img: "/assets/image.png",
-        tech: [tech.html, tech.css, tech.js, tech.git, tech.php, tech.symfony, tech.tailwind, tech.mysql],
+        tech: ["html", "css", "js", "git", "php", "symfony", "tailwind", "mysql"],
         description: "Participación en proyecto web de búsqueda de videojuegos utilizando una API de Steam",
         github: "https://github.com/iDankest/Proyecto-Symfony",
         styleNone: "m-2 flex justify-center items-center",
@@ -31,7 +43,7 @@ export const projects = [
     {
         name: "Criptomoneda",
         img: "/assets/crypto.png",
-        tech: [tech.html, tech.css, tech.js, tech.git, tech.vue],
+        tech: ["html", "css", "js", "git", "vue"],
         description: "Proyecto donde principlamente es el manejo de APIs con Vue.js con composables",
         github: "https://github.com/iDankest/crypto-vue",
         url: "https://cryptovueapi.netlify.app/",
@@ -41,7 +53,7 @@ export const projects = [
     {
         name: "Admin Gastos",
         img: "/assets/adgastos.png",
-        tech: [tech.html, tech.css, tech.js, tech.git, tech.vue],
+        tech: ["html", "css", "js", "git", "vue"],
         description: "Proyecto frontend de administración de gastos poniendo a prueba la reactividad de Vue.js",
         github: "https://github.com/iDankest/admin-gastos",
         url: "https://adgastos.netlify.app/",
@@ -51,7 +63,7 @@ export const projects = [
     {
         name: "Tu Guitarra Online",
         img: "/assets/guitarra.png",
-        tech: [tech.html, tech.css, tech.js, tech.git, tech.vue],
+        tech: ["html", "css", "js", "git", "vue"],
         description: "Tienda Online de venta de guitarras con un carrito de compras, guardado en localStorage y trabajo frontend",
         github: "https://github.com/iDankest/guitarla-vue",
         url: "https://gitardankest.netlify.app/",
