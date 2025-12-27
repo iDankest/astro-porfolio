@@ -1,58 +1,52 @@
 ---
 const exp = [
     {
-        img: '',
-        empresa: '',
-        cargo: '',
-        title: '',
-        
+        img: '/assets/islas.jpg',
+        empresa: 'ISLASSEM',
+        cargo: 'Desarrollador Web',
+        periodo: 'agosto 2024 - septiembre 2024',
+        descripcion: 'Mantenimiento de páginas web',
+        tareas: ['WordPress', 'Protección de datos', 'Cookies']
+    },
+    {
+        img: '/assets/bitbox_it_logo.jpg',
+        empresa: 'BitBox S.L',
+        cargo: 'Técnico IT',
+        periodo: 'marzo 2019 - noviembre 2019',
+        descripcion: 'Mantenimiento de equipos informáticos',
+        tareas: ['Instalación de sistemas operativos', 'HelpDesk', 'Mantenimiento de racks']
     }
 ]
 ---
 <section class="flex flex-col gap-2">
     <h2 class="text-2xl font-bold text-center my-10" id="experiencia">Experiencia Profesional</h2>
-    <div class="flex justify-between items-center">
-        <div>
-            <div class="flex items-center gap-2">
-                <img class="w-10 h-10 bg-violet-500 rounded border border-black" src="/assets/briefcase-2.svg" alt="">
-                <h3 class="text-xl">agosto 2024 - septiembre 2024</h3>
+    {exp.map((e) => (
+        <div class="flex justify-between items-center mt-6">
+            <div>
+                <div class="flex items-center gap-2">
+                    <img class="w-10 h-10 bg-violet-500 rounded border border-black" src="/assets/briefcase-2.svg" alt="icono">
+                    <h3 class="text-xl">{e.periodo}</h3>
+                </div>
+                <div class="flex items-center gap-2">
+                    <h4 class="font-bold">{e.empresa}</h4> - <em>{e.cargo}</em>
+                </div>
+                <p>{e.descripcion}</p>
+                <ol>
+                    {e.tareas.map((t) => (
+                        <li>{t}</li>
+                    ))}
+                </ol>
             </div>
-            <div class="flex items-center gap-2">
-                <h4 class="font-bold">ISLASSEM</h4> - <em>Desarrollador Web</em>
-            </div>
-            <p>Mantenimiento de páginas web</p>
-            <ol>
-                <li>WordPress</li>
-                <li>Protección de datos</li>
-                <li>Cookies</li>
-            </ol>
+            <img class="w-[10em] h-[10em] rounded company-image" src={e.img} alt={`Empresa ${e.empresa}`} />
         </div>
-        <img class="w-[10em] rounded" src="/assets/islas.jpg" alt="Empresa Islassem">
-    </div>
-    <div class="flex justify-between items-center mt-10">
-        <div>
-            <div class="flex items-center gap-2">
-                <img class="w-10 h-10 bg-violet-500 rounded border border-black" src="/assets/briefcase-2.svg" alt="">
-                <h3 class="text-xl">marzo 2019 - noviembre 2019</h3>
-            </div>
-            <div class="flex items-center gap-2">
-                <h4 class="font-bold">BitBox S.L</h4> - <em>Técnico IT</em>
-            </div>
-            <p>Mantenimiento de equipos informáticos</p>
-            <ol>
-                <li>Instalación de sistemas operativos</li>
-                <li>HelpDesk</li>
-                <li>Mantenimiento de racks</li>
-            </ol>
-        </div>
-        <img class="w-[10em] h-[10em] rounded" src="/assets/bitbox_it_logo.jpg" alt="Empresa BitBox S.L">
-    </div>
+    ))}
+
     <hr class="border-violet-500 border-2 mt-10">
     <h2 class="text-2xl font-bold text-center my-5">Formación Académica</h2>
     <div class="flex justify-between items-center">
         <div>
             <div class="flex items-center gap-2">
-                <img class="w-10 h-10 bg-violet-500 rounded border border-black" src="/assets/school.svg" alt="">
+                <img class="w-10 h-10 bg-violet-500 rounded border border-black" src="/assets/school.svg" alt="icono-escuela">
                 <h3 class="text-xl">agosto 2024 - febrero 2025</h3>
             </div>
             <div class="flex items-center gap-2">
@@ -71,7 +65,7 @@ const exp = [
     <div class="flex justify-between items-center mt-10">
         <div>
             <div class="flex items-center gap-2">
-                <img class="w-10 h-10 bg-violet-500 rounded border border-black" src="/assets/school.svg" alt="">
+                <img class="w-10 h-10 bg-violet-500 rounded border border-black" src="/assets/school.svg" alt="icono-escuela">
                 <h3 class="text-xl">marzo 2023 - febrero 2024</h3>
             </div>
             <div class="flex items-center gap-2">
@@ -97,6 +91,7 @@ const exp = [
         list-style: none;
         position: relative;
         padding-left: 1.5em;
+        margin-bottom: 0.25rem;
     }
     li::before {
         content: "•";
@@ -104,13 +99,13 @@ const exp = [
         left: 0;
         color: white;
     }
-    @media (max-width: 639px) { /* sm breakpoint de Tailwind - 1px */
+    @media (max-width: 639px) {
         section {
             flex-direction: column;
             align-items: stretch;
-            width: 95vw; /* O el ancho que prefieras para móvil */
+            width: 95vw;
         }
-        img[alt="empresa"], img[alt="Centro Reboot Academy"], img[alt="Centro Fuerteventura 2000"], img[alt="Empresa Islassem"], img[alt="Empresa BitBox S.L"] {
+        .company-image {
             width: 6em;
             height: 6em;
         }
