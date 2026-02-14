@@ -1,60 +1,108 @@
 ---
 const exp = [
     {
-        img: '/assets/0x0.png',
-        empresa: 'iServices',
-        cargo: 'Técnico en reparaciones y ventas',
-        periodo: 'Diciembre 2025 - Actualmente',
-        descripcion: 'Reparación de dispositivos móviles',
-        tareas: ['Diagnósticos', 'Reparaciones', 'Atención al cliente']
+        img: "/assets/0x0.png",
+        empresa: "iServices",
+        cargo: "Técnico en reparaciones y ventas",
+        periodo: "Diciembre 2025 - Actualmente",
+        descripcion: "Reparación de dispositivos móviles",
+        tareas: ["Diagnósticos", "Reparaciones", "Atención al cliente"],
     },
     {
-        img: '/assets/islas.jpg',
-        empresa: 'ISLASSEM',
-        cargo: 'Desarrollador Web',
-        periodo: 'Agosto 2024 - Septiembre 2024',
-        descripcion: 'Mantenimiento de páginas web',
-        tareas: ['WordPress', 'Protección de datos', 'Cookies']
+        img: "/assets/islas.jpg",
+        empresa: "ISLASSEM",
+        cargo: "Desarrollador Web",
+        periodo: "Agosto 2024 - Septiembre 2024",
+        descripcion: "Mantenimiento de páginas web",
+        tareas: ["WordPress", "Protección de datos", "Cookies"],
     },
     {
-        img: '/assets/bitbox_it_logo.jpg',
-        empresa: 'BitBox S.L',
-        cargo: 'Técnico IT',
-        periodo: 'Marzo 2019 - Noviembre 2019',
-        descripcion: 'Mantenimiento de equipos informáticos',
-        tareas: ['Instalación de sistemas operativos', 'HelpDesk', 'Mantenimiento de racks']
-    }
-]
+        img: "/assets/bitbox_it_logo.jpg",
+        empresa: "BitBox S.L",
+        cargo: "Técnico IT",
+        periodo: "Marzo 2019 - Noviembre 2019",
+        descripcion: "Mantenimiento de equipos informáticos",
+        tareas: [
+            "Instalación de sistemas operativos",
+            "HelpDesk",
+            "Mantenimiento de racks",
+        ],
+    },
+];
 ---
-<section class="flex flex-col gap-2">
-    <h2 class="text-2xl font-bold text-center my-10" id="experiencia">Experiencia Profesional</h2>
-    {exp.map((e) => (
-        <div class="flex justify-between items-center mt-6">
-            <div>
-                <div class="flex items-center gap-2">
-                    <img class="w-10 h-10 bg-violet-500 rounded border border-black" src="/assets/briefcase-2.svg" alt="icono">
-                    <h3 class="text-xl">{e.periodo}</h3>
-                </div>
-                <div class="flex items-center gap-2">
-                    <h4 class="font-bold">{e.empresa}</h4> - <em>{e.cargo}</em>
-                </div>
-                <p>{e.descripcion}</p>
-                <ol>
-                    {e.tareas.map((t) => (
-                        <li>{t}</li>
-                    ))}
-                </ol>
-            </div>
-            <img class="w-[10em] h-[10em] rounded company-image" src={e.img} alt={`Empresa ${e.empresa}`} />
-        </div>
-    ))}
 
-    <hr class="border-violet-500 border-2 mt-10">
+<section class="flex flex-col gap-2">
+    <h2 class="text-2xl font-bold text-center my-10" id="experiencia">
+        Experiencia Profesional
+    </h2>
+    {
+        exp.map((e) => (
+            <div class="flex justify-between items-center mt-6">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <img
+                            class="w-10 h-10 bg-violet-500 rounded border border-black"
+                            src="/assets/briefcase-2.svg"
+                            alt="icono"
+                        />
+                        <h3 class="text-xl">{e.periodo}</h3>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <h4 class="font-bold">{e.empresa}</h4> -{" "}
+                        <em>{e.cargo}</em>
+                    </div>
+                    <p>{e.descripcion}</p>
+                    <ol>
+                        {e.tareas.map((t) => (
+                            <li>{t}</li>
+                        ))}
+                    </ol>
+                </div>
+                <img
+                    class="w-[10em] h-[10em] rounded company-image"
+                    src={e.img}
+                    alt={`Empresa ${e.empresa}`}
+                />
+            </div>
+        ))
+    }
+
+    <hr class="border-violet-500 border-2 mt-10" />
     <h2 class="text-2xl font-bold text-center my-5">Formación Académica</h2>
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center mt-6">
         <div>
             <div class="flex items-center gap-2">
-                <img class="w-10 h-10 bg-violet-500 rounded border border-black" src="/assets/school.svg" alt="icono-escuela">
+                <img
+                    class="w-10 h-10 bg-violet-500 rounded border border-black"
+                    src="/assets/school.svg"
+                    alt="icono-escuela"
+                />
+                <h3 class="text-xl">Octubre 2025 - Noviembre 2025</h3>
+            </div>
+            <div class="flex items-center gap-2">
+                <h4 class="font-bold">42 Málaga</h4> - <em>Escuela de Elite de Programación</em>
+            </div>
+            <p>Piscina de 42 Málaga</p>
+            <ol>
+                <li>C</li>
+                <li>Aprendí a aprender</li>
+                <li>Trabajo en equipo</li>
+            </ol>
+        </div>
+        <img
+            class="w-[10em] h-[10em] rounded"
+            src="https://pbs.twimg.com/profile_images/1201525003147268097/Uzikrfvt_400x400.jpg"
+            alt="Centro 42 Malaga"
+        />
+    </div>
+    <div class="flex justify-between items-center mt-10">
+        <div>
+            <div class="flex items-center gap-2">
+                <img
+                    class="w-10 h-10 bg-violet-500 rounded border border-black"
+                    src="/assets/school.svg"
+                    alt="icono-escuela"
+                />
                 <h3 class="text-xl">agosto 2024 - febrero 2025</h3>
             </div>
             <div class="flex items-center gap-2">
@@ -68,16 +116,26 @@ const exp = [
                 <li>WordPress, WooCommerce, Prestashop, Magento</li>
             </ol>
         </div>
-        <img class="w-[10em] h-[10em] rounded" src="/assets/Reboot.png" alt="Centro Reboot Academy">
+        <img
+            class="w-[10em] h-[10em] rounded"
+            src="/assets/Reboot.png"
+            alt="Centro Reboot Academy"
+        />
     </div>
     <div class="flex justify-between items-center mt-10">
         <div>
             <div class="flex items-center gap-2">
-                <img class="w-10 h-10 bg-violet-500 rounded border border-black" src="/assets/school.svg" alt="icono-escuela">
+                <img
+                    class="w-10 h-10 bg-violet-500 rounded border border-black"
+                    src="/assets/school.svg"
+                    alt="icono-escuela"
+                />
                 <h3 class="text-xl">marzo 2023 - febrero 2024</h3>
             </div>
             <div class="flex items-center gap-2">
-                <h4 class="font-bold">Fuerteventura 2000</h4> - <em>Desarrollador de Aplicaciones Web</em>
+                <h4 class="font-bold">Fuerteventura 2000</h4> - <em
+                    >Desarrollador de Aplicaciones Web</em
+                >
             </div>
             <p>Desarrollo de aplicaciones web</p>
             <ol>
@@ -86,12 +144,16 @@ const exp = [
                 <li>MySQL, MongoDB, Git, GitHub</li>
             </ol>
         </div>
-        <img class="w-[10em] h-[10em] rounded" src="/assets/f2000.jpg" alt="Centro Fuerteventura 2000">
+        <img
+            class="w-[10em] h-[10em] rounded"
+            src="/assets/f2000.jpg"
+            alt="Centro Fuerteventura 2000"
+        />
     </div>
 </section>
 
 <style>
-    section{
+    section {
         margin-top: 2em;
         width: 50vw;
     }
