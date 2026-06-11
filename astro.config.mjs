@@ -7,6 +7,7 @@ import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
+	site: 'https://idankest.dev',
 	output: 'server',
 	adapter: node({ mode: 'standalone' }),
 	integrations: [
@@ -32,6 +33,10 @@ export default defineConfig({
 					'git',
 					'github',
 					'astro',
+					'swift',
+					'rust',
+					'python',
+					'docker',
 				],
 				'simple-icons': [
 					'axios',

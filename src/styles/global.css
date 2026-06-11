@@ -192,17 +192,18 @@ button {
   80% { transform: translate(1px, 0); }
 }
 
+/* Duración y delays cortos: el hero es el LCP y no puede esperar a la coreografía */
 .reveal {
   opacity: 0;
-  animation: reveal-up 1s var(--ease-out-expo) forwards;
+  animation: reveal-up 0.7s var(--ease-out-expo) forwards;
 }
 
-.reveal-delay-1 { animation-delay: 0.1s; }
-.reveal-delay-2 { animation-delay: 0.2s; }
-.reveal-delay-3 { animation-delay: 0.35s; }
-.reveal-delay-4 { animation-delay: 0.5s; }
-.reveal-delay-5 { animation-delay: 0.65s; }
-.reveal-delay-6 { animation-delay: 0.8s; }
+.reveal-delay-1 { animation-delay: 0.06s; }
+.reveal-delay-2 { animation-delay: 0.12s; }
+.reveal-delay-3 { animation-delay: 0.2s; }
+.reveal-delay-4 { animation-delay: 0.3s; }
+.reveal-delay-5 { animation-delay: 0.4s; }
+.reveal-delay-6 { animation-delay: 0.5s; }
 
 .marquee-track {
   display: flex;
@@ -284,6 +285,46 @@ button {
 /* Iconos con partes oscuras que se pierden sobre el fondo */
 [data-icon="devicon:astro"],
 [data-icon="devicon:symfony"],
-[data-icon="devicon:github"] {
+[data-icon="devicon:github"],
+[data-icon="devicon:rust"] {
   filter: brightness(0) invert(1);
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  .marquee-track,
+  .blink,
+  .float-y,
+  .heart,
+  .status-dot,
+  .dot-pulse,
+  .progress-fill {
+    animation: none !important;
+  }
+
+  .reveal {
+    opacity: 1;
+  }
+
+  .cursor-dot,
+  .cursor-ring {
+    display: none !important;
+  }
+
+  .scroll-progress {
+    transition: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
 }

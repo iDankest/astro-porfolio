@@ -1,5 +1,41 @@
 ---
-const { title = "Kilian Sánchez — Desarrollador Web Front-End", description = "Portfolio de Kilian Sánchez, desarrollador web front-end. Interfaces atractivas, funcionales y con atención al detalle." } = Astro.props;
+const { title = "Kilian Sánchez — Desarrollador Web Front-End", description = "Portfolio de Kilian Sánchez, desarrollador web front-end en Canarias. Interfaces atractivas, funcionales y con atención al detalle." } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/og.png', Astro.site);
+
+const jsonLd = JSON.stringify({
+	"@context": "https://schema.org",
+	"@graph": [
+		{
+			"@type": "Person",
+			"@id": "https://idankest.dev/#person",
+			name: "Kilian Sánchez",
+			jobTitle: "Desarrollador Web Front-End",
+			url: "https://idankest.dev/",
+			image: ogImage.href,
+			sameAs: [
+				"https://github.com/idankest",
+				"https://www.linkedin.com/in/dankest/",
+			],
+			address: {
+				"@type": "PostalAddress",
+				addressRegion: "Canarias",
+				addressCountry: "ES",
+			},
+			knowsAbout: ["Vue.js", "React", "JavaScript", "TypeScript", "Astro", "Tailwind CSS", "Node.js", "PHP", "Symfony"],
+		},
+		{
+			"@type": "WebSite",
+			"@id": "https://idankest.dev/#website",
+			url: "https://idankest.dev/",
+			name: title,
+			description,
+			inLanguage: "es",
+			publisher: { "@id": "https://idankest.dev/#person" },
+		},
+	],
+});
 ---
 
 <!DOCTYPE html>
@@ -10,9 +46,25 @@ const { title = "Kilian Sánchez — Desarrollador Web Front-End", description =
 	<meta name="description" content={description}>
 	<meta name="author" content="Kilian Sánchez">
 	<meta name="theme-color" content="#0a0a0c">
+	<link rel="canonical" href={canonical}>
+
 	<meta property="og:title" content={title}>
 	<meta property="og:description" content={description}>
 	<meta property="og:type" content="website">
+	<meta property="og:url" content={canonical}>
+	<meta property="og:site_name" content="Kilian Sánchez">
+	<meta property="og:locale" content="es_ES">
+	<meta property="og:image" content={ogImage}>
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta property="og:image:alt" content="Kilian Sánchez — Desarrollador Web Front-End">
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content={title}>
+	<meta name="twitter:description" content={description}>
+	<meta name="twitter:image" content={ogImage}>
+
+	<script type="application/ld+json" set:html={jsonLd}></script>
 
 	<link rel="icon" type="image/svg+xml" href="/Code.svg">
 
@@ -44,49 +96,57 @@ const { title = "Kilian Sánchez — Desarrollador Web Front-End", description =
 	<slot />
 
 	<script>
+		// Cursor custom solo en dispositivos con puntero fino y sin reduced-motion
+		const wantsCursor =
+			window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+			!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 		const dot = document.getElementById('cursorDot');
 		const ring = document.getElementById('cursorRing');
-		let mx = 0, my = 0;
-		let rx = 0, ry = 0;
 
-		document.addEventListener('mousemove', (e) => {
-			mx = e.clientX;
-			my = e.clientY;
-			dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
-		});
+		if (wantsCursor && dot && ring) {
+			let mx = 0, my = 0;
+			let rx = 0, ry = 0;
 
-		function tick() {
-			rx += (mx - rx) * 0.15;
-			ry += (my - ry) * 0.15;
-			ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
-			requestAnimationFrame(tick);
+			document.addEventListener('mousemove', (e) => {
+				mx = e.clientX;
+				my = e.clientY;
+				dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
+			});
+
+			function tick() {
+				rx += (mx - rx) * 0.15;
+				ry += (my - ry) * 0.15;
+				ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
+				requestAnimationFrame(tick);
+			}
+			tick();
+
+			// Hide cursor on leave
+			document.addEventListener('mouseleave', () => {
+				dot.style.opacity = '0';
+				ring.style.opacity = '0';
+			});
+			document.addEventListener('mouseenter', () => {
+				dot.style.opacity = '1';
+				ring.style.opacity = '1';
+			});
+
+			// Hover effect
+			const hoverables = document.querySelectorAll('a, button, [data-cursor="hover"]');
+			hoverables.forEach(el => {
+				el.addEventListener('mouseenter', () => {
+					ring.style.width = '60px';
+					ring.style.height = '60px';
+					ring.style.borderColor = '#c8ff00';
+				});
+				el.addEventListener('mouseleave', () => {
+					ring.style.width = '36px';
+					ring.style.height = '36px';
+					ring.style.borderColor = '#f5f1e8';
+				});
+			});
 		}
-		tick();
-
-		// Hide cursor on leave
-		document.addEventListener('mouseleave', () => {
-			dot.style.opacity = '0';
-			ring.style.opacity = '0';
-		});
-		document.addEventListener('mouseenter', () => {
-			dot.style.opacity = '1';
-			ring.style.opacity = '1';
-		});
-
-		// Hover effect
-		const hoverables = document.querySelectorAll('a, button, [data-cursor="hover"]');
-		hoverables.forEach(el => {
-			el.addEventListener('mouseenter', () => {
-				ring.style.width = '60px';
-				ring.style.height = '60px';
-				ring.style.borderColor = '#c8ff00';
-			});
-			el.addEventListener('mouseleave', () => {
-				ring.style.width = '36px';
-				ring.style.height = '36px';
-				ring.style.borderColor = '#f5f1e8';
-			});
-		});
 
 		// Scroll progress bar
 		const scrollProgress = document.getElementById('scrollProgress');
