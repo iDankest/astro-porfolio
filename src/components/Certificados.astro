@@ -21,7 +21,7 @@ const certificados = [
 
 <section class="cert" id="certificados">
 	<div class="cert-header">
-		<span class="eyebrow">Verificado · 05 / 10</span>
+		<span class="eyebrow">Verificado · 05 / 08</span>
 		<h2 class="cert-title">
 			<span>Certificados</span>
 			<em>& credenciales</em>
@@ -46,11 +46,29 @@ const certificados = [
 			</a>
 		))}
 
+		<div class="cert-card cert-pending">
+			<div class="cert-image cert-image-typo">
+				<span class="typo-mark">Ironhack</span>
+				<span class="typo-sub">en colaboración con la FULP</span>
+				<span class="cert-tag">Bootcamp · IA</span>
+			</div>
+			<div class="cert-body">
+				<div class="cert-meta">
+					<span class="cert-date">2026 · Por finalizar</span>
+				</div>
+				<h3 class="cert-name">Desarrollo Web Full Stack + IA</h3>
+				<p class="cert-issuer">3 meses de formación + 6 de prácticas en empresa</p>
+				<span class="cert-progress">
+					<span class="progress-fill"></span>
+				</span>
+			</div>
+		</div>
+
 		<div class="cert-card cert-cta">
 			<div class="cert-body">
 				<span class="eyebrow">Próximamente</span>
 				<h3 class="cert-name">Más en camino</h3>
-				<p class="cert-issuer">Continuamente formándome. Vue 3, TypeScript, Node.</p>
+				<p class="cert-issuer">La formación no para: ahora mismo, Ironhack y producto propio.</p>
 				<span class="cert-progress">
 					<span class="progress-fill"></span>
 				</span>
@@ -95,7 +113,7 @@ const certificados = [
 
 	.cert-grid {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(4, 1fr);
 		gap: 1.5rem;
 	}
 
@@ -191,6 +209,36 @@ const certificados = [
 		color: var(--text-dim);
 	}
 
+	/* Card de certificación en curso (sin enlace todavía) */
+	.cert-image-typo {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.4rem;
+		padding: 1rem;
+	}
+	.typo-mark {
+		font-family: var(--font-display);
+		font-style: italic;
+		font-size: clamp(2rem, 3vw, 2.6rem);
+		letter-spacing: -0.02em;
+		color: var(--acid);
+		line-height: 1;
+	}
+	.typo-sub {
+		font-family: var(--font-mono);
+		font-size: 9.5px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--text-faint);
+		text-align: center;
+	}
+	.cert-pending:hover {
+		border-color: var(--line-strong);
+		transform: translateY(-4px);
+	}
+
 	/* CTA card */
 	.cert-cta {
 		justify-content: center;
@@ -225,7 +273,11 @@ const certificados = [
 		50% { left: 65%; }
 	}
 
-	@media (max-width: 900px) {
+	@media (max-width: 1100px) {
+		.cert-grid { grid-template-columns: repeat(2, 1fr); }
+	}
+
+	@media (max-width: 640px) {
 		.cert-grid { grid-template-columns: 1fr; }
 	}
 </style>

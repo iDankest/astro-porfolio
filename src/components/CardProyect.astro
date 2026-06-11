@@ -9,9 +9,13 @@ const getTech = (key: string) => (techs as any)[key] || { icon: null, name: key 
 const featured = projects.find((p) => p.featured);
 const rest = projects.filter((p) => !p.featured);
 
-// Show featured + first 2 initially
-const visibleCount = 2;
-const hidden = rest.slice(visibleCount);
+// Bento corto: solo los proyectos potentes. El resto vive en el carrusel "Archivo".
+const bentoRest = rest.slice(0, 3); // VoicePrompt, Orbix, PrismaCrawler
+const archive = rest.slice(3);
+
+// VoicePrompt y Orbix a media fila; PrismaCrawler cierra en horizontal invertido.
+const bentoSizes = ["b-3", "b-3", "b-flip"];
+const bentoOf = (i: number) => bentoSizes[i] ?? "b-3";
 ---
 
 <section class="projects" id="proyectos">
@@ -38,13 +42,17 @@ const hidden = rest.slice(visibleCount);
 
 	<div class="projects-grid" id="projects-grid">
 		{featured && (
-			<article class="project-card" data-index="01">
+			<article class="project-card b-featured" data-index="01">
 				<div class="card-image" data-cursor="hover">
 					<ProjectCover
 						name={featured.name}
 						tag={featured.tag}
 						tagline={featured.tagline}
 						cover={featured.cover}
+						coverAlt={featured.coverAlt}
+						kind={featured.kind}
+						url={featured.url}
+						github={featured.github}
 						index="01"
 					/>
 					{featured.video ? (
@@ -77,14 +85,18 @@ const hidden = rest.slice(visibleCount);
 					<p class="card-desc">{featured.description}</p>
 
 					<div class="card-actions">
-						<a href={featured.github} target="_blank" rel="noopener" class="action-link">
-							<span class="action-label">Ver código</span>
-							<span class="action-icon" aria-hidden="true">
-								<svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-									<path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-								</svg>
-							</span>
-						</a>
+						{featured.github ? (
+							<a href={featured.github} target="_blank" rel="noopener" class="action-link">
+								<span class="action-label">Ver código</span>
+								<span class="action-icon" aria-hidden="true">
+									<svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+										<path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+									</svg>
+								</span>
+							</a>
+						) : (
+							<span class="action-note">Código privado · beta</span>
+						)}
 						{featured.url ? (
 							<a href={featured.url} target="_blank" rel="noopener" class="action-cta">
 								<span class="action-label">Live preview</span>
@@ -108,17 +120,20 @@ const hidden = rest.slice(visibleCount);
 			</article>
 		)}
 
-		{rest.map((p, i) => {
+		{bentoRest.map((p, i) => {
 			const indexStr = String(i + 2).padStart(2, "0");
-			const isHidden = i >= visibleCount;
 			return (
-				<article class={`project-card ${isHidden ? 'project-hidden' : ''}`} data-index={indexStr}>
+				<article class={`project-card ${bentoOf(i)}`} data-index={indexStr}>
 					<div class="card-image" data-cursor="hover">
 						<ProjectCover
 							name={p.name}
 							tag={p.tag}
 							tagline={p.tagline}
 							cover={p.cover}
+							coverAlt={p.coverAlt}
+							kind={p.kind}
+							url={p.url}
+							github={p.github}
 							index={indexStr}
 						/>
 						{p.video ? (
@@ -150,14 +165,18 @@ const hidden = rest.slice(visibleCount);
 						<p class="card-desc">{p.description}</p>
 
 						<div class="card-actions">
-							<a href={p.github} target="_blank" rel="noopener" class="action-link">
-								<span class="action-label">Ver código</span>
-								<span class="action-icon" aria-hidden="true">
-									<svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-										<path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-								</svg>
-							</span>
-						</a>
+							{p.github ? (
+								<a href={p.github} target="_blank" rel="noopener" class="action-link">
+									<span class="action-label">Ver código</span>
+									<span class="action-icon" aria-hidden="true">
+										<svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+											<path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+										</svg>
+									</span>
+								</a>
+							) : (
+								<span class="action-note">Código privado · beta</span>
+							)}
 							{p.url ? (
 								<a href={p.url} target="_blank" rel="noopener" class="action-cta">
 									<span class="action-label">Live preview</span>
@@ -181,40 +200,70 @@ const hidden = rest.slice(visibleCount);
 				</article>
 			);
 		})}
+	</div>
 
-		{/* The "Show More" card as the 4th item in the grid */}
-		<div class="project-card more-project-card" id="more-project-card" data-cursor="hover">
-			<div class="more-card-content">
-				<div class="more-card-inner">
-					<span class="more-card-num">04</span>
-					<div class="more-card-icon-container">
-						<div class="icon-circle">
-							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-								<line x1="12" y1="5" x2="12" y2="19"></line>
-								<line x1="5" y1="12" x2="19" y2="12"></line>
-							</svg>
-						</div>
-					</div>
-					<div class="more-card-text">
-						<h3 class="more-card-title">Ver más proyectos</h3>
-						<p class="more-card-desc">Explora otros {hidden.length} proyectos que he desarrollado.</p>
-					</div>
-					<span class="more-card-badge">+{hidden.length} Proyectos</span>
+	{archive.length > 0 && (
+		<div class="archive">
+			<div class="archive-header">
+				<div class="archive-title-wrap">
+					<span class="eyebrow">Archivo</span>
+					<h3 class="archive-title">Más <em>proyectos</em></h3>
 				</div>
+				<span class="archive-hint" aria-hidden="true">
+					<span>drag / scroll</span>
+					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+				</span>
+			</div>
+
+			<div class="archive-scroller" id="archive-scroller" tabindex="0" aria-label="Carrusel de proyectos: desplázate horizontalmente">
+				{archive.map((p, i) => {
+					const indexStr = String(i + 2 + bentoRest.length).padStart(2, "0");
+					return (
+						<article class="archive-card" data-index={indexStr}>
+							<div class="card-image" data-cursor="hover">
+								<ProjectCover
+									name={p.name}
+									tag={p.tag}
+									tagline={p.tagline}
+									cover={p.cover}
+									coverAlt={p.coverAlt}
+									kind={p.kind}
+									url={p.url}
+									github={p.github}
+									index={indexStr}
+								/>
+								{p.video ? (
+									<video
+										class="project-video"
+										src={p.video}
+										muted
+										loop
+										playsinline
+										preload="metadata"
+									></video>
+								) : null}
+							</div>
+							<div class="archive-body">
+								<div class="archive-meta">
+									<span class="card-tag">{p.tag}</span>
+									<span class="archive-num">{indexStr}</span>
+								</div>
+								<h4 class="archive-name">{p.name}</h4>
+								<div class="archive-actions">
+									{p.github ? (
+										<a href={p.github} target="_blank" rel="noopener" class="archive-link">Código</a>
+									) : null}
+									{p.url ? (
+										<a href={p.url} target="_blank" rel="noopener" class="archive-link archive-link-live">Live ↗</a>
+									) : null}
+								</div>
+							</div>
+						</article>
+					);
+				})}
 			</div>
 		</div>
-	</div>
-
-	<div class="projects-actions-footer">
-		<button class="less-btn" id="less-btn" type="button">
-			<span class="more-label">Ver menos proyectos</span>
-			<span class="more-icon" aria-hidden="true">
-				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M18 15l-6-6-6 6"/>
-				</svg>
-			</span>
-		</button>
-	</div>
+	)}
 </section>
 
 <style>
@@ -285,12 +334,16 @@ const hidden = rest.slice(visibleCount);
 		text-transform: uppercase;
 	}
 
-	/* Uniform 2-column grid */
+	/* ===== Bento grid: 6 columnas, los spans dan el ritmo ===== */
 	.projects-grid {
 		display: grid;
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(6, 1fr);
 		gap: 1.5rem;
 	}
+
+	.b-featured { grid-column: span 6; }
+	.b-flip { grid-column: span 6; }
+	.b-3 { grid-column: span 3; }
 
 	.project-card {
 		position: relative;
@@ -299,16 +352,17 @@ const hidden = rest.slice(visibleCount);
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
-		transition: border-color 0.4s, transform 0.4s var(--ease-out-expo);
+		transition: border-color 0.4s, transform 0.4s var(--ease-out-expo), box-shadow 0.4s;
 	}
 	.project-card:hover {
 		border-color: var(--line-strong);
 		transform: translateY(-4px);
+		box-shadow: 0 0 0 1px var(--acid-soft), 0 24px 48px -28px rgba(200, 255, 0, 0.18);
 	}
 	.project-card::before {
 		content: attr(data-index);
 		position: absolute;
-		top: 3.2rem; /* Lowered from 1.1rem to clear browser mockup bar */
+		top: 3.2rem; /* Debajo de la barra del mockup */
 		right: 1.1rem;
 		font-family: var(--font-mono);
 		font-size: 10px;
@@ -318,6 +372,61 @@ const hidden = rest.slice(visibleCount);
 		background: var(--ink);
 		padding: 0.3rem 0.5rem;
 		border: 1px solid var(--line);
+	}
+
+	/* Reveal escalonado al entrar en viewport (solo si hay JS) */
+	.projects-grid.js .project-card {
+		opacity: 0;
+		transform: translateY(28px);
+	}
+	.projects-grid.js .project-card.in-view {
+		opacity: 1;
+		transform: translateY(0);
+		transition:
+			opacity 0.7s var(--ease-out-expo) var(--d, 0s),
+			transform 0.7s var(--ease-out-expo) var(--d, 0s),
+			border-color 0.4s, box-shadow 0.4s;
+	}
+	.projects-grid.js .project-card.in-view:hover {
+		transform: translateY(-4px);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.projects-grid.js .project-card {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	/* Featured y flip se presentan en horizontal: cover grande + cuerpo al lado */
+	.b-featured,
+	.b-flip {
+		flex-direction: row;
+	}
+	.b-flip {
+		flex-direction: row-reverse;
+	}
+	.b-featured .card-image,
+	.b-flip .card-image {
+		flex: 1.35;
+		aspect-ratio: auto;
+		min-height: 420px;
+		border-bottom: none;
+		border-right: 1px solid var(--line);
+	}
+	.b-flip .card-image {
+		border-right: none;
+		border-left: 1px solid var(--line);
+	}
+	.b-featured .card-body,
+	.b-flip .card-body {
+		flex: 1;
+		justify-content: center;
+		gap: 1.1rem;
+		padding: 2.2rem 2.4rem;
+	}
+	.b-featured .card-title,
+	.b-flip .card-title {
+		font-size: clamp(2.2rem, 3.5vw, 3.2rem);
 	}
 
 	.card-image {
@@ -346,7 +455,7 @@ const hidden = rest.slice(visibleCount);
 
 	.featured-badge {
 		position: absolute;
-		top: 3.2rem; /* Lowered from 1.1rem to clear browser mockup bar */
+		top: 3.2rem; /* Debajo de la barra del mockup */
 		left: 1.1rem;
 		font-family: var(--font-mono);
 		font-size: 10px;
@@ -445,6 +554,7 @@ const hidden = rest.slice(visibleCount);
 		padding-top: 1rem;
 		border-top: 1px solid var(--line);
 		margin-top: 0.4rem;
+		flex-wrap: wrap;
 	}
 
 	.action-link {
@@ -474,6 +584,14 @@ const hidden = rest.slice(visibleCount);
 	.action-link:hover .action-icon {
 		border-color: var(--acid);
 		transform: rotate(-12deg) scale(1.08);
+	}
+
+	.action-note {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--text-faint);
 	}
 
 	.action-cta {
@@ -531,181 +649,187 @@ const hidden = rest.slice(visibleCount);
 		100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0); }
 	}
 
-	/* Hidden projects */
-	.project-card.project-hidden {
-		display: none;
-	}
-	
-	/* Expanded Grid State */
-	#projects-grid.expanded .project-card.project-hidden {
-		display: flex;
-		animation: reveal-project 0.5s var(--ease-out-expo) forwards;
-	}
-	
-	/* Staggered animation delay for revealed cards */
-	#projects-grid.expanded .project-card.project-hidden:nth-child(4) { animation-delay: 0.05s; }
-	#projects-grid.expanded .project-card.project-hidden:nth-child(5) { animation-delay: 0.1s; }
-	#projects-grid.expanded .project-card.project-hidden:nth-child(6) { animation-delay: 0.15s; }
-	#projects-grid.expanded .project-card.project-hidden:nth-child(7) { animation-delay: 0.2s; }
-	#projects-grid.expanded .project-card.project-hidden:nth-child(8) { animation-delay: 0.25s; }
-
-	#projects-grid.expanded #more-project-card {
-		display: none;
+	/* ===== Archivo: carrusel horizontal con scroll-snap ===== */
+	.archive {
+		margin-top: 4rem;
 	}
 
-	@keyframes reveal-project {
-		0% {
-			opacity: 0;
-			transform: translateY(20px);
-		}
-		100% {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
-
-	/* "Show More" Grid Card styling */
-	.more-project-card {
-		cursor: pointer;
-		justify-content: center;
-		align-items: center;
-		min-height: 420px;
-		border: 1px dashed var(--line);
-		background: linear-gradient(135deg, var(--ink-2) 0%, rgba(19, 19, 24, 0.4) 100%);
-		transition: border-color 0.4s, background-color 0.4s, transform 0.4s var(--ease-out-expo);
-	}
-	.more-project-card::before {
-		display: none;
-	}
-	.more-project-card:hover {
-		border-color: var(--acid);
-		transform: translateY(-4px);
-		background: rgba(200, 255, 0, 0.01);
-	}
-	.more-card-content {
-		padding: 3rem 2rem;
+	.archive-header {
 		display: flex;
-		flex-direction: column;
-		height: 100%;
-		width: 100%;
-		box-sizing: border-box;
-	}
-	.more-card-inner {
-		display: flex;
-		flex-direction: column;
 		justify-content: space-between;
-		height: 100%;
-		flex: 1;
-		gap: 2rem;
+		align-items: flex-end;
+		gap: 1rem;
+		padding-bottom: 1.2rem;
+		border-bottom: 1px solid var(--line);
+		margin-bottom: 1.5rem;
 	}
-	.more-card-num {
-		font-family: var(--font-mono);
-		font-size: 11px;
-		color: var(--text-faint);
-		letter-spacing: 0.15em;
+
+	.archive-title {
+		margin: 0.5rem 0 0;
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: clamp(1.8rem, 3vw, 2.6rem);
+		line-height: 1;
+		letter-spacing: -0.02em;
+		color: var(--text);
 	}
-	.more-card-icon-container {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		margin: auto 0;
-	}
-	.icon-circle {
-		width: 64px;
-		height: 64px;
-		border-radius: 50%;
-		border: 1px solid var(--line);
-		background: var(--ink);
+	.archive-title em {
+		font-style: italic;
 		color: var(--acid);
-		display: flex;
+	}
+
+	.archive-hint {
+		display: inline-flex;
 		align-items: center;
-		justify-content: center;
-		transition: transform 0.6s var(--ease-out-expo), border-color 0.4s, background-color 0.4s, color 0.4s;
+		gap: 0.5rem;
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		color: var(--text-faint);
+		animation: hint-nudge 2.4s ease-in-out infinite;
 	}
-	.more-project-card:hover .icon-circle {
-		transform: rotate(90deg) scale(1.1);
-		border-color: var(--acid);
-		background: var(--acid);
-		color: var(--ink);
+	@keyframes hint-nudge {
+		0%, 100% { transform: translateX(0); }
+		50% { transform: translateX(6px); }
 	}
-	.more-card-text {
+
+	.archive-scroller {
+		display: flex;
+		gap: 1.25rem;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		padding: 0.25rem 0.25rem 1.25rem;
+		cursor: grab;
+		scrollbar-width: none;
+		mask-image: linear-gradient(to right, black 94%, transparent 100%);
+		-webkit-mask-image: linear-gradient(to right, black 94%, transparent 100%);
+	}
+	.archive-scroller::-webkit-scrollbar { display: none; }
+	.archive-scroller {
+		user-select: none;
+		-webkit-user-select: none;
+	}
+	.archive-scroller :global(img) {
+		-webkit-user-drag: none;
+		user-select: none;
+	}
+	.archive-scroller.dragging {
+		cursor: grabbing;
+		scroll-snap-type: none;
+	}
+	.archive-scroller:focus-visible {
+		outline: 1px solid var(--acid);
+		outline-offset: 4px;
+	}
+
+	.archive-card {
+		position: relative;
+		flex: 0 0 min(380px, 82vw);
+		scroll-snap-align: start;
+		background: var(--ink-2);
+		border: 1px solid var(--line);
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		transition: border-color 0.4s, transform 0.4s var(--ease-out-expo), box-shadow 0.4s;
+	}
+	.archive-card:hover {
+		border-color: var(--line-strong);
+		transform: translateY(-4px);
+		box-shadow: 0 0 0 1px var(--acid-soft), 0 24px 48px -28px rgba(200, 255, 0, 0.18);
+	}
+	.archive-card .card-image {
+		aspect-ratio: 16 / 10;
+	}
+	/* En el carrusel las cards no llevan numerito flotante sobre la imagen */
+	.archive-card::before { display: none; }
+
+	.archive-body {
+		padding: 1.1rem 1.2rem 1.2rem;
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
 	}
-	.more-card-title {
+
+	.archive-meta {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.archive-num {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.15em;
+		color: var(--text-faint);
+	}
+
+	.archive-name {
 		margin: 0;
 		font-family: var(--font-display);
-		font-size: 1.8rem;
 		font-weight: 400;
+		font-size: 1.45rem;
+		line-height: 1;
+		letter-spacing: -0.02em;
 		color: var(--text);
-		line-height: 1.1;
-	}
-	.more-card-desc {
-		margin: 0;
-		font-size: 0.88rem;
-		line-height: 1.6;
-		color: var(--text-dim);
-	}
-	.more-card-badge {
-		align-self: flex-start;
-		font-family: var(--font-mono);
-		font-size: 9.5px;
-		letter-spacing: 0.1em;
-		color: var(--acid);
-		border: 1px solid var(--acid-soft);
-		background: var(--acid-soft);
-		padding: 0.35rem 0.75rem;
-		border-radius: 999px;
-		text-transform: uppercase;
-		font-weight: 500;
 	}
 
-	/* Footer action buttons */
-	.projects-actions-footer {
+	.archive-actions {
 		display: flex;
-		justify-content: center;
-		width: 100%;
-		margin-top: 3rem;
+		gap: 1rem;
+		padding-top: 0.6rem;
+		border-top: 1px solid var(--line);
+		margin-top: 0.3rem;
 	}
-	
-	.less-btn {
-		display: none;
-		align-items: center;
-		justify-content: center;
-		gap: 0.5rem;
-		width: fit-content;
-		padding: 1rem 2.5rem;
-		background: transparent;
-		border: 1px solid var(--line);
-		border-radius: 999px;
-		color: var(--text-dim);
+
+	.archive-link {
 		font-family: var(--font-mono);
-		font-size: 12px;
+		font-size: 10.5px;
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
-		cursor: pointer;
-		transition: color 0.3s, border-color 0.3s, background 0.3s;
+		color: var(--text-dim);
+		transition: color 0.3s;
 	}
-	.less-btn:hover {
-		color: var(--text);
-		border-color: var(--line-strong);
-		background: rgba(255, 255, 255, 0.03);
+	.archive-link:hover { color: var(--acid); }
+	.archive-link-live { color: var(--acid); }
+	.archive-link-live:hover { color: var(--text); }
+
+	@media (prefers-reduced-motion: reduce) {
+		.archive-hint { animation: none; }
+	}
+
+	@media (max-width: 1100px) {
+		.projects-grid { grid-template-columns: 1fr 1fr; }
+		.b-featured, .b-flip { grid-column: span 2; }
+		.b-3 { grid-column: span 1; }
+		.b-featured, .b-flip { flex-direction: column; }
+		.b-featured .card-image, .b-flip .card-image {
+			aspect-ratio: 16 / 9;
+			min-height: 0;
+			border-right: none;
+			border-left: none;
+			border-bottom: 1px solid var(--line);
+		}
 	}
 
 	@media (max-width: 900px) {
 		.projects-header { grid-template-columns: 1fr; gap: 1.5rem; }
-		.projects-grid { grid-template-columns: 1fr; }
-		.more-project-card { min-height: 360px; }
 		.project-card::before, .featured-badge {
-			top: 3.2rem; /* Keep it below browser bar on mobile too */
+			top: 3.2rem; /* Mantenerlo bajo la barra del mockup también en móvil */
 		}
+	}
+
+	@media (max-width: 640px) {
+		.projects-grid { grid-template-columns: 1fr; }
+		.b-featured, .b-flip, .b-3 { grid-column: span 1; }
 	}
 </style>
 
 <script>
-	// Auto-play video on hover
-	document.querySelectorAll(".project-card").forEach((card) => {
+	// Auto-play video al hacer hover (bento y carrusel)
+	document.querySelectorAll(".project-card, .archive-card").forEach((card) => {
 		const video = card.querySelector(".project-video") as HTMLVideoElement | null;
 		if (!video) return;
 		card.addEventListener("mouseenter", () => {
@@ -717,23 +841,69 @@ const hidden = rest.slice(visibleCount);
 		});
 	});
 
-	// Toggle project grid expansion
-	const projectsGrid = document.getElementById("projects-grid");
-	const moreCard = document.getElementById("more-project-card");
-	const lessBtn = document.getElementById("less-btn");
+	// Carrusel del archivo: drag-to-scroll con el ratón (en táctil el scroll nativo ya funciona)
+	const scroller = document.getElementById("archive-scroller");
+	if (scroller) {
+		let isDown = false;
+		let startX = 0;
+		let startScroll = 0;
+		let moved = false;
 
-	if (projectsGrid && moreCard && lessBtn) {
-		moreCard.addEventListener("click", () => {
-			projectsGrid.classList.add("expanded");
-			lessBtn.style.display = "flex";
+		scroller.addEventListener("pointerdown", (e) => {
+			if (e.pointerType !== "mouse") return;
+			e.preventDefault(); // evita que el drag nativo de las imágenes secuestre el gesto
+			isDown = true;
+			moved = false;
+			startX = e.clientX;
+			startScroll = scroller.scrollLeft;
+			scroller.setPointerCapture(e.pointerId);
+			scroller.classList.add("dragging");
 		});
+		scroller.addEventListener("pointermove", (e) => {
+			if (!isDown) return;
+			const dx = e.clientX - startX;
+			if (Math.abs(dx) > 4) moved = true;
+			scroller.scrollLeft = startScroll - dx;
+		});
+		scroller.addEventListener("pointerup", (e) => {
+			if (!isDown) return;
+			isDown = false;
+			scroller.releasePointerCapture(e.pointerId);
+			scroller.classList.remove("dragging");
+		});
+		scroller.addEventListener("pointercancel", () => {
+			isDown = false;
+			scroller.classList.remove("dragging");
+		});
+		// Evita que un drag dispare el click de los enlaces
+		scroller.addEventListener("click", (e) => {
+			if (moved) {
+				e.preventDefault();
+				e.stopPropagation();
+				moved = false;
+			}
+		}, true);
+	}
 
-		lessBtn.addEventListener("click", () => {
-			projectsGrid.classList.remove("expanded");
-			lessBtn.style.display = "none";
-			
-			// Smooth scroll back to top of projects section to maintain focus
-			document.getElementById("proyectos")?.scrollIntoView({ behavior: "smooth" });
-		});
+	// Reveal escalonado al entrar en viewport
+	const grid = document.getElementById("projects-grid");
+	if (grid && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+		grid.classList.add("js");
+		const cards = [...grid.querySelectorAll(".project-card")];
+		const io = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (!entry.isIntersecting) return;
+					const el = entry.target as HTMLElement;
+					// Delay escalonado dentro del lote visible
+					const visibleIdx = cards.indexOf(el) % 4;
+					el.style.setProperty("--d", `${visibleIdx * 0.08}s`);
+					el.classList.add("in-view");
+					io.unobserve(el);
+				});
+			},
+			{ rootMargin: "0px 0px -8% 0px", threshold: 0.1 }
+		);
+		cards.forEach((c) => io.observe(c));
 	}
 </script>

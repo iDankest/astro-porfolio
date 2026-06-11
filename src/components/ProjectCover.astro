@@ -6,10 +6,21 @@ interface Props {
 	tag: string;
 	tagline: string;
 	cover: ImageMetadata;
+	coverAlt?: string;
 	index: string;
+	kind?: 'web' | 'app';
+	url?: string;
+	github?: string;
 }
 
-const { name, tag, tagline, cover, index } = Astro.props;
+const { name, tag, tagline, cover, coverAlt, index, kind = 'web', url, github } = Astro.props;
+
+// Dirección real que se muestra en la barra del mockup (solo para webs).
+const address = url
+	? new URL(url).hostname
+	: github
+		? github.replace(/^https?:\/\//, '')
+		: name.toLowerCase().replace(/\s+/g, '-');
 
 // Genera una versión minúscula y muy comprimida que sirve como LQIP (low-quality image placeholder).
 const lqip = await getImage({
@@ -28,20 +39,27 @@ const lqip = await getImage({
 				<span class="dot dot-yellow"></span>
 				<span class="dot dot-green"></span>
 			</div>
-			<div class="browser-address">
-				<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="lock-icon" aria-hidden="true">
-					<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-					<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-				</svg>
-				<span>{name.toLowerCase().replace(/\s+/g, '-')}.idankest.dev</span>
-			</div>
+			{kind === 'app' ? (
+				<div class="app-titlebar">
+					<span>{name}</span>
+					<span class="app-badge">macOS</span>
+				</div>
+			) : (
+				<div class="browser-address">
+					<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="lock-icon" aria-hidden="true">
+						<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+						<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+					</svg>
+					<span>{address}</span>
+				</div>
+			)}
 			<div class="browser-action-placeholder"></div>
 		</div>
-		
+
 		<div class="browser-viewport">
 			<Image
 				src={cover}
-				alt={name}
+				alt={coverAlt ?? name}
 				widths={[480, 800, 1200]}
 				sizes="(max-width: 900px) 100vw, 50vw"
 				quality={70}
@@ -136,6 +154,29 @@ const lqip = await getImage({
 		color: var(--acid);
 		opacity: 0.85;
 		flex-shrink: 0;
+	}
+
+	/* Barra de título para apps nativas (sin dirección ni candado) */
+	.app-titlebar {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.6rem;
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.08em;
+		color: var(--text-dim);
+	}
+
+	.app-badge {
+		font-size: 8.5px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--acid);
+		border: 1px solid var(--acid-soft);
+		background: var(--acid-soft);
+		border-radius: 999px;
+		padding: 0.15rem 0.5rem;
 	}
 
 	.browser-viewport {
