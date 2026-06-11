@@ -1,13 +1,31 @@
+/**
+ * Mapeo de tecnologías a iconos Iconify.
+ * - devicon: iconos con colores de marca originales
+ * - simple-icons: fallback para techs que no existen en devicon
+ */
 export const techs = {
-    html: {name: "HTML", img: "/assets/brand-html5.svg"},
-    css: {name: "CSS", img: "/assets/brand-css3.svg"},
-    js: {name: "JavaScript", img: "/assets/brand-javascript.svg"},
-    vue: {name: "Vue", img: "./assets/vuejs-brands-solid.svg"},
-    git: {name: "Git", img: "/assets/brand-git.svg"},
-    php: {name: "PHP", img: "/assets/brand-php.svg"},
-    symfony: {name: "Symfony", img: "/assets/brand-symfony.svg"},
-    tailwind: {name: "Tailwind", img: "/assets/brand-tailwind.svg"},
-    mysql: {name: "MySQL", img: "/assets/brand-mysql.svg"},
-    codeShow: {name: "Ver código", img: "/assets/code.svg"}
-}
-    
+    html: { name: "HTML", icon: "devicon:html5" },
+    css: { name: "CSS", icon: "devicon:css3" },
+    js: { name: "JavaScript", icon: "devicon:javascript" },
+    ts: { name: "TypeScript", icon: "devicon:typescript" },
+    vue: { name: "Vue", icon: "devicon:vuejs" },
+    react: { name: "React", icon: "devicon:react" },
+    nuxt: { name: "Nuxt", icon: "devicon:nuxtjs" },
+    node: { name: "Node.js", icon: "devicon:nodejs" },
+    express: { name: "Express", icon: "devicon:express" },
+    php: { name: "PHP", icon: "devicon:php" },
+    symfony: { name: "Symfony", icon: "devicon:symfony" },
+    tailwind: { name: "Tailwind", icon: "devicon:tailwindcss" },
+    mysql: { name: "MySQL", icon: "devicon:mysql" },
+    postgresql: { name: "PostgreSQL", icon: "devicon:postgresql" },
+    prisma: { name: "Prisma", icon: "devicon:prisma" },
+    phaser: { name: "Phaser", icon: null },
+    vite: { name: "Vite", icon: "devicon:vite" },
+    jest: { name: "Jest", icon: "simple-icons:jest" },
+    framer: { name: "Framer Motion", icon: "simple-icons:framer" },
+    gemini: { name: "Gemini AI", icon: "simple-icons:googlegemini" },
+    git: { name: "Git", icon: "devicon:git" },
+    github: { name: "GitHub", icon: "devicon:github" },
+    astro: { name: "Astro", icon: "devicon:astro" },
+    axios: { name: "Axios", icon: "simple-icons:axios" },
+};
