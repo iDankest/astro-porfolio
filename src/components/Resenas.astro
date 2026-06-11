@@ -9,7 +9,7 @@ const rest = sorted.slice(1);
 
 <section class="resenas" id="resenas">
   <div class="resenas-header">
-    <span class="eyebrow">Testimonios · 06 / 10</span>
+    <span class="eyebrow">Testimonios · 06 / 08</span>
     <h2 class="resenas-title">
       <span>Lo que dicen</span>
       <em>de mí</em>
@@ -20,8 +20,7 @@ const rest = sorted.slice(1);
 
   <div class="resenas-grid" role="list">
     <!-- Reseña destacada (la más larga) -->
-    <article class="review-card review-featured" itemscope itemtype="https://schema.org/Review" role="listitem">
-      <meta itemprop="datePublished" content={featured.date} />
+    <article class="review-card review-featured" role="listitem">
       <div class="review-meta">
         <div class="review-avatar-wrap">
           <img
@@ -40,17 +39,14 @@ const rest = sorted.slice(1);
             target="_blank"
             rel="noopener noreferrer"
             class="review-author-link"
-            itemprop="author"
-            itemscope
-            itemtype="https://schema.org/Person"
           >
-            <span class="review-author" itemprop="name">{featured.author}</span>
+            <span class="review-author">{featured.author}</span>
           </a>
           <span class="review-role">{featured.role}</span>
           <span class="review-relationship">{featured.relationship}</span>
         </div>
       </div>
-      <blockquote class="review-text" itemprop="reviewBody">
+      <blockquote class="review-text">
         {featured.text.split('\n').map((p) => (
           <p>{p}</p>
         ))}
@@ -62,8 +58,7 @@ const rest = sorted.slice(1);
 
     <!-- Resto de reseñas -->
     {rest.map((review, index) => (
-      <article class="review-card" itemscope itemtype="https://schema.org/Review" role="listitem">
-        <meta itemprop="datePublished" content={review.date} />
+      <article class="review-card" role="listitem">
         <div class="review-meta">
           <div class="review-avatar-wrap">
             <img
@@ -82,17 +77,14 @@ const rest = sorted.slice(1);
               target="_blank"
               rel="noopener noreferrer"
               class="review-author-link"
-              itemprop="author"
-              itemscope
-              itemtype="https://schema.org/Person"
             >
-              <span class="review-author" itemprop="name">{review.author}</span>
+              <span class="review-author">{review.author}</span>
             </a>
             <span class="review-role">{review.role}</span>
             <span class="review-relationship">{review.relationship}</span>
           </div>
         </div>
-        <blockquote class="review-text" itemprop="reviewBody">
+        <blockquote class="review-text">
           {review.text.split('\n').map((p) => (
             <p>{p}</p>
           ))}

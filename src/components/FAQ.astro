@@ -1,36 +1,48 @@
 ---
 const faqs = [
-	{ 
-		q: "¿Frontend, backend o full-stack?", 
-		a: "Me defiendo en todas las capas, pero donde más disfruto es en el frontend. También tengo experiencia montando APIs REST con Node/Express, PHP/Symfony y persistencia con Prisma + PostgreSQL." 
+	{
+		q: "¿Frontend, backend o full-stack?",
+		a: "Full-stack con el corazón en el front. Puedo montar una API REST con Node/Express o Symfony, modelar datos con Prisma y PostgreSQL, y defenderme en toda la capa de servidor — pero donde realmente marco la diferencia es en la interfaz: tipografía, movimiento, jerarquía y esos detalles que hacen que un producto se sienta bien. Si un proyecto no tiene front… me lo pensaría dos veces."
 	},
-	{ 
-		q: "¿Cuál es tu stack preferido?", 
-		a: "Vue 3 con Composition API para desarrollo ágil, React cuando el proyecto lo requiere, Tailwind CSS para un estilado eficiente, y Node/Express o Symfony para el backend. Como base de datos suelo elegir PostgreSQL." 
+	{
+		q: "¿Cuál es tu stack preferido?",
+		a: "Vue 3 con Composition API es mi primera opción: es donde más cómodo y productivo me siento. Lo acompaño con Tailwind CSS para estilar rápido sin perder consistencia, Node/Express en el backend y PostgreSQL como base de datos. Y últimamente Astro para sitios donde el rendimiento manda — este portfolio está hecho con él."
 	},
-	{ 
-		q: "¿Vue o React? ¿Por cuál te decides?", 
-		a: "Vue me parece más limpio y rápido para prototipar. React cuenta con un ecosistema más amplio y robusto. Para proyectos rápidos prefiero Vue; para aplicaciones complejas con mucho estado, me decanto por React." 
+	{
+		q: "¿Vue o React? ¿Por cuál te decides?",
+		a: "Vue, sin dudarlo mucho. Me resulta más limpio, más predecible, y el código que escribo con Vue me queda mejor. Lo que le reconozco a React es su ecosistema: al ser más popular tiene una librería para todo, y por eso lo uso cuando el proyecto lo pide — Orbix y PrismaCrawler están hechos con React y no me tiembla el pulso. Pero si la decisión es mía, es Vue."
 	},
-	{ 
-		q: "¿Cuál ha sido tu mayor proyecto hasta la fecha?", 
-		a: "PrismaCrawler: un roguelike full-stack desarrollado con Phaser, Node/Express, Prisma, PostgreSQL, autenticación JWT y tabla de clasificación. Unas 16,000 líneas de código implementadas en una semana." 
+	{
+		q: "¿Cuál ha sido tu mayor proyecto hasta la fecha?",
+		a: "Como proyecto académico, PrismaCrawler: un roguelike full-stack con Phaser, Node/Express, Prisma y PostgreSQL — auth con JWT, leaderboard y unas 16.000 líneas en una semana. Y ahora mismo estoy construyendo dos productos propios: Reelify, una grabadora y editor de pantalla nativa para macOS en Swift y Rust, y VoicePrompt, una app de dictado por voz para trabajar con IA. Me gusta hacer producto, no solo ejercicios."
 	},
-	{ 
-		q: "¿Cuál ha sido tu mayor error y qué aprendiste de él?", 
-		a: "Al principio no separaba adecuadamente las responsabilidades. Aprendí a estructurar el código utilizando arquitectura de capas (Controller-Service en backend y composables/custom hooks en frontend) y a realizar commits pequeños y descriptivos." 
+	{
+		q: "¿Cuál ha sido tu mayor error y qué aprendiste de él?",
+		a: "Al principio lo metía todo junto: lógica, vista y datos en el mismo sitio. Aprendí por las malas a separar responsabilidades — arquitectura por capas en el backend (Controller-Service), composables y custom hooks en el front — y a hacer commits pequeños y descriptivos. Hoy estructurar bien un proyecto desde el día uno es de las cosas que más valoro."
 	},
-	{ 
-		q: "¿Qué disponibilidad y modalidad de trabajo buscas?", 
-		a: "Disponibilidad inmediata para trabajar de forma 100% remota o híbrida en Canarias. Estoy abierto a contratos indefinidos, proyectos freelance a mediano plazo o colaboraciones interesantes." 
+	{
+		q: "¿Qué disponibilidad y modalidad de trabajo buscas?",
+		a: "Disponibilidad inmediata, 100% remoto o híbrido en Canarias. Abierto a contrato indefinido, proyectos freelance a medio plazo o colaboraciones interesantes — lo importante es un equipo donde el front-end se tome en serio."
 	}
 ];
+
+const faqJsonLd = JSON.stringify({
+	"@context": "https://schema.org",
+	"@type": "FAQPage",
+	mainEntity: faqs.map((f) => ({
+		"@type": "Question",
+		name: f.q,
+		acceptedAnswer: { "@type": "Answer", text: f.a },
+	})),
+});
 ---
+
+<script type="application/ld+json" set:html={faqJsonLd}></script>
 
 <section class="faq" id="faq">
 	<div class="faq-header">
 		<div class="header-left">
-			<span class="eyebrow">Q &amp; A · 06 / 06</span>
+			<span class="eyebrow">Q &amp; A · 07 / 08</span>
 			<h2 class="faq-title">
 				<span>Preguntas</span>
 				<em>frecuentes</em>
