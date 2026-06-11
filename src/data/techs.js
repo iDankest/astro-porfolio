@@ -28,4 +28,8 @@ export const techs = {
     github: { name: "GitHub", icon: "devicon:github" },
     astro: { name: "Astro", icon: "devicon:astro" },
     axios: { name: "Axios", icon: "simple-icons:axios" },
+    swift: { name: "Swift", icon: "devicon:swift" },
+    rust: { name: "Rust", icon: "devicon:rust" },
+    python: { name: "Python", icon: "devicon:python" },
+    docker: { name: "Docker", icon: "devicon:docker" },
 };
