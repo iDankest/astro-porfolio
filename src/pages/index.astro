@@ -1,44 +1,29 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
 import SobreMi from '../components/SobreMi.astro';
-import '../styles/global.css';
+import Stack from '../components/Stack.astro';
+import Snake from '../components/Snake.astro';
 import CardProyect from '../components/CardProyect.astro';
 import Exp from '../components/Exp.astro';
 import Certificados from '../components/Certificados.astro';
-import QR from '../components/QR.astro';
-import Menu from '../components/Menu.astro';
-import { projects } from '../data/proyects';
+import Resenas from '../components/Resenas.astro';
+import FAQ from '../components/FAQ.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
 ---
 
 <Layout>
-	<SobreMi /><h2 class="text-2xl text-center mt-10 font-bold">Contribuciones</h2>
-  <div class=" flex cosas p-2 bg-[#393d41] mt-4 my-4 rounded w-[50vw] justify-center items-center">
-    
-    <img  class="cosas" src="https://raw.githubusercontent.com/iDankest/iDankest/main/img/snake_dark.svg#gh-dark-mode-only)" alt="">
-  </div>
-    <CardProyect projects={projects} />
-    <Exp />
-    <Certificados />
-    <QR />
-    <Menu />
+	<Nav />
+	<SobreMi />
+	<Stack />
+	<Snake />
+	<CardProyect />
+	<Exp />
+	<Certificados />
+	<Resenas />
+	<FAQ />
+	<Contact />
+	<Footer />
 </Layout>
-
-<style is:global>
-body {
---tw-bg-opacity: 1;
-  background-color: rgb(44 45 48/var(--tw-bg-opacity));
-}
-@media (max-width: 639px) { 
-        .cosas {
-            flex-direction: column;
-            align-items: stretch;
-            width:  95vw; 
-        }
-        
-    }
-    html {
-  scroll-behavior: smooth;
-}
-</style>
-
-
