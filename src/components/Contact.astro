@@ -1,0 +1,749 @@
+---
+const channels = [
+	{
+		label: "Email",
+		value: "kilijes@gmail.com",
+		href: "mailto:kilijes@gmail.com",
+		hint: "Respuesta en < 24h"
+	},
+	{
+		label: "GitHub",
+		value: "@idankest",
+		href: "https://github.com/idankest",
+		hint: "Open source & side projects"
+	},
+	{
+		label: "LinkedIn",
+		value: "in/dankest",
+		href: "https://www.linkedin.com/in/dankest/",
+		hint: "Conectemos profesionalmente"
+	},
+];
+---
+
+<section class="contact" id="contacto">
+	<div class="contact-wrap">
+		<div class="contact-left">
+			<span class="eyebrow">Contacto · 08 / 10</span>
+			<h2 class="contact-title">
+				<span>¿Construimos</span>
+				<em>algo juntos?</em>
+			</h2>
+			<p class="contact-lead">
+				Disponible para <em>freelance</em>, colaboraciones o un puesto
+				en un equipo donde el front-end se toma en serio. Escríbeme —
+				le respondo a todo.
+			</p>
+		</div>
+
+		<div class="contact-right">
+			<div class="channels">
+				{channels.map((c, i) => (
+					<a href={c.href} target={c.href.startsWith("http") ? "_blank" : undefined} rel="noopener" class="channel" style={`--i:${i}`}>
+						<div class="channel-left">
+							<span class="channel-num">0{i + 1}</span>
+							<div>
+								<span class="channel-label">{c.label}</span>
+								<span class="channel-value">{c.value}</span>
+							</div>
+						</div>
+						<div class="channel-right">
+							<span class="channel-hint">{c.hint}</span>
+							<svg class="channel-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+						</div>
+					</a>
+				))}
+			</div>
+
+			<div class="form-card" data-state="idle" id="form-card">
+				<button type="button" class="form-toggle" id="form-toggle" aria-expanded="false" aria-controls="form-collapsible">
+					<span class="toggle-left">
+						<span class="toggle-eyebrow" data-state="closed">Formulario</span>
+						<span class="toggle-eyebrow" data-state="open">Cerrar</span>
+						<span class="toggle-text" data-state="closed">O escríbeme un mensaje</span>
+						<span class="toggle-text" data-state="open">Cerrar formulario</span>
+					</span>
+					<span class="toggle-icon" aria-hidden="true">
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path class="icon-down" d="M6 9l6 6 6-6"/>
+						</svg>
+					</span>
+				</button>
+
+				<div class="collapsible" id="form-collapsible" aria-hidden="true">
+					<div class="collapsible-inner">
+						<form class="contact-form" id="contact-form" novalidate>
+							<div class="form-row form-row-2">
+								<div class="field">
+									<label for="cf-name">Nombre</label>
+									<input type="text" id="cf-name" name="name" required minlength="2" maxlength="80" autocomplete="name" />
+								</div>
+								<div class="field">
+									<label for="cf-email">Email</label>
+									<input type="email" id="cf-email" name="email" required maxlength="120" autocomplete="email" />
+								</div>
+							</div>
+
+							<div class="field">
+								<label for="cf-subject">Asunto <span class="optional">(opcional)</span></label>
+								<input type="text" id="cf-subject" name="subject" maxlength="120" />
+							</div>
+
+							<div class="field">
+								<label for="cf-message">Mensaje</label>
+								<textarea id="cf-message" name="message" rows="5" required minlength="10" maxlength="5000" placeholder="Cuéntame en qué puedo ayudarte…"></textarea>
+							</div>
+
+							<input type="text" name="website" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+							<div class="form-actions">
+								<button type="submit" class="submit-btn">
+									<span class="btn-label">Enviar mensaje</span>
+									<span class="btn-icon" aria-hidden="true">
+										<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+											<path d="M5 12h14M13 6l6 6-6 6"/>
+										</svg>
+									</span>
+								</button>
+								<p class="form-status" role="status" aria-live="polite"></p>
+							</div>
+						</form>
+
+						<div class="success-state" id="success-state" hidden>
+							<div class="success-icon" aria-hidden="true">
+								<svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+									<circle class="check-circle" cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2"/>
+									<path class="check-mark" d="M20 33 L29 42 L46 24" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+								</svg>
+							</div>
+							<h3 class="success-title">¡Mensaje enviado!</h3>
+							<p class="success-msg">Gracias por contactar. <strong>Me pondré en contacto a la mayor brevedad posible.</strong></p>
+							<button type="button" class="reset-btn" id="reset-btn">
+								<span>Enviar otro mensaje</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+	const card = document.getElementById('form-card');
+	const toggle = document.getElementById('form-toggle');
+	const collapsible = document.getElementById('form-collapsible');
+	const form = document.getElementById('contact-form');
+	const success = document.getElementById('success-state');
+	const resetBtn = document.getElementById('reset-btn');
+
+	const openForm = () => {
+		if (!card || !toggle || !collapsible) return;
+		card.dataset.state = 'open';
+		toggle.setAttribute('aria-expanded', 'true');
+		collapsible.setAttribute('aria-hidden', 'false');
+	};
+
+	const closeForm = () => {
+		if (!card || !toggle || !collapsible) return;
+		card.dataset.state = card.dataset.state === 'sent' ? 'sent' : 'idle';
+		toggle.setAttribute('aria-expanded', 'false');
+		collapsible.setAttribute('aria-hidden', 'true');
+	};
+
+	const showSuccess = () => {
+		if (!card || !form || !success) return;
+		card.dataset.state = 'sent';
+		form.hidden = true;
+		success.hidden = false;
+		const status = form.querySelector('.form-status');
+		if (status) {
+			status.textContent = '';
+			status.className = 'form-status';
+		}
+	};
+
+	const showForm = () => {
+		if (!card || !form || !success) return;
+		card.dataset.state = 'open';
+		form.hidden = false;
+		success.hidden = true;
+		form.reset();
+		const first = form.querySelector('input, textarea');
+		if (first) setTimeout(() => first.focus(), 350);
+	};
+
+	toggle?.addEventListener('click', () => {
+		const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+		if (isOpen) closeForm();
+		else openForm();
+	});
+
+	resetBtn?.addEventListener('click', () => {
+		showForm();
+	});
+
+	form?.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		const status = form.querySelector('.form-status');
+		const submit = form.querySelector('.submit-btn');
+		if (!status || !submit) return;
+
+		status.textContent = '';
+		status.className = 'form-status';
+
+		const data = {
+			name: form.elements.namedItem('name')?.value.trim() ?? '',
+			email: form.elements.namedItem('email')?.value.trim() ?? '',
+			subject: form.elements.namedItem('subject')?.value.trim() ?? '',
+			message: form.elements.namedItem('message')?.value.trim() ?? '',
+			website: form.elements.namedItem('website')?.value.trim() ?? '',
+		};
+
+		submit.disabled = true;
+		submit.classList.add('loading');
+
+		try {
+			const res = await fetch('/api/contact', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(data),
+			});
+			const json = await res.json().catch(() => ({}));
+
+			if (res.ok && json.ok) {
+				showSuccess();
+			} else {
+				status.textContent = json.error || 'Error al enviar el mensaje.';
+				status.className = 'form-status error';
+			}
+		} catch {
+			status.textContent = 'Error de red. Inténtalo de nuevo.';
+			status.className = 'form-status error';
+		} finally {
+			submit.disabled = false;
+			submit.classList.remove('loading');
+		}
+	});
+</script>
+
+<style>
+	.contact {
+		width: min(1280px, 100% - 3rem);
+		padding: 8rem 0 5rem;
+		position: relative;
+		z-index: 5;
+	}
+
+	.contact-wrap {
+		display: grid;
+		grid-template-columns: 1fr 1.2fr;
+		gap: 4rem;
+		padding-top: 4rem;
+		border-top: 1px solid var(--line);
+	}
+
+	.contact-left {
+		display: flex;
+		flex-direction: column;
+		gap: 1.4rem;
+	}
+
+	.contact-title {
+		margin: 0.5rem 0 0;
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: clamp(2.8rem, 6vw, 5rem);
+		line-height: 0.9;
+		letter-spacing: -0.03em;
+		color: var(--text);
+	}
+
+	.contact-title span { display: block; }
+	.contact-title em {
+		font-style: italic;
+		color: var(--acid);
+		display: block;
+	}
+
+	.contact-lead {
+		font-size: 1rem;
+		line-height: 1.7;
+		color: var(--text-dim);
+		max-width: 38ch;
+		margin: 0;
+	}
+
+	.contact-lead em { font-style: italic; color: var(--text); }
+
+	.contact-right {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	/* ============== CHANNELS ============== */
+	.channels {
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+	}
+
+	.channel {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1.5rem;
+		padding: 1.1rem 1.3rem;
+		background: var(--ink-2);
+		border: 1px solid var(--line);
+		color: inherit;
+		text-decoration: none;
+		transition: border-color 0.4s, transform 0.4s var(--ease-out-expo), background 0.3s;
+	}
+
+	.channel:hover {
+		border-color: var(--acid);
+		background: var(--ink-3);
+		transform: translateX(6px);
+	}
+
+	.channel-left {
+		display: flex;
+		align-items: center;
+		gap: 1.2rem;
+	}
+
+	.channel-num {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.15em;
+		color: var(--text-faint);
+	}
+
+	.channel:hover .channel-num { color: var(--acid); }
+
+	.channel-label {
+		display: block;
+		font-family: var(--font-sans);
+		font-size: 0.7rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--text-dim);
+		margin-bottom: 0.2rem;
+	}
+
+	.channel-value {
+		display: block;
+		font-family: var(--font-display);
+		font-style: italic;
+		font-size: 1.15rem;
+		letter-spacing: -0.01em;
+		color: var(--text);
+	}
+
+	.channel-right {
+		display: flex;
+		align-items: center;
+		gap: 0.8rem;
+	}
+
+	.channel-hint {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.1em;
+		color: var(--text-faint);
+	}
+
+	.channel-arrow {
+		stroke: var(--text);
+		transition: transform 0.4s var(--ease-out-expo), stroke 0.3s;
+	}
+
+	.channel:hover .channel-arrow {
+		transform: translateX(4px);
+		stroke: var(--acid);
+	}
+
+	/* ============== FORM CARD (collapsible) ============== */
+	.form-card {
+		background: var(--ink-2);
+		border: 1px solid var(--line);
+		transition: border-color 0.4s, background 0.3s;
+	}
+
+	.form-card[data-state="open"],
+	.form-card[data-state="sent"] {
+		border-color: var(--line-strong);
+	}
+
+	.form-card[data-state="sent"] {
+		border-color: var(--acid);
+	}
+
+	.form-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		width: 100%;
+		padding: 1.3rem 1.5rem;
+		background: transparent;
+		border: none;
+		color: var(--text);
+		text-align: left;
+		cursor: pointer;
+		font-family: inherit;
+		transition: background 0.3s;
+	}
+
+	.form-toggle:hover { background: var(--ink-3); }
+	.form-card[data-state="sent"] .form-toggle { cursor: default; }
+	.form-card[data-state="sent"] .form-toggle:hover { background: transparent; }
+
+	.toggle-left {
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+	}
+
+	.toggle-eyebrow {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: var(--text-faint);
+	}
+
+	.toggle-eyebrow[data-state="closed"],
+	.toggle-text[data-state="closed"] { display: block; }
+	.toggle-eyebrow[data-state="open"],
+	.toggle-text[data-state="open"] { display: none; }
+
+	.form-card[data-state="open"] .toggle-eyebrow[data-state="closed"],
+	.form-card[data-state="open"] .toggle-text[data-state="closed"] { display: none; }
+	.form-card[data-state="open"] .toggle-eyebrow[data-state="open"],
+	.form-card[data-state="open"] .toggle-text[data-state="open"] { display: block; }
+
+	.form-card[data-state="sent"] .toggle-eyebrow[data-state="open"],
+	.form-card[data-state="sent"] .toggle-text[data-state="open"] { display: none; }
+	.form-card[data-state="sent"] .toggle-eyebrow[data-state="closed"],
+	.form-card[data-state="sent"] .toggle-text[data-state="closed"] { display: block; }
+
+	.toggle-text {
+		font-family: var(--font-display);
+		font-style: italic;
+		font-size: 1.3rem;
+		letter-spacing: -0.01em;
+		color: var(--text);
+	}
+
+	.toggle-icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		color: var(--text);
+		transition: transform 0.4s var(--ease-out-expo), border-color 0.3s, color 0.3s;
+	}
+
+	.form-card[data-state="open"] .toggle-icon,
+	.form-card[data-state="sent"] .toggle-icon {
+		transform: rotate(180deg);
+		border-color: var(--acid);
+		color: var(--acid);
+	}
+
+	.collapsible {
+		display: grid;
+		grid-template-rows: 0fr;
+		transition: grid-template-rows 0.5s var(--ease-out-expo);
+	}
+
+	.form-card[data-state="open"] .collapsible,
+	.form-card[data-state="sent"] .collapsible {
+		grid-template-rows: 1fr;
+	}
+
+	.collapsible-inner {
+		overflow: hidden;
+		min-height: 0;
+	}
+
+	.collapsible-inner > * {
+		padding: 0 1.75rem;
+	}
+
+	.collapsible-inner > *:first-child { padding-top: 0.5rem; }
+
+	/* ============== FORM ============== */
+	.contact-form {
+		display: flex;
+		flex-direction: column;
+		gap: 1.35rem;
+		padding-top: 1.5rem;
+		padding-bottom: 2.2rem;
+		border-top: 1px solid var(--line);
+		animation: form-fade-in 0.4s var(--ease-out-expo) 0.2s both;
+	}
+
+	@keyframes form-fade-in {
+		from { opacity: 0; transform: translateY(-4px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+
+	.form-row {
+		display: grid;
+		gap: 1.25rem;
+	}
+
+	.form-row-2 { grid-template-columns: 1fr 1fr; }
+
+	.field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.45rem;
+	}
+
+	.field label {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		color: var(--text-dim);
+	}
+
+	.field .optional {
+		color: var(--text-faint);
+		text-transform: none;
+		letter-spacing: 0.08em;
+		font-size: 9.5px;
+	}
+
+	.field input,
+	.field textarea {
+		font-family: var(--font-sans);
+		font-size: 0.95rem;
+		color: var(--text);
+		background: var(--ink);
+		border: 1px solid var(--line);
+		padding: 0.8rem 1rem;
+		border-radius: 0;
+		transition: border-color 0.3s, background 0.3s;
+		font-weight: 350;
+	}
+
+	.field textarea {
+		resize: vertical;
+		min-height: 120px;
+		line-height: 1.6;
+		font-family: var(--font-sans);
+	}
+
+	.field input::placeholder,
+	.field textarea::placeholder {
+		color: var(--text-faint);
+	}
+
+	.field input:hover,
+	.field textarea:hover {
+		border-color: var(--line-strong);
+	}
+
+	.field input:focus,
+	.field textarea:focus {
+		outline: none;
+		border-color: var(--acid);
+		background: var(--ink-3);
+	}
+
+	.field input:invalid:not(:placeholder-shown),
+	.field textarea:invalid:not(:placeholder-shown) {
+		border-color: rgba(255, 107, 53, 0.5);
+	}
+
+	.honeypot {
+		position: absolute;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.form-actions {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 0.9rem;
+		padding-top: 1.5rem;
+	}
+
+	.submit-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.7rem;
+		padding: 1rem 1.2rem;
+		width: 100%;
+		background: var(--text);
+		color: var(--ink);
+		border: none;
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		font-weight: 500;
+		cursor: pointer;
+		transition: background 0.3s, color 0.3s, box-shadow 0.3s, transform 0.3s;
+		margin-bottom: 1rem;
+	}
+
+	.submit-btn:hover:not(:disabled) {
+		background: var(--acid);
+		box-shadow: 0 0 0 4px var(--acid-soft);
+	}
+
+	.submit-btn:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
+
+	.submit-btn .btn-icon {
+		display: inline-flex;
+		align-items: center;
+		transition: transform 0.4s var(--ease-out-expo);
+	}
+
+	.submit-btn:hover:not(:disabled) .btn-icon {
+		transform: translateX(3px);
+	}
+
+	.submit-btn.loading .btn-label::after {
+		content: "…";
+		display: inline-block;
+		animation: btn-dots 1.2s steps(4) infinite;
+		width: 1ch;
+		text-align: left;
+	}
+
+	@keyframes btn-dots {
+		0%   { content: ""; }
+		25%  { content: "."; }
+		50%  { content: ".."; }
+		75%  { content: "..."; }
+		100% { content: ""; }
+	}
+
+	.form-status {
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		letter-spacing: 0.05em;
+		margin: 0;
+		text-align: center;
+		min-height: 1em;
+	}
+
+	.form-status:empty { display: none; }
+	.form-status.success { color: var(--acid); }
+	.form-status.error { color: var(--ember); }
+
+	/* ============== SUCCESS STATE ============== */
+	.success-state {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		gap: 1rem;
+		padding-top: 1.5rem;
+		padding-bottom: 2.2rem;
+		animation: success-in 0.6s var(--ease-out-expo) both;
+	}
+
+	@keyframes success-in {
+		from { opacity: 0; transform: scale(0.92); }
+		to { opacity: 1; transform: scale(1); }
+	}
+
+	.success-icon {
+		color: var(--acid);
+		width: 64px;
+		height: 64px;
+	}
+
+	.check-circle {
+		transform-origin: 32px 32px;
+		stroke-dasharray: 188.5;
+		stroke-dashoffset: 188.5;
+		animation: draw-circle 0.6s var(--ease-out-expo) 0.1s forwards;
+	}
+
+	.check-mark {
+		stroke-dasharray: 50;
+		stroke-dashoffset: 50;
+		animation: draw-check 0.4s var(--ease-out-expo) 0.55s forwards;
+	}
+
+	@keyframes draw-circle {
+		to { stroke-dashoffset: 0; }
+	}
+
+	@keyframes draw-check {
+		to { stroke-dashoffset: 0; }
+	}
+
+	.success-title {
+		margin: 0;
+		font-family: var(--font-display);
+		font-style: italic;
+		font-weight: 400;
+		font-size: 2rem;
+		letter-spacing: -0.02em;
+		color: var(--text);
+	}
+
+	.success-msg {
+		margin: 0;
+		max-width: 36ch;
+		font-size: 0.95rem;
+		line-height: 1.6;
+		color: var(--text-dim);
+	}
+
+	.success-msg strong { color: var(--text); }
+
+	.reset-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-top: 0.5rem;
+		padding: 0.65rem 1.1rem;
+		background: transparent;
+		border: 1px solid var(--line-strong);
+		color: var(--text-dim);
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		cursor: pointer;
+		transition: border-color 0.3s, color 0.3s;
+	}
+
+	.reset-btn:hover {
+		border-color: var(--acid);
+		color: var(--acid);
+	}
+
+	/* ============== RESPONSIVE ============== */
+	@media (max-width: 900px) {
+		.contact-wrap { grid-template-columns: 1fr; gap: 2.5rem; }
+		.channel { padding: 1rem; }
+		.channel-right { display: none; }
+		.form-row-2 { grid-template-columns: 1fr; }
+		.form-actions { flex-direction: column; align-items: stretch; }
+		.form-status { text-align: left; }
+	}
+</style>
