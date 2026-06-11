@@ -875,6 +875,21 @@ const bentoOf = (i: number) => bentoSizes[i] ?? "b-3";
 			isDown = false;
 			scroller.classList.remove("dragging");
 		});
+
+		// Rueda vertical del ratón → scroll horizontal del carrusel.
+		// En los extremos soltamos el control para que la página siga su scroll vertical normal.
+		// Los trackpads con gesto horizontal (deltaX dominante) usan el scroll nativo.
+		scroller.addEventListener("wheel", (e) => {
+			if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+			const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+			if (maxScroll <= 0) return;
+			const atStart = scroller.scrollLeft <= 0;
+			const atEnd = scroller.scrollLeft >= maxScroll - 1;
+			if ((atStart && e.deltaY < 0) || (atEnd && e.deltaY > 0)) return;
+			e.preventDefault();
+			scroller.scrollLeft += e.deltaY;
+		}, { passive: false });
+
 		// Evita que un drag dispare el click de los enlaces
 		scroller.addEventListener("click", (e) => {
 			if (moved) {

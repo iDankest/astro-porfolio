@@ -144,10 +144,18 @@ const lqip = await getImage({
 		align-items: center;
 		justify-content: center;
 		gap: 6px;
-		padding: 0 1rem;
+		padding: 0 0.85rem;
 		max-width: 260px;
 		margin: 0 auto;
 		width: 100%;
+		overflow: hidden;
+	}
+
+	.browser-address span {
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
 	.lock-icon {
