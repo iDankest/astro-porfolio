@@ -1,0 +1,243 @@
+---
+const faqs = [
+	{ 
+		q: "¿Frontend, backend o full-stack?", 
+		a: "Me defiendo en todas las capas, pero donde más disfruto es en el frontend. También tengo experiencia montando APIs REST con Node/Express, PHP/Symfony y persistencia con Prisma + PostgreSQL." 
+	},
+	{ 
+		q: "¿Cuál es tu stack preferido?", 
+		a: "Vue 3 con Composition API para desarrollo ágil, React cuando el proyecto lo requiere, Tailwind CSS para un estilado eficiente, y Node/Express o Symfony para el backend. Como base de datos suelo elegir PostgreSQL." 
+	},
+	{ 
+		q: "¿Vue o React? ¿Por cuál te decides?", 
+		a: "Vue me parece más limpio y rápido para prototipar. React cuenta con un ecosistema más amplio y robusto. Para proyectos rápidos prefiero Vue; para aplicaciones complejas con mucho estado, me decanto por React." 
+	},
+	{ 
+		q: "¿Cuál ha sido tu mayor proyecto hasta la fecha?", 
+		a: "PrismaCrawler: un roguelike full-stack desarrollado con Phaser, Node/Express, Prisma, PostgreSQL, autenticación JWT y tabla de clasificación. Unas 16,000 líneas de código implementadas en una semana." 
+	},
+	{ 
+		q: "¿Cuál ha sido tu mayor error y qué aprendiste de él?", 
+		a: "Al principio no separaba adecuadamente las responsabilidades. Aprendí a estructurar el código utilizando arquitectura de capas (Controller-Service en backend y composables/custom hooks en frontend) y a realizar commits pequeños y descriptivos." 
+	},
+	{ 
+		q: "¿Qué disponibilidad y modalidad de trabajo buscas?", 
+		a: "Disponibilidad inmediata para trabajar de forma 100% remota o híbrida en Canarias. Estoy abierto a contratos indefinidos, proyectos freelance a mediano plazo o colaboraciones interesantes." 
+	}
+];
+---
+
+<section class="faq" id="faq">
+	<div class="faq-header">
+		<div class="header-left">
+			<span class="eyebrow">Q &amp; A · 06 / 06</span>
+			<h2 class="faq-title">
+				<span>Preguntas</span>
+				<em>frecuentes</em>
+			</h2>
+		</div>
+		<div class="header-right">
+			<p class="faq-intro">
+				Lo que más me preguntan en entrevistas. Si tienes alguna otra,
+				<a href="#contacto">escríbeme</a>.
+			</p>
+		</div>
+	</div>
+
+	<div class="faq-accordion">
+		{faqs.map((item, i) => (
+			<div class="faq-item" data-index={String(i + 1).padStart(2, '0')}>
+				<button class="faq-question-btn" aria-expanded="false" aria-controls={`faq-answer-${i}`}>
+					<span class="faq-num">{String(i + 1).padStart(2, '0')}</span>
+					<span class="faq-q">{item.q}</span>
+					<span class="faq-icon" aria-hidden="true">
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+							<line x1="12" y1="5" x2="12" y2="19"></line>
+							<line x1="5" y1="12" x2="19" y2="12"></line>
+						</svg>
+					</span>
+				</button>
+				<div class="faq-answer-wrapper" id={`faq-answer-${i}`}>
+					<div class="faq-answer-content">
+						<p class="faq-a">{item.a}</p>
+					</div>
+				</div>
+			</div>
+		))}
+	</div>
+</section>
+
+<style>
+	.faq {
+		width: min(1280px, 100% - 3rem);
+		padding: 7rem 0 4rem;
+		position: relative;
+		z-index: 5;
+	}
+
+	.faq-header {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 3rem;
+		padding-bottom: 3rem;
+		border-bottom: 1px solid var(--line);
+		margin-bottom: 3rem;
+		align-items: end;
+	}
+
+	.faq-title {
+		margin: 1.2rem 0 0;
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: clamp(3rem, 7vw, 6rem);
+		line-height: 0.9;
+		letter-spacing: -0.03em;
+		color: var(--text);
+	}
+	.faq-title span { display: block; }
+	.faq-title em {
+		font-style: italic;
+		color: var(--acid);
+		display: block;
+	}
+
+	.faq-intro {
+		font-size: 0.95rem;
+		line-height: 1.7;
+		color: var(--text-dim);
+		margin: 0;
+		max-width: 38ch;
+	}
+	.faq-intro a {
+		color: var(--acid);
+		text-decoration: none;
+		border-bottom: 1px solid var(--acid-soft);
+		transition: color 0.3s, border-color 0.3s;
+	}
+	.faq-intro a:hover {
+		color: var(--text);
+		border-bottom-color: var(--text);
+	}
+
+	/* Accordion styles */
+	.faq-accordion {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		border-top: 1px solid var(--line);
+	}
+
+	.faq-item {
+		border-bottom: 1px solid var(--line);
+		transition: background-color 0.3s;
+	}
+	.faq-item:hover {
+		background-color: rgba(255, 255, 255, 0.01);
+	}
+
+	.faq-question-btn {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 2rem 1.5rem;
+		background: transparent;
+		border: none;
+		text-align: left;
+		color: var(--text);
+		gap: 1.5rem;
+		transition: color 0.3s;
+	}
+
+	.faq-num {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		color: var(--acid);
+		min-width: 3ch;
+		opacity: 0.85;
+		margin-top: 0.1rem;
+	}
+
+	.faq-q {
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+		line-height: 1.2;
+		color: var(--text);
+		flex: 1;
+	}
+
+	.faq-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--text-dim);
+		transition: transform 0.4s var(--ease-out-expo), color 0.3s;
+		flex-shrink: 0;
+	}
+
+	.faq-icon svg {
+		transition: transform 0.4s var(--ease-out-expo);
+	}
+
+	.faq-question-btn[aria-expanded="true"] .faq-icon {
+		color: var(--acid);
+		transform: rotate(45deg);
+	}
+
+	.faq-answer-wrapper {
+		display: grid;
+		grid-template-rows: 0fr;
+		transition: grid-template-rows 0.4s var(--ease-out-expo);
+		overflow: hidden;
+	}
+
+	.faq-answer-wrapper.open {
+		grid-template-rows: 1fr;
+	}
+
+	.faq-answer-content {
+		min-height: 0;
+	}
+
+	.faq-a {
+		margin: 0;
+		font-size: 0.95rem;
+		line-height: 1.7;
+		color: var(--text-dim);
+		padding: 0 1.5rem 2rem calc(3ch + 1.5rem);
+		max-width: 85ch;
+	}
+
+	@media (max-width: 900px) {
+		.faq-header { grid-template-columns: 1fr; gap: 1.5rem; }
+		.faq-title { font-size: clamp(2.5rem, 6vw, 4rem); }
+		.faq-question-btn { padding: 1.5rem 1rem; }
+		.faq-a { padding: 0 1rem 1.5rem calc(3ch + 1rem); }
+	}
+</style>
+
+<script>
+	// Toggle FAQ accordion items
+	document.querySelectorAll('.faq-question-btn').forEach((btn) => {
+		btn.addEventListener('click', () => {
+			const wrapper = btn.nextElementSibling;
+			const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+
+			// Close other open FAQs
+			if (!isExpanded) {
+				document.querySelectorAll('.faq-question-btn[aria-expanded="true"]').forEach((openBtn) => {
+					openBtn.setAttribute('aria-expanded', 'false');
+					openBtn.nextElementSibling?.classList.remove('open');
+				});
+			}
+
+			btn.setAttribute('aria-expanded', String(!isExpanded));
+			if (isExpanded) {
+				wrapper?.classList.remove('open');
+			} else {
+				wrapper?.classList.add('open');
+			}
+		});
+	});
+</script>
