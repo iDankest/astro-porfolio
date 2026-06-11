@@ -1,0 +1,136 @@
+---
+const links = [
+	{ href: "#inicio", label: "Inicio", num: "01" },
+	{ href: "#proyectos", label: "Proyectos", num: "02" },
+	{ href: "#experiencia", label: "Trayectoria", num: "03" },
+	{ href: "#certificados", label: "Certificados", num: "04" },
+	{ href: "#resenas", label: "Reseñas", num: "05" },
+	{ href: "#faq", label: "FAQ", num: "06" },
+	{ href: "#contacto", label: "Contacto", num: "07" },
+];
+---
+
+<nav class="nav-floating">
+	<div class="nav-inner">
+		<a href="#inicio" class="nav-mark" aria-label="Inicio">
+			<span class="mark-bracket">[</span>
+			<span class="mark-name">K.S</span>
+			<span class="mark-bracket">]</span>
+		</a>
+		<ul class="nav-links">
+			{links.map((l) => (
+				<li>
+					<a href={l.href} class="nav-link">
+						<span class="nav-num">{l.num}</span>
+						<span class="nav-label">{l.label}</span>
+					</a>
+				</li>
+			))}
+		</ul>
+		<a href="https://github.com/idankest" target="_blank" rel="noopener" class="nav-cta">
+			<span>github</span>
+			<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
+		</a>
+	</div>
+</nav>
+
+<style>
+	.nav-floating {
+		position: fixed;
+		top: 1.25rem;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 100;
+		width: min(1100px, calc(100% - 2rem));
+		pointer-events: none;
+	}
+
+	.nav-inner {
+		pointer-events: auto;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 0.5rem 0.6rem 0.5rem 1rem;
+		background: rgba(19, 19, 24, 0.72);
+		backdrop-filter: blur(20px) saturate(180%);
+		-webkit-backdrop-filter: blur(20px) saturate(180%);
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 20px 40px -20px rgba(0, 0, 0, 0.6);
+	}
+
+	.nav-mark {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.15rem;
+		font-family: var(--font-mono);
+		font-size: 13px;
+		font-weight: 500;
+		color: var(--text);
+		letter-spacing: 0.04em;
+		padding: 0.35rem 0.6rem;
+	}
+	.mark-bracket { color: var(--acid); }
+	.mark-name { color: var(--text); }
+
+	.nav-links {
+		display: flex;
+		align-items: center;
+		gap: 0.15rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.nav-link {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.45rem 0.85rem;
+		border-radius: 999px;
+		font-size: 13px;
+		font-weight: 450;
+		color: var(--text-dim);
+		transition: color 0.25s, background 0.25s;
+	}
+
+	.nav-link:hover {
+		color: var(--text);
+		background: rgba(255, 255, 255, 0.04);
+	}
+
+	.nav-num {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.1em;
+		color: var(--text-faint);
+	}
+
+	.nav-link:hover .nav-num { color: var(--acid); }
+
+	.nav-cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.5rem 0.95rem;
+		border-radius: 999px;
+		background: var(--text);
+		color: var(--ink);
+		font-family: var(--font-mono);
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.04em;
+		transition: background 0.25s, transform 0.25s;
+	}
+	.nav-cta:hover {
+		background: var(--acid);
+		transform: translateY(-1px);
+	}
+
+	@media (max-width: 820px) {
+		.nav-links { display: none; }
+		.nav-inner { padding: 0.4rem 0.4rem 0.4rem 0.7rem; }
+	}
+</style>
