@@ -1,183 +1,336 @@
 ---
 const exp = [
-    {
-        img: "/assets/0x0.png",
-        empresa: "iServices",
-        cargo: "Técnico en reparaciones y ventas",
-        periodo: "Diciembre 2025 - Marzo 2026",
-        descripcion: "Reparación de dispositivos móviles",
-        tareas: ["Diagnósticos", "Reparaciones", "Atención al cliente"],
-    },
-    {
-        img: "/assets/islas.jpg",
-        empresa: "ISLASSEM",
-        cargo: "Desarrollador Web",
-        periodo: "Agosto 2024 - Septiembre 2024",
-        descripcion: "Mantenimiento de páginas web",
-        tareas: ["WordPress", "Protección de datos", "Cookies"],
-    },
-    {
-        img: "/assets/bitbox_it_logo.jpg",
-        empresa: "BitBox S.L",
-        cargo: "Técnico IT",
-        periodo: "Marzo 2019 - Noviembre 2019",
-        descripcion: "Mantenimiento de equipos informáticos",
-        tareas: [
-            "Instalación de sistemas operativos",
-            "HelpDesk",
-            "Mantenimiento de racks",
-        ],
-    },
+	{
+		img: "/assets/0x0.png",
+		empresa: "iServices",
+		cargo: "Técnico en reparaciones y ventas",
+		periodo: "Dic 2025 — Mar 2026",
+		descripcion: "Reparación de dispositivos móviles, diagnóstico y atención al cliente.",
+		tareas: ["Diagnósticos", "Reparaciones", "Atención al cliente"],
+	},
+	{
+		img: "/assets/islas.jpg",
+		empresa: "ISLASSEM",
+		cargo: "Desarrollador Web",
+		periodo: "Ago 2024 — Sep 2024",
+		descripcion: "Mantenimiento de páginas web, políticas de cookies y protección de datos.",
+		tareas: ["WordPress", "Protección de datos", "Cookies"],
+	},
+	{
+		img: "/assets/bitbox_it_logo.jpg",
+		empresa: "BitBox S.L",
+		cargo: "Técnico IT",
+		periodo: "Mar 2019 — Nov 2019",
+		descripcion: "Mantenimiento de equipos informáticos y soporte HelpDesk.",
+		tareas: ["Instalación de sistemas", "HelpDesk", "Mantenimiento de racks"],
+	},
+];
+
+const edu = [
+	{
+		img: "https://pbs.twimg.com/profile_images/1201525003147268097/Uzikrfvt_400x400.jpg",
+		centro: "42 Málaga",
+		titulo: "Piscina · Escuela de Elite de Programación",
+		periodo: "Oct 2025 — Nov 2025",
+		descripcion: "Inmersión intensiva: trabajo en equipo, C, y aprender a aprender.",
+		tareas: ["C", "Aprendí a aprender", "Trabajo en equipo"],
+	},
+	{
+		img: "/assets/Reboot.png",
+		centro: "Reboot Academy",
+		titulo: "Bootcamp E-commerce",
+		periodo: "Ago 2024 — Feb 2025",
+		descripcion: "Creación de tiendas online: front, back y plataformas e-commerce.",
+		tareas: ["HTML, CSS, JS", "PHP, Symfony, Tailwind", "MySQL, Git, Docker", "WordPress, WooCommerce, Prestashop, Magento"],
+	},
+	{
+		img: "/assets/f2000.jpg",
+		centro: "Fuerteventura 2000",
+		titulo: "Desarrollador de Aplicaciones Web",
+		periodo: "Mar 2023 — Feb 2024",
+		descripcion: "Formación profesional en desarrollo de aplicaciones web full-stack.",
+		tareas: ["HTML, CSS, JS", "Angular, Node.js, Express.js", "MySQL, MongoDB, Git"],
+	},
 ];
 ---
 
-<section class="flex flex-col gap-2">
-    <h2 class="text-2xl font-bold text-center my-10" id="experiencia">
-        Experiencia Profesional
-    </h2>
-    {
-        exp.map((e) => (
-            <div class="flex justify-between items-center mt-6">
-                <div>
-                    <div class="flex items-center gap-2">
-                        <img
-                            class="w-10 h-10 bg-violet-500 rounded border border-black"
-                            src="/assets/briefcase-2.svg"
-                            alt="icono"
-                        />
-                        <h3 class="text-xl">{e.periodo}</h3>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <h4 class="font-bold">{e.empresa}</h4> -{" "}
-                        <em>{e.cargo}</em>
-                    </div>
-                    <p>{e.descripcion}</p>
-                    <ol>
-                        {e.tareas.map((t) => (
-                            <li>{t}</li>
-                        ))}
-                    </ol>
-                </div>
-                <img
-                    class="w-[10em] h-[10em] rounded company-image"
-                    src={e.img}
-                    alt={`Empresa ${e.empresa}`}
-                />
-            </div>
-        ))
-    }
+<section class="exp" id="experiencia">
+	<div class="exp-header">
+		<span class="eyebrow">Trayectoria · 04 / 10</span>
+		<h2 class="exp-title">
+			<span>Experiencia</span>
+			<em>& formación</em>
+		</h2>
+	</div>
 
-    <hr class="border-violet-500 border-2 mt-10" />
-    <h2 class="text-2xl font-bold text-center my-5">Formación Académica</h2>
-    <div class="flex justify-between items-center mt-6">
-        <div>
-            <div class="flex items-center gap-2">
-                <img
-                    class="w-10 h-10 bg-violet-500 rounded border border-black"
-                    src="/assets/school.svg"
-                    alt="icono-escuela"
-                />
-                <h3 class="text-xl">Octubre 2025 - Noviembre 2025</h3>
-            </div>
-            <div class="flex items-center gap-2">
-                <h4 class="font-bold">42 Málaga</h4> - <em>Escuela de Elite de Programación</em>
-            </div>
-            <p>Piscina de 42 Málaga</p>
-            <ol>
-                <li>C</li>
-                <li>Aprendí a aprender</li>
-                <li>Trabajo en equipo</li>
-            </ol>
-        </div>
-        <img
-            class="w-[10em] h-[10em] rounded"
-            src="https://pbs.twimg.com/profile_images/1201525003147268097/Uzikrfvt_400x400.jpg"
-            alt="Centro 42 Malaga"
-        />
-    </div>
-    <div class="flex justify-between items-center mt-10">
-        <div>
-            <div class="flex items-center gap-2">
-                <img
-                    class="w-10 h-10 bg-violet-500 rounded border border-black"
-                    src="/assets/school.svg"
-                    alt="icono-escuela"
-                />
-                <h3 class="text-xl">agosto 2024 - febrero 2025</h3>
-            </div>
-            <div class="flex items-center gap-2">
-                <h4 class="font-bold">Reboot Academy</h4> - <em>E-commerce</em>
-            </div>
-            <p>Creación de tiendas online</p>
-            <ol class="flex flex-col gap-1">
-                <li>HTML, CSS, JS</li>
-                <li>PHP, Symfony, Tailwind</li>
-                <li>MySQL, Git, GitHub, Docker</li>
-                <li>WordPress, WooCommerce, Prestashop, Magento</li>
-            </ol>
-        </div>
-        <img
-            class="w-[10em] h-[10em] rounded"
-            src="/assets/Reboot.png"
-            alt="Centro Reboot Academy"
-        />
-    </div>
-    <div class="flex justify-between items-center mt-10">
-        <div>
-            <div class="flex items-center gap-2">
-                <img
-                    class="w-10 h-10 bg-violet-500 rounded border border-black"
-                    src="/assets/school.svg"
-                    alt="icono-escuela"
-                />
-                <h3 class="text-xl">marzo 2023 - febrero 2024</h3>
-            </div>
-            <div class="flex items-center gap-2">
-                <h4 class="font-bold">Fuerteventura 2000</h4> - <em
-                    >Desarrollador de Aplicaciones Web</em
-                >
-            </div>
-            <p>Desarrollo de aplicaciones web</p>
-            <ol>
-                <li>HTML, CSS, JS</li>
-                <li>Angular, Node.js, Express.js</li>
-                <li>MySQL, MongoDB, Git, GitHub</li>
-            </ol>
-        </div>
-        <img
-            class="w-[10em] h-[10em] rounded"
-            src="/assets/f2000.jpg"
-            alt="Centro Fuerteventura 2000"
-        />
-    </div>
+	<div class="timeline">
+		<div class="timeline-block">
+			<div class="block-label">
+				<span class="block-num">A.</span>
+				<h3>Experiencia Profesional</h3>
+			</div>
+			<div class="timeline-list">
+				{exp.map((e, i) => (
+					<div class="entry" style={`--i:${i}`}>
+						<div class="entry-marker">
+							<span class="entry-year">{e.periodo}</span>
+						</div>
+						<div class="entry-content">
+							<div class="entry-head">
+								<div class="entry-head-text">
+									<h4 class="entry-title">{e.empresa}</h4>
+									<span class="entry-role">{e.cargo}</span>
+								</div>
+								<img class="entry-img" src={e.img} alt={e.empresa} loading="lazy" width="100" height="100" />
+							</div>
+							<p class="entry-desc">{e.descripcion}</p>
+							<ul class="entry-tasks">
+								{e.tareas.map((t) => <li>{t}</li>)}
+							</ul>
+						</div>
+					</div>
+				))}
+			</div>
+		</div>
+
+		<div class="timeline-block">
+			<div class="block-label">
+				<span class="block-num">B.</span>
+				<h3>Formación Académica</h3>
+			</div>
+			<div class="timeline-list">
+				{edu.map((e, i) => (
+					<div class="entry" style={`--i:${i}`}>
+						<div class="entry-marker">
+							<span class="entry-year">{e.periodo}</span>
+						</div>
+						<div class="entry-content">
+							<div class="entry-head">
+								<div class="entry-head-text">
+									<h4 class="entry-title">{e.centro}</h4>
+									<span class="entry-role">{e.titulo}</span>
+								</div>
+								<img class="entry-img" src={e.img} alt={e.centro} loading="lazy" width="100" height="100" />
+							</div>
+							<p class="entry-desc">{e.descripcion}</p>
+							<ul class="entry-tasks">
+								{e.tareas.map((t) => <li>{t}</li>)}
+							</ul>
+						</div>
+					</div>
+				))}
+			</div>
+		</div>
+	</div>
 </section>
 
 <style>
-    section {
-        margin-top: 2em;
-        width: 50vw;
-    }
-    li {
-        list-style: none;
-        position: relative;
-        padding-left: 1.5em;
-        margin-bottom: 0.25rem;
-    }
-    li::before {
-        content: "•";
-        position: absolute;
-        left: 0;
-        color: white;
-    }
-    @media (max-width: 639px) {
-        section {
-            flex-direction: column;
-            align-items: stretch;
-            width: 95vw;
-        }
-        .company-image {
-            width: 6em;
-            height: 6em;
-        }
-    }
+	.exp {
+		width: min(1280px, 100% - 3rem);
+		padding: 7rem 0 4rem;
+		position: relative;
+		z-index: 5;
+	}
+
+	.exp-header {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding-bottom: 3rem;
+		border-bottom: 1px solid var(--line);
+		margin-bottom: 4rem;
+	}
+
+	.exp-title {
+		margin: 0;
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: clamp(3rem, 7vw, 6rem);
+		line-height: 0.9;
+		letter-spacing: -0.03em;
+		color: var(--text);
+	}
+
+	.exp-title span { display: block; }
+	.exp-title em {
+		font-style: italic;
+		color: var(--acid);
+		display: block;
+	}
+
+	.timeline {
+		display: flex;
+		flex-direction: column;
+		gap: 5rem;
+	}
+
+	.timeline-block {
+		display: grid;
+		grid-template-columns: 1fr 2.5fr;
+		gap: 3rem;
+	}
+
+	.block-label {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		padding-top: 0.5rem;
+		position: sticky;
+		top: 7rem;
+		height: max-content;
+	}
+
+	.block-num {
+		font-family: var(--font-display);
+		font-style: italic;
+		font-size: 2.5rem;
+		color: var(--acid);
+		line-height: 1;
+	}
+
+	.block-label h3 {
+		margin: 0;
+		font-family: var(--font-sans);
+		font-size: 0.85rem;
+		font-weight: 500;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--text-dim);
+	}
+
+	.timeline-list {
+		display: flex;
+		flex-direction: column;
+		gap: 3rem;
+	}
+
+	.entry {
+		display: grid;
+		grid-template-columns: 8rem 1fr;
+		gap: 1.5rem;
+		padding-bottom: 3rem;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.entry:last-child { border-bottom: none; padding-bottom: 0; }
+
+	.entry-marker {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.entry-year {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.1em;
+		color: var(--text);
+		padding-left: 1rem;
+		position: relative;
+	}
+
+	.entry-year::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0.4em;
+		width: 0.5rem;
+		height: 1px;
+		background: var(--acid);
+	}
+
+	.entry-content {
+		display: flex;
+		flex-direction: column;
+		gap: 0.8rem;
+	}
+
+	.entry-head {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		gap: 1.5rem;
+		align-items: start;
+	}
+
+	.entry-head-text {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+
+	.entry-img {
+		width: 100px;
+		height: 100px;
+		object-fit: cover;
+		border: 1px solid var(--line);
+		filter: grayscale(0.3);
+		transition: filter 0.4s var(--ease-out-expo), transform 0.4s var(--ease-out-expo), border-color 0.4s;
+		flex-shrink: 0;
+		border-radius: 4px;
+	}
+
+	.entry:hover .entry-img {
+		filter: grayscale(0);
+		transform: scale(1.05);
+		border-color: var(--acid);
+	}
+
+	.entry-title {
+		margin: 0;
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: 1.6rem;
+		line-height: 1.05;
+		letter-spacing: -0.02em;
+		color: var(--text);
+	}
+
+	.entry-role {
+		font-style: italic;
+		font-family: var(--font-display);
+		color: var(--text-dim);
+		font-size: 1.05rem;
+	}
+
+	.entry-desc {
+		margin: 0;
+		font-size: 0.92rem;
+		line-height: 1.6;
+		color: var(--text-dim);
+		max-width: 60ch;
+	}
+
+	.entry-tasks {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.entry-tasks li {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.08em;
+		padding: 0.3rem 0.6rem;
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		color: var(--text-dim);
+		text-transform: uppercase;
+	}
+
+	.entry-tasks li:hover {
+		border-color: var(--acid);
+		color: var(--acid);
+	}
+
+	@media (max-width: 900px) {
+		.timeline-block { grid-template-columns: 1fr; gap: 1.5rem; }
+		.block-label { position: static; flex-direction: row; align-items: center; gap: 1rem; }
+		.entry { grid-template-columns: 1fr; gap: 0.5rem; }
+		.entry-marker { padding-bottom: 0.5rem; border-bottom: 1px solid var(--line); }
+		.entry-head { grid-template-columns: 1fr auto; }
+		.entry-img { width: 80px; height: 80px; }
+	}
 </style>

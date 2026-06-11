@@ -1,45 +1,231 @@
 ---
 const certificados = [
-    {
-        img: "/assets/f2000.jpg",
-        title: "Aplicaciones web",
-        description: "SCE Certificado Nivel 3",
-        date: "Mar 2024",
-        link: "https://drive.google.com/file/d/1-NH-Ii4VJ2VzO6fgcEypirOJXkQseMtg/view?usp=sharing"
-    },
-    {
-        img: "/assets/Reboot.png",
-        title: "Ecommerce",
-        description: "Bootcamp Reboot Academy",
-        date: "Feb 2025",
-        link: "https://drive.google.com/file/d/1ld9HZJUF7_kOkroo8FXSWtdDuctyNeK5/view?usp=sharing"
-    }
+	{
+		img: "/assets/f2000.jpg",
+		title: "Aplicaciones Web",
+		issuer: "SCE · Certificado Nivel 3",
+		date: "Mar 2024",
+		link: "https://drive.google.com/file/d/1-NH-Ii4VJ2VzO6fgcEypirOJXkQseMtg/view?usp=sharing",
+		tag: "FP"
+	},
+	{
+		img: "/assets/Reboot.png",
+		title: "E-commerce Bootcamp",
+		issuer: "Reboot Academy",
+		date: "Feb 2025",
+		link: "https://drive.google.com/file/d/1ld9HZJUF7_kOkroo8FXSWtdDuctyNeK5/view?usp=sharing",
+		tag: "Bootcamp"
+	},
 ];
 ---
 
-<section class="w-[50vw]">
-    <h2 class="text-2xl text-center mt-10 font-bold">Certificados</h2>
-    <main class="flex gap-10 justify-center my-10 items-center flex-wrap" id="certificados">
-        {certificados.map((certificado) => (
-            <div class="flex gap-2 bg-[#393d41] rounded min-w-[22em]">
-                <img
-                    class="rounded w-[7em] h-[7em]"
-                    src={certificado.img}
-                    alt={certificado.title}
-                />
-                <div class="flex flex-col gap-1">
-                    <h4>{certificado.title}</h4>
-                    <p>{certificado.description}</p>
-                    <p>{certificado.date}</p>
-                    <div class="flex gap-2 bg-[#393d41] rounded min-w-[13em] justify-end">
-                        <a
-                            href={certificado.link}
-                            target="_blank"
-                            class="bg-violet-500 rounded px-2"
-                            >Ver certificado</a>
-                    </div>
-                </div>
-            </div>
-        ))}
-    </main>
+<section class="cert" id="certificados">
+	<div class="cert-header">
+		<span class="eyebrow">Verificado · 05 / 10</span>
+		<h2 class="cert-title">
+			<span>Certificados</span>
+			<em>& credenciales</em>
+		</h2>
+	</div>
+
+	<div class="cert-grid">
+		{certificados.map((c, i) => (
+			<a href={c.link} target="_blank" rel="noopener" class="cert-card" style={`--i:${i}`}>
+				<div class="cert-image">
+					<img src={c.img} alt={c.title} loading="lazy" />
+					<span class="cert-tag">{c.tag}</span>
+				</div>
+				<div class="cert-body">
+					<div class="cert-meta">
+						<span class="cert-date">{c.date}</span>
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
+					</div>
+					<h3 class="cert-name">{c.title}</h3>
+					<p class="cert-issuer">{c.issuer}</p>
+				</div>
+			</a>
+		))}
+
+		<div class="cert-card cert-cta">
+			<div class="cert-body">
+				<span class="eyebrow">Próximamente</span>
+				<h3 class="cert-name">Más en camino</h3>
+				<p class="cert-issuer">Continuamente formándome. Vue 3, TypeScript, Node.</p>
+				<span class="cert-progress">
+					<span class="progress-fill"></span>
+				</span>
+			</div>
+		</div>
+	</div>
 </section>
+
+<style>
+	.cert {
+		width: min(1280px, 100% - 3rem);
+		padding: 7rem 0 4rem;
+		position: relative;
+		z-index: 5;
+	}
+
+	.cert-header {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding-bottom: 3rem;
+		border-bottom: 1px solid var(--line);
+		margin-bottom: 3rem;
+	}
+
+	.cert-title {
+		margin: 0;
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: clamp(3rem, 7vw, 6rem);
+		line-height: 0.9;
+		letter-spacing: -0.03em;
+		color: var(--text);
+	}
+
+	.cert-title span { display: block; }
+	.cert-title em {
+		font-style: italic;
+		color: var(--acid);
+		display: block;
+	}
+
+	.cert-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.5rem;
+	}
+
+	.cert-card {
+		background: var(--ink-2);
+		border: 1px solid var(--line);
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		transition: border-color 0.4s, transform 0.4s var(--ease-out-expo);
+		text-decoration: none;
+		color: inherit;
+	}
+
+	a.cert-card:hover {
+		border-color: var(--acid);
+		transform: translateY(-4px);
+	}
+
+	.cert-image {
+		position: relative;
+		aspect-ratio: 4 / 3;
+		overflow: hidden;
+		background: var(--ink);
+		border-bottom: 1px solid var(--line);
+	}
+
+	.cert-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		filter: grayscale(0.5) contrast(1.05);
+		transition: filter 0.5s, transform 0.6s var(--ease-out-expo);
+	}
+
+	a.cert-card:hover .cert-image img {
+		filter: grayscale(0) contrast(1.05);
+		transform: scale(1.06);
+	}
+
+	.cert-tag {
+		position: absolute;
+		top: 0.8rem;
+		left: 0.8rem;
+		font-family: var(--font-mono);
+		font-size: 9.5px;
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		color: var(--ink);
+		background: var(--acid);
+		padding: 0.3rem 0.55rem;
+	}
+
+	.cert-body {
+		padding: 1.4rem 1.4rem 1.6rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		flex: 1;
+	}
+
+	.cert-meta {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		color: var(--text-faint);
+		margin-bottom: 0.5rem;
+	}
+
+	a.cert-card:hover .cert-meta { color: var(--acid); }
+
+	.cert-date {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.1em;
+	}
+
+	.cert-name {
+		margin: 0;
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: 1.5rem;
+		line-height: 1.05;
+		letter-spacing: -0.02em;
+		color: var(--text);
+	}
+
+	.cert-issuer {
+		margin: 0;
+		font-family: var(--font-display);
+		font-style: italic;
+		font-size: 1rem;
+		color: var(--text-dim);
+	}
+
+	/* CTA card */
+	.cert-cta {
+		justify-content: center;
+		background: transparent;
+		border-style: dashed;
+	}
+
+	.cert-cta .cert-body { gap: 0.8rem; justify-content: center; height: 100%; }
+
+	.cert-progress {
+		display: block;
+		margin-top: 0.6rem;
+		width: 100%;
+		height: 2px;
+		background: var(--ink-3);
+		overflow: hidden;
+		position: relative;
+	}
+
+	.progress-fill {
+		position: absolute;
+		left: 0;
+		top: 0;
+		height: 100%;
+		width: 35%;
+		background: var(--acid);
+		animation: progress-shift 3s ease-in-out infinite;
+	}
+
+	@keyframes progress-shift {
+		0%, 100% { left: 0; }
+		50% { left: 65%; }
+	}
+
+	@media (max-width: 900px) {
+		.cert-grid { grid-template-columns: 1fr; }
+	}
+</style>

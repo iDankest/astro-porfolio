@@ -1,133 +1,739 @@
 ---
-// @ts-nocheck
-// Import projects data
-const { projects } = Astro.props;
+import { Icon } from "astro-icon/components";
+import ProjectCover from "./ProjectCover.astro";
+import { projects } from "../data/proyects";
+import { techs } from "../data/techs";
 
-// Tech data
-const techs = {
-    html: { name: 'HTML', img: '/assets/brand-html5.svg' },
-    css: { name: 'CSS', img: '/assets/brand-css3.svg' },
-    js: { name: 'JavaScript', img: '/assets/brand-javascript.svg' },
-    vue: { name: 'Vue.js', img: '/assets/vuejs-brands-solid.svg' },
-    git: { name: 'Git', img: '/assets/brand-git.svg' },
-    php: { name: 'PHP', img: '/assets/brand-php.svg' },
-    symfony: { name: 'Symfony', img: '/assets/brand-symfony.svg' },
-    tailwind: { name: 'Tailwind CSS', img: '/assets/brand-tailwind.svg' },
-    mysql: { name: 'MySQL', img: '/assets/brand-mysql.svg' },
-    codeShow: { name: 'Ver código', img: '/assets/code.svg' }
-};
+const getTech = (key: string) => (techs as any)[key] || { icon: null, name: key };
 
-// Helper function to get tech data
-function getTech(key) {
-    return techs[key] || { img: "", name: key };
-}
+const featured = projects.find((p) => p.featured);
+const rest = projects.filter((p) => !p.featured);
+
+// Show featured + first 2 initially
+const visibleCount = 2;
+const hidden = rest.slice(visibleCount);
 ---
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Seleccionamos todos los elementos que tienen la clase 'group'.
-        // Esto incluirá tanto los <li> de las tecnologías como los <a> de 'Ver código'.
-        const elementsWithTooltips = document.querySelectorAll('.group');
-    
-        elementsWithTooltips.forEach(wrapper => {
-            const img = wrapper.querySelector('img');
-            const tooltip = wrapper.querySelector('.custom-tooltip');
-    
-            if (img && tooltip) {
-                // Obtenemos el texto del tooltip desde el atributo data-tooltip-text de la imagen
-                tooltip.textContent = img.dataset.tooltipText || '';
-            }
-        });
-    });
-</script>
 
-<section>
-    <h2 class="text-2xl text-center mb-10 font-bold" id="proyectos">Proyectos destacados</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {projects.map((proyecto) => (
-        <article class="hover:scale-103 transition-all duration-500 ease-in-out flex justify-between">
-            <img class="w-full h-[10em] object-cover rounded-t-lg" src={proyecto.img} alt={`Imagen del proyecto ${proyecto.name}`}>
-            <div class="tech"><ul class="flex gap-1">
-                {proyecto.tech.map((t) => (
-                    <li class="relative group cursor-help w-[25px] h-[25px] flex items-center justify-center">
-                        <img 
-                          src={getTech(t).img} 
-                          alt={getTech(t).name} 
-                          data-tooltip-text={getTech(t).name} 
-                          class="code w-full h-full object-contain" 
-                        />
-                        <span class="custom-tooltip absolute bottom-[calc(100%+5px)] left-1/2 -translate-x-1/2 translate-y-1
-                                     bg-gray-800 text-white px-2 py-1 rounded-md whitespace-nowrap text-xs
-                                     shadow-md z-10
-                                     opacity-0 invisible transition-all duration-300 ease-in-out
-                                     group-hover:opacity-100 group-hover:visible group-hover:translate-y-0">
-                        </span>
-                    </li>
-                ))}
-            </ul></div>
-                <div class="m-2">
-                    <h3 class="text-lg font-bold" >{proyecto.name}</h3>
-                    <p class="text-sm">{proyecto.description}</p>
-                </div>
-                <div class={proyecto.styleNone}>
-                    <a href={proyecto.github} target="_blank" class="relative group cursor-help w-[25px] h-[25px] flex items-center justify-center">
-                        <img src={techs.codeShow.img} alt={techs.codeShow.name} data-tooltip-text={techs.codeShow.name} class="code w-full h-full object-contain" />
-                        <span class="custom-tooltip absolute bottom-[calc(100%+5px)] left-1/2 -translate-x-1/2 translate-y-1
-                                     bg-gray-800 text-white px-2 py-1 rounded-md whitespace-nowrap text-xs
-                                     shadow-md z-10
-                                     opacity-0 invisible transition-all duration-300 ease-in-out
-                                     group-hover:opacity-100 group-hover:visible group-hover:translate-y-0">
-                        </span>
-                    </a>
-                    <a class={`${proyecto.display}`} href={proyecto.url} target="_blank">Ver Proyecto</a>
-                </div>
-        </article>
-        ))}
-    </div>
+<section class="projects" id="proyectos">
+	<div class="projects-header">
+		<div class="header-left">
+			<span class="eyebrow">Selected Work · 03 / 08</span>
+			<h2 class="projects-title">
+				<span>Proyectos</span>
+				<em>destacados</em>
+			</h2>
+		</div>
+		<div class="header-right">
+			<p class="projects-intro">
+				Una selección de proyectos donde apliqué <em>front-end</em>,
+				integración de <em>APIs</em> y trabajo en equipo. Cada uno con su
+				propio contexto, su propio reto.
+			</p>
+			<div class="projects-count">
+				<span class="count-num">{String(projects.length).padStart(2, "0")}</span>
+				<span class="count-label">total projects</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="projects-grid" id="projects-grid">
+		{featured && (
+			<article class="project-card" data-index="01">
+				<div class="card-image" data-cursor="hover">
+					<ProjectCover
+						name={featured.name}
+						tag={featured.tag}
+						tagline={featured.tagline}
+						cover={featured.cover}
+						index="01"
+					/>
+					{featured.video ? (
+						<video
+							class="project-video"
+							src={featured.video}
+							muted
+							loop
+							playsinline
+							preload="metadata"
+						></video>
+					) : null}
+					<span class="featured-badge">FEATURED</span>
+				</div>
+
+				<div class="card-body">
+					<div class="card-meta">
+						<span class="card-tag">{featured.tag}</span>
+						<ul class="card-tech">
+							{featured.tech.slice(0, 4).map((t) => (
+								<li class="tech-pill">
+									{getTech(t).icon ? <Icon name={getTech(t).icon} class="tech-icon" /> : null}
+									<span>{getTech(t).name}</span>
+								</li>
+							))}
+						</ul>
+					</div>
+
+					<h3 class="card-title">{featured.name}</h3>
+					<p class="card-desc">{featured.description}</p>
+
+					<div class="card-actions">
+						<a href={featured.github} target="_blank" rel="noopener" class="action-link">
+							<span class="action-label">Ver código</span>
+							<span class="action-icon" aria-hidden="true">
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+									<path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+								</svg>
+							</span>
+						</a>
+						{featured.url ? (
+							<a href={featured.url} target="_blank" rel="noopener" class="action-cta">
+								<span class="action-label">Live preview</span>
+								<span class="cta-arrow" aria-hidden="true">
+									<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+										<path d="M7 17L17 7"/>
+										<path d="M8 7h9v9"/>
+									</svg>
+								</span>
+							</a>
+						) : (
+							<span class="action-cta disabled">
+								<span class="action-label">En desarrollo</span>
+								<span class="cta-dot" aria-hidden="true">
+									<span class="dot-pulse"></span>
+								</span>
+							</span>
+						)}
+					</div>
+				</div>
+			</article>
+		)}
+
+		{rest.map((p, i) => {
+			const indexStr = String(i + 2).padStart(2, "0");
+			const isHidden = i >= visibleCount;
+			return (
+				<article class={`project-card ${isHidden ? 'project-hidden' : ''}`} data-index={indexStr}>
+					<div class="card-image" data-cursor="hover">
+						<ProjectCover
+							name={p.name}
+							tag={p.tag}
+							tagline={p.tagline}
+							cover={p.cover}
+							index={indexStr}
+						/>
+						{p.video ? (
+							<video
+								class="project-video"
+								src={p.video}
+								muted
+								loop
+								playsinline
+								preload="metadata"
+							></video>
+						) : null}
+					</div>
+
+					<div class="card-body">
+						<div class="card-meta">
+							<span class="card-tag">{p.tag}</span>
+							<ul class="card-tech">
+								{p.tech.slice(0, 4).map((t) => (
+									<li class="tech-pill">
+										{getTech(t).icon ? <Icon name={getTech(t).icon} class="tech-icon" /> : null}
+										<span>{getTech(t).name}</span>
+									</li>
+								))}
+							</ul>
+						</div>
+
+						<h3 class="card-title">{p.name}</h3>
+						<p class="card-desc">{p.description}</p>
+
+						<div class="card-actions">
+							<a href={p.github} target="_blank" rel="noopener" class="action-link">
+								<span class="action-label">Ver código</span>
+								<span class="action-icon" aria-hidden="true">
+									<svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+										<path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+								</svg>
+							</span>
+						</a>
+							{p.url ? (
+								<a href={p.url} target="_blank" rel="noopener" class="action-cta">
+									<span class="action-label">Live preview</span>
+									<span class="cta-arrow" aria-hidden="true">
+										<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+											<path d="M7 17L17 7"/>
+											<path d="M8 7h9v9"/>
+										</svg>
+									</span>
+								</a>
+							) : (
+								<span class="action-cta disabled">
+									<span class="action-label">En desarrollo</span>
+									<span class="cta-dot" aria-hidden="true">
+										<span class="dot-pulse"></span>
+									</span>
+								</span>
+							)}
+						</div>
+					</div>
+				</article>
+			);
+		})}
+
+		{/* The "Show More" card as the 4th item in the grid */}
+		<div class="project-card more-project-card" id="more-project-card" data-cursor="hover">
+			<div class="more-card-content">
+				<div class="more-card-inner">
+					<span class="more-card-num">04</span>
+					<div class="more-card-icon-container">
+						<div class="icon-circle">
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+								<line x1="12" y1="5" x2="12" y2="19"></line>
+								<line x1="5" y1="12" x2="19" y2="12"></line>
+							</svg>
+						</div>
+					</div>
+					<div class="more-card-text">
+						<h3 class="more-card-title">Ver más proyectos</h3>
+						<p class="more-card-desc">Explora otros {hidden.length} proyectos que he desarrollado.</p>
+					</div>
+					<span class="more-card-badge">+{hidden.length} Proyectos</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="projects-actions-footer">
+		<button class="less-btn" id="less-btn" type="button">
+			<span class="more-label">Ver menos proyectos</span>
+			<span class="more-icon" aria-hidden="true">
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M18 15l-6-6-6 6"/>
+				</svg>
+			</span>
+		</button>
+	</div>
 </section>
 
 <style>
-    section{
-        margin-top: 2em;
-        width: 50vw;
-    }
-    article{
-        background-color: #393d41;
-        border-radius: 5px;
-        display: flex;
-        flex-direction: column;
-    }
-    .tech{
-        background-color: blueviolet;
-        padding: 0.4em;
-    }
-    /* Si quieres que el icono de código también tenga el efecto de escala al hacer hover, mantén esta regla */
-    .code:hover{
-        scale: 1.2;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-    .show-proyect{
-        background-color: blueviolet;
-        padding: 0.1em;
-        border-radius: 5px;
-    }
-    .show-proyect:hover{
-        background-color: blueviolet;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        color: black;
-    }
-    .show-proyect-none{
-        display: none;
-    }
-    @media (max-width: 639px) { /* sm breakpoint de Tailwind - 1px */
-        section {
-            width: 95vw;
-        }
-        article{
-            width: 90%;
-            height: auto;
-            margin: 1em auto;
-        }
-    }
+	.projects {
+		width: min(1280px, 100% - 3rem);
+		padding: 7rem 0 4rem;
+		position: relative;
+		z-index: 5;
+	}
+
+	.projects-header {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 3rem;
+		padding-bottom: 3rem;
+		border-bottom: 1px solid var(--line);
+		margin-bottom: 3rem;
+		align-items: end;
+	}
+
+	.projects-title {
+		margin: 1.2rem 0 0;
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: clamp(3rem, 7vw, 6rem);
+		line-height: 0.9;
+		letter-spacing: -0.03em;
+		color: var(--text);
+	}
+	.projects-title span { display: block; }
+	.projects-title em {
+		font-style: italic;
+		color: var(--acid);
+		display: block;
+	}
+
+	.projects-intro {
+		font-size: 0.95rem;
+		line-height: 1.7;
+		color: var(--text-dim);
+		margin: 0 0 1.5rem;
+		max-width: 38ch;
+	}
+	.projects-intro em {
+		font-style: italic;
+		color: var(--text);
+	}
+
+	.projects-count {
+		display: flex;
+		align-items: baseline;
+		gap: 0.6rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--line);
+	}
+	.count-num {
+		font-family: var(--font-display);
+		font-style: italic;
+		font-size: 2.4rem;
+		color: var(--acid);
+		line-height: 1;
+	}
+	.count-label {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.15em;
+		color: var(--text-faint);
+		text-transform: uppercase;
+	}
+
+	/* Uniform 2-column grid */
+	.projects-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1.5rem;
+	}
+
+	.project-card {
+		position: relative;
+		background: var(--ink-2);
+		border: 1px solid var(--line);
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		transition: border-color 0.4s, transform 0.4s var(--ease-out-expo);
+	}
+	.project-card:hover {
+		border-color: var(--line-strong);
+		transform: translateY(-4px);
+	}
+	.project-card::before {
+		content: attr(data-index);
+		position: absolute;
+		top: 3.2rem; /* Lowered from 1.1rem to clear browser mockup bar */
+		right: 1.1rem;
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.15em;
+		color: var(--text-faint);
+		z-index: 3;
+		background: var(--ink);
+		padding: 0.3rem 0.5rem;
+		border: 1px solid var(--line);
+	}
+
+	.card-image {
+		position: relative;
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		background: var(--ink);
+		border-bottom: 1px solid var(--line);
+	}
+
+	/* Video on hover */
+	.project-video {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		opacity: 0;
+		transition: opacity 0.5s var(--ease-out-expo);
+		z-index: 4;
+		pointer-events: none;
+	}
+	.project-card:hover .project-video {
+		opacity: 1;
+	}
+
+	.featured-badge {
+		position: absolute;
+		top: 3.2rem; /* Lowered from 1.1rem to clear browser mockup bar */
+		left: 1.1rem;
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.2em;
+		color: var(--ink);
+		background: var(--acid);
+		padding: 0.4rem 0.7rem;
+		font-weight: 600;
+		z-index: 4;
+	}
+
+	.card-body {
+		padding: 1.6rem 1.5rem 1.4rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.9rem;
+		flex: 1;
+	}
+
+	.card-meta {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.card-tag {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.1em;
+		color: var(--acid);
+		text-transform: uppercase;
+	}
+
+	.card-tech {
+		display: flex;
+		gap: 0.3rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+	}
+	.tech-pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		padding: 0.3rem 0.6rem;
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		font-family: var(--font-mono);
+		font-size: 9.5px;
+		letter-spacing: 0.05em;
+		color: var(--text-dim);
+		background: var(--ink);
+		transition: border-color 0.3s, color 0.3s, background 0.3s;
+	}
+	.tech-pill:hover {
+		border-color: var(--line-strong);
+		color: var(--text);
+	}
+	.tech-icon {
+		width: 13px;
+		height: 13px;
+		flex-shrink: 0;
+		transition: transform 0.4s var(--ease-out-expo);
+	}
+	.tech-pill:hover .tech-icon {
+		transform: scale(1.15);
+	}
+
+	.card-title {
+		margin: 0;
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: 1.8rem;
+		line-height: 1;
+		letter-spacing: -0.02em;
+		color: var(--text);
+	}
+
+	.card-desc {
+		margin: 0;
+		font-size: 0.88rem;
+		line-height: 1.6;
+		color: var(--text-dim);
+		flex: 1;
+	}
+
+	.card-actions {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 0.6rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--line);
+		margin-top: 0.4rem;
+	}
+
+	.action-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.55rem;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.1em;
+		color: var(--text);
+		text-transform: uppercase;
+		transition: color 0.3s;
+	}
+	.action-link .action-icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 26px;
+		height: 26px;
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		color: var(--acid);
+		background: var(--ink);
+		transition: border-color 0.3s, transform 0.4s var(--ease-out-expo), color 0.3s;
+	}
+	.action-link:hover { color: var(--acid); }
+	.action-link:hover .action-icon {
+		border-color: var(--acid);
+		transform: rotate(-12deg) scale(1.08);
+	}
+
+	.action-cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.55rem;
+		padding: 0.55rem 0.9rem 0.55rem 1rem;
+		background: var(--text);
+		color: var(--ink);
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		font-weight: 500;
+		transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+	}
+	.action-cta:hover {
+		background: var(--acid);
+		box-shadow: 0 0 0 4px var(--acid-soft);
+	}
+	.action-cta.disabled {
+		background: var(--ink-3);
+		color: var(--text-faint);
+		pointer-events: none;
+		gap: 0.6rem;
+	}
+	.cta-arrow {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		transition: transform 0.4s var(--ease-out-expo);
+	}
+	.action-cta:hover .cta-arrow {
+		transform: translate(2px, -2px) rotate(0deg);
+	}
+	.cta-dot {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 14px;
+		height: 14px;
+		position: relative;
+	}
+	.cta-dot .dot-pulse {
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: var(--ember);
+		box-shadow: 0 0 0 0 var(--ember);
+		animation: pulse-ember 1.8s ease-out infinite;
+	}
+	@keyframes pulse-ember {
+		0% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.55); }
+		70% { box-shadow: 0 0 0 6px rgba(255, 107, 53, 0); }
+		100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0); }
+	}
+
+	/* Hidden projects */
+	.project-card.project-hidden {
+		display: none;
+	}
+	
+	/* Expanded Grid State */
+	#projects-grid.expanded .project-card.project-hidden {
+		display: flex;
+		animation: reveal-project 0.5s var(--ease-out-expo) forwards;
+	}
+	
+	/* Staggered animation delay for revealed cards */
+	#projects-grid.expanded .project-card.project-hidden:nth-child(4) { animation-delay: 0.05s; }
+	#projects-grid.expanded .project-card.project-hidden:nth-child(5) { animation-delay: 0.1s; }
+	#projects-grid.expanded .project-card.project-hidden:nth-child(6) { animation-delay: 0.15s; }
+	#projects-grid.expanded .project-card.project-hidden:nth-child(7) { animation-delay: 0.2s; }
+	#projects-grid.expanded .project-card.project-hidden:nth-child(8) { animation-delay: 0.25s; }
+
+	#projects-grid.expanded #more-project-card {
+		display: none;
+	}
+
+	@keyframes reveal-project {
+		0% {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	/* "Show More" Grid Card styling */
+	.more-project-card {
+		cursor: pointer;
+		justify-content: center;
+		align-items: center;
+		min-height: 420px;
+		border: 1px dashed var(--line);
+		background: linear-gradient(135deg, var(--ink-2) 0%, rgba(19, 19, 24, 0.4) 100%);
+		transition: border-color 0.4s, background-color 0.4s, transform 0.4s var(--ease-out-expo);
+	}
+	.more-project-card::before {
+		display: none;
+	}
+	.more-project-card:hover {
+		border-color: var(--acid);
+		transform: translateY(-4px);
+		background: rgba(200, 255, 0, 0.01);
+	}
+	.more-card-content {
+		padding: 3rem 2rem;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		width: 100%;
+		box-sizing: border-box;
+	}
+	.more-card-inner {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		height: 100%;
+		flex: 1;
+		gap: 2rem;
+	}
+	.more-card-num {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		color: var(--text-faint);
+		letter-spacing: 0.15em;
+	}
+	.more-card-icon-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: auto 0;
+	}
+	.icon-circle {
+		width: 64px;
+		height: 64px;
+		border-radius: 50%;
+		border: 1px solid var(--line);
+		background: var(--ink);
+		color: var(--acid);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: transform 0.6s var(--ease-out-expo), border-color 0.4s, background-color 0.4s, color 0.4s;
+	}
+	.more-project-card:hover .icon-circle {
+		transform: rotate(90deg) scale(1.1);
+		border-color: var(--acid);
+		background: var(--acid);
+		color: var(--ink);
+	}
+	.more-card-text {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+	.more-card-title {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: 1.8rem;
+		font-weight: 400;
+		color: var(--text);
+		line-height: 1.1;
+	}
+	.more-card-desc {
+		margin: 0;
+		font-size: 0.88rem;
+		line-height: 1.6;
+		color: var(--text-dim);
+	}
+	.more-card-badge {
+		align-self: flex-start;
+		font-family: var(--font-mono);
+		font-size: 9.5px;
+		letter-spacing: 0.1em;
+		color: var(--acid);
+		border: 1px solid var(--acid-soft);
+		background: var(--acid-soft);
+		padding: 0.35rem 0.75rem;
+		border-radius: 999px;
+		text-transform: uppercase;
+		font-weight: 500;
+	}
+
+	/* Footer action buttons */
+	.projects-actions-footer {
+		display: flex;
+		justify-content: center;
+		width: 100%;
+		margin-top: 3rem;
+	}
+	
+	.less-btn {
+		display: none;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		width: fit-content;
+		padding: 1rem 2.5rem;
+		background: transparent;
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		color: var(--text-dim);
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		cursor: pointer;
+		transition: color 0.3s, border-color 0.3s, background 0.3s;
+	}
+	.less-btn:hover {
+		color: var(--text);
+		border-color: var(--line-strong);
+		background: rgba(255, 255, 255, 0.03);
+	}
+
+	@media (max-width: 900px) {
+		.projects-header { grid-template-columns: 1fr; gap: 1.5rem; }
+		.projects-grid { grid-template-columns: 1fr; }
+		.more-project-card { min-height: 360px; }
+		.project-card::before, .featured-badge {
+			top: 3.2rem; /* Keep it below browser bar on mobile too */
+		}
+	}
 </style>
+
+<script>
+	// Auto-play video on hover
+	document.querySelectorAll(".project-card").forEach((card) => {
+		const video = card.querySelector(".project-video") as HTMLVideoElement | null;
+		if (!video) return;
+		card.addEventListener("mouseenter", () => {
+			video.play().catch(() => {});
+		});
+		card.addEventListener("mouseleave", () => {
+			video.pause();
+			video.currentTime = 0;
+		});
+	});
+
+	// Toggle project grid expansion
+	const projectsGrid = document.getElementById("projects-grid");
+	const moreCard = document.getElementById("more-project-card");
+	const lessBtn = document.getElementById("less-btn");
+
+	if (projectsGrid && moreCard && lessBtn) {
+		moreCard.addEventListener("click", () => {
+			projectsGrid.classList.add("expanded");
+			lessBtn.style.display = "flex";
+		});
+
+		lessBtn.addEventListener("click", () => {
+			projectsGrid.classList.remove("expanded");
+			lessBtn.style.display = "none";
+			
+			// Smooth scroll back to top of projects section to maintain focus
+			document.getElementById("proyectos")?.scrollIntoView({ behavior: "smooth" });
+		});
+	}
+</script>
