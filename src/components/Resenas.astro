@@ -1,0 +1,468 @@
+---
+import { reviews } from '../data/reviews';
+
+// La reseña más larga se destaca automáticamente
+const sorted = [...reviews].sort((a, b) => b.text.length - a.text.length);
+const featured = sorted[0];
+const rest = sorted.slice(1);
+---
+
+<section class="resenas" id="resenas">
+  <div class="resenas-header">
+    <span class="eyebrow">Testimonios · 06 / 10</span>
+    <h2 class="resenas-title">
+      <span>Lo que dicen</span>
+      <em>de mí</em>
+    </h2>
+    <!-- Marca decorativa: comilla gigante -->
+    <span class="quote-mark" aria-hidden="true">"</span>
+  </div>
+
+  <div class="resenas-grid" role="list">
+    <!-- Reseña destacada (la más larga) -->
+    <article class="review-card review-featured" itemscope itemtype="https://schema.org/Review" role="listitem">
+      <meta itemprop="datePublished" content={featured.date} />
+      <div class="review-meta">
+        <div class="review-avatar-wrap">
+          <img
+            class="review-avatar"
+            src={featured.avatar}
+            alt={`Foto de ${featured.author}`}
+            width="56"
+            height="56"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="review-author-info">
+          <a
+            href={featured.linkedInUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="review-author-link"
+            itemprop="author"
+            itemscope
+            itemtype="https://schema.org/Person"
+          >
+            <span class="review-author" itemprop="name">{featured.author}</span>
+          </a>
+          <span class="review-role">{featured.role}</span>
+          <span class="review-relationship">{featured.relationship}</span>
+        </div>
+      </div>
+      <blockquote class="review-text" itemprop="reviewBody">
+        {featured.text.split('\n').map((p) => (
+          <p>{p}</p>
+        ))}
+      </blockquote>
+      <time class="review-date" datetime={featured.date}>
+        {new Date(featured.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+      </time>
+    </article>
+
+    <!-- Resto de reseñas -->
+    {rest.map((review, index) => (
+      <article class="review-card" itemscope itemtype="https://schema.org/Review" role="listitem">
+        <meta itemprop="datePublished" content={review.date} />
+        <div class="review-meta">
+          <div class="review-avatar-wrap">
+            <img
+              class="review-avatar"
+              src={review.avatar}
+              alt={`Foto de ${review.author}`}
+              width="48"
+              height="48"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div class="review-author-info">
+            <a
+              href={review.linkedInUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="review-author-link"
+              itemprop="author"
+              itemscope
+              itemtype="https://schema.org/Person"
+            >
+              <span class="review-author" itemprop="name">{review.author}</span>
+            </a>
+            <span class="review-role">{review.role}</span>
+            <span class="review-relationship">{review.relationship}</span>
+          </div>
+        </div>
+        <blockquote class="review-text" itemprop="reviewBody">
+          {review.text.split('\n').map((p) => (
+            <p>{p}</p>
+          ))}
+        </blockquote>
+        <time class="review-date" datetime={review.date}>
+          {new Date(review.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </time>
+      </article>
+    ))}
+  </div>
+</section>
+
+<script>
+  // Efecto partículas sutil en hover de tarjetas
+  document.querySelectorAll('.review-card').forEach(card => {
+    const canvas = document.createElement('canvas');
+    canvas.className = 'review-particles';
+    canvas.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:1;opacity:0;transition:opacity 0.4s;';
+    card.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    let animId = null;
+    let particles = [];
+
+    function resize() {
+      const rect = card.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+
+    function createParticles() {
+      particles = [];
+      const count = Math.floor((canvas.width * canvas.height) / 12000);
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          size: Math.random() * 1.5 + 0.5,
+          alpha: Math.random() * 0.3 + 0.1,
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const acidColor = getComputedStyle(document.documentElement).getPropertyValue('--acid').trim() || '#c8ff00';
+
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = acidColor;
+        ctx.globalAlpha = p.alpha;
+        ctx.fill();
+      });
+
+      ctx.globalAlpha = 1;
+      animId = requestAnimationFrame(draw);
+    }
+
+    card.addEventListener('mouseenter', () => {
+      resize();
+      createParticles();
+      canvas.style.opacity = '1';
+      if (!animId) draw();
+    });
+
+    card.addEventListener('mouseleave', () => {
+      canvas.style.opacity = '0';
+      if (animId) {
+        cancelAnimationFrame(animId);
+        animId = null;
+      }
+    });
+  });
+</script>
+
+<style>
+  .resenas {
+    width: min(1280px, 100% - 3rem);
+    padding: 7rem 0 4rem;
+    position: relative;
+    z-index: 5;
+  }
+
+  .resenas-header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 4rem;
+    overflow: hidden;
+  }
+
+  .resenas-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(3rem, 7vw, 6rem);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    color: var(--text);
+  }
+
+  .resenas-title span { display: block; }
+  .resenas-title em {
+    font-style: italic;
+    color: var(--acid);
+    display: block;
+  }
+
+  /* Marca decorativa: comilla gigante */
+  .quote-mark {
+    position: absolute;
+    right: -2rem;
+    top: -4rem;
+    font-family: var(--font-display);
+    font-size: clamp(12rem, 25vw, 22rem);
+    line-height: 1;
+    color: var(--acid-soft);
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+  }
+
+  /* Grid editorial asimétrico */
+  .resenas-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(200px, auto);
+    gap: 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Tarjetas */
+  .review-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 2rem;
+    border: 1px solid var(--line);
+    background: var(--ink-2);
+    transition: transform 0.4s var(--ease-out-expo),
+                border-color 0.4s var(--ease-out-expo),
+                box-shadow 0.4s var(--ease-out-expo);
+    opacity: 0;
+    animation: reveal-up 0.9s var(--ease-out-expo) forwards;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .review-card:nth-child(1) { animation-delay: 0.1s; }
+  .review-card:nth-child(2) { animation-delay: 0.25s; }
+  .review-card:nth-child(3) { animation-delay: 0.4s; }
+  .review-card:nth-child(4) { animation-delay: 0.55s; }
+  .review-card:nth-child(5) { animation-delay: 0.7s; }
+  .review-card:nth-child(6) { animation-delay: 0.85s; }
+
+  .review-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--acid);
+    box-shadow: 0 0 40px var(--acid-soft), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  /* Efecto video/scanlines en hover */
+  .review-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(200, 255, 0, 0.03) 2px,
+      rgba(200, 255, 0, 0.03) 4px
+    );
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .review-card:hover::before {
+    opacity: 1;
+    animation: scanline-move 8s linear infinite;
+  }
+
+  @keyframes scanline-move {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+
+  /* Shimmer border effect */
+  .review-card::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      120deg,
+      transparent 30%,
+      var(--acid) 50%,
+      transparent 70%
+    );
+    background-size: 200% 200%;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s;
+    animation: shimmer-border 3s linear infinite;
+    pointer-events: none;
+  }
+
+  .review-card:hover::after {
+    opacity: 1;
+  }
+
+  @keyframes shimmer-border {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Reseña destacada: doble ancho */
+  .review-featured {
+    grid-column: span 2;
+  }
+
+  /* Meta: avatar + info */
+  .review-meta {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .review-avatar-wrap {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .review-card:hover .review-avatar-wrap {
+    border-color: var(--acid);
+  }
+
+  .review-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1);
+    transition: filter 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo);
+  }
+
+  .review-card:hover .review-avatar {
+    filter: grayscale(0);
+    transform: scale(1.05);
+  }
+
+  .review-author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .review-author-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .review-author {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+
+  .review-role {
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: var(--text-dim);
+    line-height: 1.35;
+  }
+
+  .review-relationship {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--acid);
+    margin-top: 0.2rem;
+  }
+
+  /* Texto de la reseña */
+  .review-text {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+    line-height: 1.55;
+    color: var(--text-dim);
+    flex-grow: 1;
+  }
+
+  .review-text p {
+    margin: 0 0 0.9em;
+  }
+
+  .review-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Fecha */
+  .review-date {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .resenas-grid {
+      grid-template-columns: 1fr;
+    }
+    .review-featured {
+      grid-column: span 1;
+    }
+    .quote-mark {
+      right: -1rem;
+      top: -2rem;
+      font-size: 8rem;
+      opacity: 0.4;
+    }
+    .review-text {
+      font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .review-card {
+      padding: 1.4rem;
+    }
+    .review-meta {
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+  }
+</style>
