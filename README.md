@@ -1,48 +1,44 @@
-# Astro Starter Kit: Basics
+# idankest.dev — Portfolio de Kilian Sánchez
 
-```sh
-pnpm create astro@latest -- --template basics
-```
+Portfolio one-page construido con **Astro 5** (SSR con `@astrojs/node`, página principal prerenderizada), **Tailwind CSS v4** y formulario de contacto vía **Resend**.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+## Stack
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+- Astro 5 · output `server` + `prerender` en el index (el endpoint `/api/contact` es la única ruta dinámica)
+- Tailwind v4 (plugin de Vite) + design tokens propios en `src/styles/global.css`
+- `astro-icon` con colecciones devicon / simple-icons
+- Resend para el email del formulario (`src/pages/api/contact.ts`)
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+## Comandos
 
-## 🚀 Project Structure
+| Comando | Acción |
+| :-- | :-- |
+| `pnpm install` | Instala dependencias |
+| `pnpm dev` | Dev server en `localhost:4321` |
+| `pnpm build` | Build de producción a `./dist/` |
+| `pnpm preview` | Previsualiza el build |
+| `pnpm sync-reviews` | Regenera `src/data/reviews.ts` desde la exportación de LinkedIn |
+| `node scripts/generate-og.mjs` | Regenera la imagen Open Graph (`public/og.png`, 1200×630) |
+| `node scripts/record-previews.mjs [slug]` | Regraba los videos de hover de los proyectos live (`public/videos/*.webm`) |
 
-Inside of your Astro project, you'll see the following folders and files:
+> Los scripts de Playwright usan la instalación global de Homebrew (`/opt/homebrew/lib/node_modules/playwright`).
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+## Estructura de datos
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+- `src/data/proyects.js` — proyectos del bento grid. Campos clave: `kind` (`web` | `app`, decide el chrome del mockup), `video` (preview en hover), `coverAlt`, `github` (omitir si el repo es privado), `featured`.
+- `src/data/techs.js` — mapeo tech → icono Iconify (añadir también el icono al `include` de `astro.config.mjs`).
+- `src/data/reviews.ts` — generado por `scripts/parse-reviews.js`.
 
-## 🧞 Commands
+## Videos de preview
 
-All commands are run from the root of the project, from a terminal:
+Los `.webm` de `public/videos/` se reproducen al hacer hover en cada card. Son reemplazables sin tocar código: graba una demo mejor (p. ej. con Reelify) y sobreescribe el archivo con el mismo nombre.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+## Variables de entorno
 
-## 👀 Want to learn more?
+Ver `.env.example`: `RESEND_API_KEY`, `CONTACT_EMAIL`, `FROM_EMAIL`, `FROM_NAME`, `AUTO_REPLY_EVENT`.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Pendiente
+
+- Migración a Astro 6 / `@astrojs/node` 10 (majors; resolverían los avisos de `pnpm audit` del toolchain de build).
+- Covers/videos de Reelify y VoicePrompt grabados desde la app nativa cuando salgan de beta.
+- Enlace al certificado de Ironhack cuando esté finalizado (`src/components/Certificados.astro`).
