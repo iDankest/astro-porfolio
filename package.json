@@ -6,11 +6,22 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "sync-reviews": "node scripts/parse-reviews.js",
+    "theme": "node scripts/theme.js"
   },
   "dependencies": {
+    "@astrojs/node": "^9.5.5",
+    "@iconify-json/simple-icons": "^1.2.85",
     "@tailwindcss/vite": "^4.1.6",
-    "astro": "^5.7.13",
+    "astro": "^5.18.2",
+    "astro-icon": "^1.1.5",
+    "resend": "^6.12.4",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4.1.6"
+  },
+  "devDependencies": {
+    "@iconify-json/devicon": "^1.2.62",
+    "@iconify-json/logos": "^1.2.11"
   }
 }
