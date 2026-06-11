@@ -1,0 +1,155 @@
+---
+---
+
+<section class="snake-section" id="contribuciones">
+	<div class="snake-wrap">
+		<div class="snake-header">
+			<span class="eyebrow">Open Source · 02 / 10</span>
+			<h2 class="snake-title">
+				<span>Contribuciones</span>
+				<em>en GitHub</em>
+			</h2>
+		</div>
+
+		<div class="snake-card">
+			<div class="snake-meta">
+				<span class="meta-key">graph.type</span>
+				<span class="meta-value">"contribution_snake"</span>
+			</div>
+			<div class="snake-meta">
+				<span class="meta-key">user</span>
+				<span class="meta-value">@idankest</span>
+			</div>
+			<div class="snake-img-wrap">
+				<img
+					src="https://raw.githubusercontent.com/iDankest/iDankest/main/img/snake_dark.svg"
+					alt="GitHub contribution snake animation"
+					class="snake-img"
+				/>
+			</div>
+			<div class="snake-footnote">
+				<span>// generated automatically from contribution activity</span>
+				<span class="live-dot"></span>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.snake-section {
+		width: min(1280px, 100% - 3rem);
+		padding: 6rem 0 3rem;
+		position: relative;
+		z-index: 5;
+	}
+
+	.snake-wrap {
+		display: grid;
+		grid-template-columns: 1fr 1.6fr;
+		gap: 3rem;
+		align-items: center;
+	}
+
+	.snake-header {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.snake-title {
+		margin: 0;
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: clamp(2.4rem, 5vw, 4rem);
+		line-height: 0.95;
+		letter-spacing: -0.02em;
+		color: var(--text);
+	}
+
+	.snake-title span { display: block; }
+	.snake-title em {
+		font-style: italic;
+		color: var(--acid);
+		display: block;
+	}
+
+	.snake-card {
+		background: var(--ink-2);
+		border: 1px solid var(--line);
+		padding: 1.5rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.8rem;
+		position: relative;
+		overflow: hidden;
+		transition: border-color 0.4s, transform 0.4s var(--ease-out-expo);
+	}
+	.snake-card:hover {
+		border-color: var(--line-strong);
+		transform: translateY(-2px);
+	}
+
+	.snake-card::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 60px;
+		height: 1px;
+		background: var(--acid);
+	}
+
+	.snake-meta {
+		display: flex;
+		gap: 0.6rem;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.06em;
+	}
+
+	.meta-key { color: var(--text-faint); }
+	.meta-value { color: var(--text); }
+
+	.snake-img-wrap {
+		padding: 2rem 1.5rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		min-height: 180px;
+		background: var(--ink);
+		border: 1px solid var(--line);
+		border-radius: 4px;
+	}
+
+	.snake-img {
+		width: 100%;
+		max-width: 540px;
+		height: auto;
+		opacity: 1;
+	}
+
+	.snake-footnote {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.08em;
+		color: var(--text-faint);
+	}
+
+	.live-dot {
+		width: 6px;
+		height: 6px;
+		background: var(--acid);
+		border-radius: 50%;
+		animation: blink 1.4s steps(1) infinite;
+	}
+
+	@media (max-width: 900px) {
+		.snake-wrap {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+	}
+</style>
