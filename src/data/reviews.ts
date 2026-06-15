@@ -35,6 +35,15 @@ export const reviews: Review[] = [
     relationship: "Trabajó con Kilian en el mismo equipo",
   },
   {
+    author: "Hades Otero Trujillo",
+    role: "Estudiante en Universidad de Las Palmas de Gran Canaria",
+    avatar: "/assets/reviews/hades.jpg",
+    text: "Chico con bastante experiencia en desarrollo web. Bastante amigable y capaz de echar las horas que hagan falta para resolver cualquier problema. Dispuesto a cubrir tus momentos más flojos y trabajar en sectores que no se especializa.\n\nMuy activo y un buen chaval. Y una grata atención al detalle, tiene una alta especialización en el diseño y frontend.",
+    date: "2026-06-15",
+    linkedInUrl: "https://www.linkedin.com/in/hades-otero-trujillo-a24a05416/",
+    relationship: "Trabajó con Kilian en el mismo equipo",
+  },
+  {
     author: "Carlos Garrido López",
     role: "Web developer | Full stack | #JavaScript | #TypeScript | #Vue | #Angular | #React | #Node | #Express | #Java | Spring Boot",
     company: "Reboot Academy",
