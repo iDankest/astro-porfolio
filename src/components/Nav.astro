@@ -1,4 +1,8 @@
 ---
+// `base` se usa para que las anclas funcionen también fuera de la home:
+// en /blog se prefijan con "/" para volver a la portada (p. ej. /#proyectos).
+const { base = "" } = Astro.props;
+
 const links = [
 	{ href: "#inicio", label: "Inicio", num: "01" },
 	{ href: "#proyectos", label: "Proyectos", num: "02" },
@@ -8,11 +12,13 @@ const links = [
 	{ href: "#faq", label: "FAQ", num: "06" },
 	{ href: "#contacto", label: "Contacto", num: "07" },
 ];
+
+const resolve = (href: string) => (href.startsWith("#") ? `${base}${href}` : href);
 ---
 
 <nav class="nav-floating">
 	<div class="nav-inner">
-		<a href="#inicio" class="nav-mark" aria-label="Inicio">
+		<a href={resolve("#inicio")} class="nav-mark" aria-label="Inicio">
 			<span class="mark-bracket">[</span>
 			<span class="mark-name">K.S</span>
 			<span class="mark-bracket">]</span>
@@ -20,16 +26,16 @@ const links = [
 		<ul class="nav-links">
 			{links.map((l) => (
 				<li>
-					<a href={l.href} class="nav-link">
+					<a href={resolve(l.href)} class="nav-link">
 						<span class="nav-num">{l.num}</span>
 						<span class="nav-label">{l.label}</span>
 					</a>
 				</li>
 			))}
 		</ul>
-		<a href="https://github.com/idankest" target="_blank" rel="noopener" class="nav-cta">
-			<span>github</span>
-			<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
+		<a href="/blog" class="nav-cta">
+			<span>blog</span>
+			<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
 		</a>
 		<button
 			type="button"
@@ -48,7 +54,7 @@ const links = [
 		<ul class="nav-mobile-links">
 			{links.map((l) => (
 				<li>
-					<a href={l.href} class="nav-mobile-link">
+					<a href={resolve(l.href)} class="nav-mobile-link">
 						<span class="nav-num">{l.num}</span>
 						<span class="nav-label">{l.label}</span>
 					</a>
