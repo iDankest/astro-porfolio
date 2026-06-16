@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /keystatic/
 
-Sitemap: https://idankest.dev/sitemap.xml
+Sitemap: https://idankest.dev/sitemap-index.xml

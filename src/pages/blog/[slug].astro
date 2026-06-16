@@ -1,0 +1,274 @@
+---
+export const prerender = true;
+
+import { getImage } from "astro:assets";
+import Layout from "../../layouts/Layout.astro";
+import BlogNav from "../../components/blog/BlogNav.astro";
+import Footer from "../../components/Footer.astro";
+import BlogHeader from "../../components/blog/BlogHeader.astro";
+import Prose from "../../components/blog/Prose.astro";
+import PostContent from "../../components/blog/PostContent";
+import { reader } from "../../lib/reader";
+import { resolveCover } from "../../lib/covers";
+import { blogCategories } from "../../data/blog-categories";
+import "../../styles/global.css";
+
+export async function getStaticPaths() {
+	const posts = await reader.collections.posts.all();
+	return posts
+		.filter((p) => !p.entry.draft)
+		.map((p) => ({ params: { slug: p.slug } }));
+}
+
+const { slug } = Astro.params;
+const post = await reader.collections.posts.read(slug!);
+
+if (!post) {
+	throw new Error(`Artículo no encontrado: ${slug}`);
+}
+
+const content = await post.content();
+const nodes: any[] = Array.isArray(content) ? content : Object.values(content ?? {});
+
+// --- Tabla de contenidos (H2/H3) con slugs únicos ---
+function slugify(input: string): string {
+	return input
+		.toLowerCase()
+		.normalize("NFD")
+		.replace(/[̀-ͯ]/g, "")
+		.replace(/[^a-z0-9]+/g, "-")
+		.replace(/^-+|-+$/g, "");
+}
+function textOf(node: any): string {
+	if (!node) return "";
+	if (typeof node.text === "string") return node.text;
+	if (Array.isArray(node.children)) return node.children.map(textOf).join("");
+	return "";
+}
+
+const toc: { level: number; text: string; slug: string }[] = [];
+const slugCounts: Record<string, number> = {};
+for (const node of nodes) {
+	if (node?.type === "heading" && (node.level === 2 || node.level === 3)) {
+		const text = textOf(node).trim();
+		if (!text) continue;
+		const base = slugify(text) || "seccion";
+		const n = slugCounts[base] ?? 0;
+		slugCounts[base] = n + 1;
+		toc.push({ level: node.level, text, slug: n === 0 ? base : `${base}-${n}` });
+	}
+}
+const headingSlugs = toc.map((t) => t.slug);
+
+// --- Tiempo de lectura y nº de palabras ---
+const wordCount = nodes
+	.map(textOf)
+	.join(" ")
+	.trim()
+	.split(/\s+/)
+	.filter(Boolean).length;
+const readingMinutes = Math.max(1, Math.round(wordCount / 200));
+
+const sectionLabel = blogCategories.find((c) => c.value === post.category)?.label;
+
+// --- Imagen OG optimizada (absoluta) ---
+const coverImg = resolveCover(post.cover);
+const ogImg = coverImg
+	? await getImage({ src: coverImg, width: 1200, format: "webp" })
+	: null;
+const coverUrl = ogImg ? new URL(ogImg.src, Astro.site).href : undefined;
+---
+
+<Layout
+	title={`${post.title} — Kilian Sánchez`}
+	description={post.description}
+	type="article"
+	image={coverUrl}
+	publishedDate={post.publishedDate}
+	modifiedDate={post.publishedDate}
+	tags={[...(post.tags ?? [])]}
+	section={sectionLabel}
+	wordCount={wordCount}
+	readingMinutes={readingMinutes}
+>
+	<BlogNav />
+
+	<main class="post" id="inicio">
+		<BlogHeader
+			title={post.title}
+			date={post.publishedDate}
+			tags={post.tags ?? []}
+			cover={post.cover}
+			coverAlt={post.coverAlt}
+			readingMinutes={readingMinutes}
+		/>
+
+		<div class="post-layout">
+			<article class="post-body">
+				<Prose>
+					<PostContent document={content} headingSlugs={headingSlugs} />
+				</Prose>
+
+				<div class="post-foot">
+					<a href="/blog" class="post-back">
+						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<path d="M19 12H5M11 18l-6-6 6-6" />
+						</svg>
+						Volver al blog
+					</a>
+				</div>
+			</article>
+
+			{toc.length > 0 && (
+				<aside class="post-toc" aria-label="Tabla de contenidos">
+					<nav class="toc">
+						<p class="toc-title">En este artículo</p>
+						<ul class="toc-list">
+							{toc.map((item) => (
+								<li class={`toc-item toc-l${item.level}`}>
+									<a href={`#${item.slug}`}>{item.text}</a>
+								</li>
+							))}
+						</ul>
+					</nav>
+				</aside>
+			)}
+		</div>
+	</main>
+
+	<Footer />
+</Layout>
+
+<style>
+	.post {
+		width: min(1040px, 100% - 3rem);
+		margin: 0 auto;
+		padding: 9rem 0 4rem;
+		position: relative;
+		z-index: 5;
+	}
+
+	.post-layout {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 220px;
+		gap: 3.5rem;
+		align-items: start;
+		margin-top: 2.5rem;
+	}
+	.post-body {
+		min-width: 0;
+	}
+
+	/* Tabla de contenidos lateral (sticky) */
+	.post-toc {
+		position: sticky;
+		top: 6.5rem;
+	}
+	.toc-title {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--text-faint);
+		margin: 0 0 1rem;
+		padding-bottom: 0.8rem;
+		border-bottom: 1px solid var(--line);
+	}
+	.toc-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.1rem;
+	}
+	.toc-item a {
+		display: block;
+		padding: 0.4rem 0 0.4rem 0.9rem;
+		border-left: 1px solid var(--line);
+		font-size: 0.85rem;
+		line-height: 1.4;
+		color: var(--text-dim);
+		transition: color 0.25s, border-color 0.25s;
+	}
+	.toc-item a:hover {
+		color: var(--text);
+		border-color: var(--line-strong);
+	}
+	.toc-l3 a {
+		padding-left: 1.7rem;
+		font-size: 0.8rem;
+		color: var(--text-faint);
+	}
+	.toc-item a.is-active {
+		color: var(--acid);
+		border-color: var(--acid);
+	}
+
+	.post-foot {
+		margin-top: 3rem;
+		padding-top: 2rem;
+		border-top: 1px solid var(--line);
+	}
+	.post-back {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--text-dim);
+		transition: color 0.3s;
+	}
+	.post-back svg {
+		transition: transform 0.4s var(--ease-out-expo);
+	}
+	.post-back:hover {
+		color: var(--acid);
+	}
+	.post-back:hover svg {
+		transform: translateX(-4px);
+	}
+
+	@media (max-width: 900px) {
+		.post-layout {
+			grid-template-columns: 1fr;
+		}
+		.post-toc {
+			display: none;
+		}
+	}
+</style>
+
+<script>
+	// Resalta la sección activa en la tabla de contenidos al hacer scroll
+	const tocLinks = Array.from(
+		document.querySelectorAll<HTMLAnchorElement>(".post-toc a"),
+	);
+	const headings = Array.from(
+		document.querySelectorAll<HTMLElement>(".prose h2[id], .prose h3[id]"),
+	);
+
+	if (tocLinks.length && headings.length && "IntersectionObserver" in window) {
+		const linkById = new Map(
+			tocLinks.map((a) => [a.getAttribute("href")?.slice(1) ?? "", a]),
+		);
+		let current: HTMLAnchorElement | null = null;
+
+		const obs = new IntersectionObserver(
+			(entries) => {
+				for (const e of entries) {
+					if (!e.isIntersecting) continue;
+					const link = linkById.get((e.target as HTMLElement).id);
+					if (!link || link === current) continue;
+					current?.classList.remove("is-active");
+					link.classList.add("is-active");
+					current = link;
+				}
+			},
+			{ rootMargin: "0px 0px -75% 0px", threshold: 0 },
+		);
+		headings.forEach((h) => obs.observe(h));
+	}
+</script>

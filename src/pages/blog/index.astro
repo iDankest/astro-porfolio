@@ -1,0 +1,208 @@
+---
+export const prerender = true;
+
+import Layout from "../../layouts/Layout.astro";
+import BlogNav from "../../components/blog/BlogNav.astro";
+import Footer from "../../components/Footer.astro";
+import ArticleCard from "../../components/blog/ArticleCard.astro";
+import { getPublishedPosts } from "../../lib/reader";
+import { blogCategories } from "../../data/blog-categories";
+import "../../styles/global.css";
+
+const posts = await getPublishedPosts();
+---
+
+<Layout
+	title="Blog — Kilian Sánchez"
+	description="Artículos sobre desarrollo web front-end, Astro, rendimiento y SEO técnico. Notas de lo que aprendo construyendo interfaces."
+>
+	<BlogNav />
+
+	<main class="blog-index" id="inicio">
+		<header class="blog-hero">
+			<span class="eyebrow">Blog · Notas de desarrollo</span>
+			<h1 class="blog-title">
+				<span>Escribo sobre</span>
+				<em>front-end</em>
+			</h1>
+			<p class="blog-intro">
+				Desarrollo web, rendimiento y <em>SEO técnico</em>. Lo que voy
+				aprendiendo construyendo interfaces rápidas y bien posicionadas.
+			</p>
+		</header>
+
+		{posts.length === 0 ? (
+			<p class="blog-empty">Pronto publicaré el primer artículo. Vuelve dentro de poco.</p>
+		) : (
+			<>
+				<div class="blog-filters" id="blogFilters" aria-label="Filtrar por sección">
+					<button class="blog-chip is-active" data-cat="all" type="button">Todos</button>
+					{blogCategories.map((c) => (
+						<button class="blog-chip" data-cat={c.value} type="button">{c.label}</button>
+					))}
+				</div>
+
+				<div class="blog-grid" id="blogGrid">
+					{posts.map((post) => (
+						<ArticleCard post={post} />
+					))}
+				</div>
+
+				<p class="blog-empty-filter" id="blogEmptyFilter" hidden>
+					Todavía no hay artículos en esta sección.
+				</p>
+			</>
+		)}
+	</main>
+
+	<Footer />
+</Layout>
+
+<style>
+	.blog-index {
+		width: min(1280px, 100% - 3rem);
+		margin: 0 auto;
+		padding: 9rem 0 4rem;
+		position: relative;
+		z-index: 5;
+	}
+
+	.blog-hero {
+		display: flex;
+		flex-direction: column;
+		gap: 1.2rem;
+		padding-bottom: 3rem;
+		margin-bottom: 3rem;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.blog-title {
+		margin: 0.6rem 0 0;
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: clamp(3rem, 8vw, 6rem);
+		line-height: 0.9;
+		letter-spacing: -0.03em;
+		color: var(--text);
+	}
+	.blog-title span {
+		display: block;
+	}
+	.blog-title em {
+		font-style: italic;
+		color: var(--acid);
+		display: block;
+	}
+
+	.blog-intro {
+		font-size: 1rem;
+		line-height: 1.7;
+		color: var(--text-dim);
+		margin: 0;
+		max-width: 48ch;
+	}
+	.blog-intro em {
+		font-style: italic;
+		color: var(--text);
+	}
+
+	.blog-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.5rem;
+	}
+
+	.blog-empty {
+		font-family: var(--font-mono);
+		font-size: 0.95rem;
+		color: var(--text-dim);
+	}
+
+	@media (max-width: 980px) {
+		.blog-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	.blog-filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-bottom: 2rem;
+	}
+	.blog-chip {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		color: var(--text-dim);
+		background: var(--ink-2);
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		padding: 0.45rem 0.95rem;
+		transition: color 0.25s, border-color 0.25s, background 0.25s;
+	}
+	.blog-chip:hover {
+		color: var(--text);
+		border-color: var(--line-strong);
+	}
+	.blog-chip.is-active {
+		color: var(--ink);
+		background: var(--acid);
+		border-color: var(--acid);
+	}
+
+	.blog-empty-filter {
+		font-family: var(--font-mono);
+		font-size: 0.95rem;
+		color: var(--text-dim);
+		padding: 2rem 0;
+	}
+
+	@media (max-width: 640px) {
+		.blog-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
+
+<script>
+	const grid = document.getElementById("blogGrid");
+	const filters = document.getElementById("blogFilters");
+	const emptyFilter = document.getElementById("blogEmptyFilter");
+
+	if (grid && filters) {
+		const chips = Array.from(filters.querySelectorAll<HTMLElement>(".blog-chip"));
+		const cards = Array.from(grid.querySelectorAll<HTMLElement>(".post-card"));
+
+		const apply = (cat: string) => {
+			const c = cat || "all";
+			let visible = 0;
+			cards.forEach((card) => {
+				const match = c === "all" || card.dataset.category === c;
+				card.hidden = !match;
+				if (match) visible++;
+			});
+			chips.forEach((chip) =>
+				chip.classList.toggle("is-active", chip.dataset.cat === c),
+			);
+			if (emptyFilter) emptyFilter.hidden = visible !== 0;
+		};
+
+		const fromHash = () => apply(location.hash.slice(1) || "all");
+
+		chips.forEach((chip) => {
+			chip.addEventListener("click", () => {
+				const cat = chip.dataset.cat || "all";
+				history.replaceState(
+					null,
+					"",
+					cat === "all" ? location.pathname : `#${cat}`,
+				);
+				apply(cat);
+			});
+		});
+
+		window.addEventListener("hashchange", fromHash);
+		fromHash();
+	}
+</script>
