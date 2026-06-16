@@ -4,6 +4,9 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import icon from 'astro-icon';
 import netlify from '@astrojs/netlify';
+import react from '@astrojs/react';
+import keystatic from '@keystatic/astro';
+import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
@@ -45,6 +48,11 @@ export default defineConfig({
 					'googlegemini',
 				],
 			},
+		}),
+		react(),
+		keystatic(),
+		sitemap({
+			filter: (page) => !page.includes('/keystatic'),
 		}),
 	],
 	vite: {

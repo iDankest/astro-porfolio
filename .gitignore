@@ -31,3 +31,6 @@ pnpm-debug.log*
 .antigravitycli/
 .netlify/
 skills-lock.json
+
+# El contenido del blog (posts/, src/assets/blog/, public/blog/) se versiona en este repo.
+# Keystatic (panel local) necesita que NO esté ignorado para poder listarlo.
