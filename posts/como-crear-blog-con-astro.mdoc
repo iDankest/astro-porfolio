@@ -1,0 +1,45 @@
+---
+title: Cómo crear un blog con Astro y Keystatic
+publishedDate: 2026-06-16
+description: Aprende a crear un blog estático, súper rápido y gratuito usando Astro como framework y Keystatic como CMS basado en Git.
+category: frontend
+cover: astro-keystatic-cover.png
+coverAlt: 'Ilustración abstracta de desarrollo web con Astro'
+tags:
+  - astro
+  - keystatic
+  - jamstack
+draft: false
+---
+
+Si quieres montar un blog que cargue rápido, tenga un SEO excelente y sea gratis de alojar, la combinación de **Astro** y **Keystatic** es de las mejores opciones actuales. 
+
+En este artículo, te cuento por qué he elegido este *stack* para mi propio blog y cómo puedes implementarlo tú también.
+
+## ¿Por qué Astro?
+
+Astro es un framework web orientado al contenido. Su gran ventaja frente a opciones como Next.js o Nuxt es su arquitectura en islas (Islands Architecture), que envía por defecto **cero JavaScript** al navegador. 
+
+Para un blog, donde el 95% del contenido es texto e imágenes estáticas, esto significa:
+- Cargas casi instantáneas.
+- Mejores métricas en las Core Web Vitals (imprescindible para Google).
+- Experiencia de lectura perfecta en dispositivos móviles con conexiones lentas.
+
+## Keystatic: El CMS que vive en tu repositorio
+
+El gran problema de los blogs en Markdown puro es que, con el tiempo, manejar imágenes y campos *frontmatter* a mano se vuelve tedioso. Por otro lado, usar un CMS tradicional (como WordPress o Strapi) implica mantener una base de datos o depender de un servicio de terceros.
+
+Aquí es donde brilla **Keystatic**: es un CMS local basado en Git. Te proporciona una interfaz de administración visual muy amigable (similar a Notion o Strapi) para escribir tus artículos, pero **guarda todo como archivos Markdown o Markdoc directamente en tu repositorio**.
+
+### Ventajas de esta arquitectura:
+1. **Sin dependencias externas**: Tus posts son tuyos. Viven en texto plano en GitHub.
+2. **Cero coste**: Al ser estático, puedes alojarlo gratis en Netlify, Vercel o Cloudflare Pages.
+3. **Imágenes en su sitio**: Keystatic gestiona la subida de imágenes y las coloca automáticamente en la carpeta correcta de tu proyecto.
+
+## Almacenamiento externo vs Repositorio Privado
+
+Es tentador querer guardar las imágenes en servicios como Google Photos para ahorrar espacio, pero los enlaces dinámicos de Google no están pensados para incrustarse en blogs y a menudo se rompen (caducan a las horas o días). Si quisieras hosting de imágenes externo (como Imgur o Cloudinary), tendrías que pegar la URL a mano y pierdes la comodidad de arrastrar y soltar la imagen en tu panel.
+
+La solución elegante que utiliza este blog es conectar Keystatic a un **repositorio privado secundario en GitHub**. De esta forma, las imágenes de alta calidad y los textos no inflan el peso del repositorio público de tu portfolio. Netlify se encarga de unir ambos mundos cuando compila la página, dándote almacenamiento casi ilimitado gratis en GitHub, y control total sobre tus archivos.
+
+¡Espero que te animes a probarlo!
