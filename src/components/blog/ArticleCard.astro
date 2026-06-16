@@ -1,0 +1,160 @@
+---
+import { Image } from "astro:assets";
+import type { Post } from "../../lib/reader";
+import { resolveCover } from "../../lib/covers";
+
+interface Props {
+	post: Post;
+}
+
+const { post } = Astro.props;
+const { slug, entry } = post;
+
+const date = entry.publishedDate
+	? new Date(entry.publishedDate).toLocaleDateString("es-ES", {
+			year: "numeric",
+			month: "long",
+			day: "numeric",
+		})
+	: "";
+
+const tags = (entry.tags ?? []).slice(0, 3);
+const coverImg = resolveCover(entry.cover);
+---
+
+<article class="post-card" data-category={entry.category ?? "otros"}>
+	<a class="post-card-link" href={`/blog/${slug}`} data-cursor="hover">
+		{coverImg && (
+			<div class="post-card-image">
+				<Image
+					src={coverImg}
+					alt={entry.coverAlt || entry.title}
+					widths={[400, 800]}
+					sizes="(max-width: 640px) 100vw, 400px"
+					loading="lazy"
+				/>
+			</div>
+		)}
+		<div class="post-card-body">
+			<div class="post-card-meta">
+				{tags[0] && <span class="post-card-tag">{tags[0]}</span>}
+				{date && (
+					<time class="post-card-date" datetime={entry.publishedDate}>{date}</time>
+				)}
+			</div>
+			<h3 class="post-card-title">{entry.title}</h3>
+			<p class="post-card-desc">{entry.description}</p>
+			<span class="post-card-cta">
+				Leer artículo
+				<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<path d="M5 12h14M13 6l6 6-6 6" />
+				</svg>
+			</span>
+		</div>
+	</a>
+</article>
+
+<style>
+	.post-card {
+		background: var(--ink-2);
+		border: 1px solid var(--line);
+		overflow: hidden;
+		transition: border-color 0.4s, transform 0.4s var(--ease-out-expo), box-shadow 0.4s;
+	}
+	.post-card:hover {
+		border-color: var(--line-strong);
+		transform: translateY(-4px);
+		box-shadow: 0 0 0 1px var(--acid-soft), 0 24px 48px -28px rgba(200, 255, 0, 0.18);
+	}
+
+	.post-card-link {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
+
+	.post-card-image {
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		background: var(--ink);
+		border-bottom: 1px solid var(--line);
+	}
+	.post-card-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.6s var(--ease-out-expo);
+	}
+	.post-card:hover .post-card-image img {
+		transform: scale(1.04);
+	}
+
+	.post-card-body {
+		padding: 1.5rem 1.5rem 1.6rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+		flex: 1;
+	}
+
+	.post-card-meta {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+	.post-card-tag {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.1em;
+		color: var(--acid);
+		text-transform: uppercase;
+	}
+	.post-card-date {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.05em;
+		color: var(--text-faint);
+	}
+
+	.post-card-title {
+		margin: 0;
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: 1.9rem;
+		line-height: 1.02;
+		letter-spacing: -0.02em;
+		color: var(--text);
+	}
+
+	.post-card-desc {
+		margin: 0;
+		font-size: 0.9rem;
+		line-height: 1.6;
+		color: var(--text-dim);
+		flex: 1;
+	}
+
+	.post-card-cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--text);
+		padding-top: 0.9rem;
+		border-top: 1px solid var(--line);
+		transition: color 0.3s;
+	}
+	.post-card-cta svg {
+		transition: transform 0.4s var(--ease-out-expo);
+	}
+	.post-card:hover .post-card-cta {
+		color: var(--acid);
+	}
+	.post-card:hover .post-card-cta svg {
+		transform: translateX(4px);
+	}
+</style>

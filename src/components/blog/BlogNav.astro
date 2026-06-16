@@ -1,0 +1,89 @@
+---
+// Navegación específica del blog: volver al portfolio (arriba a la izquierda)
+// y la marca del blog a la derecha. El enlace a "/" dispara la transición inversa
+// definida en Layout.astro.
+---
+
+<nav class="blog-nav" aria-label="Navegación del blog">
+	<a href="/" class="blog-back" data-cursor="hover">
+		<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+			<path d="M19 12H5M11 18l-6-6 6-6" />
+		</svg>
+		<span>Volver al Portfolio</span>
+	</a>
+
+	<a href="/blog" class="blog-mark" aria-label="Inicio del blog">
+		<span class="mark-bracket">[</span>
+		<span class="mark-name">Blog</span>
+		<span class="mark-bracket">]</span>
+	</a>
+</nav>
+
+<style>
+	.blog-nav {
+		position: fixed;
+		top: 1.25rem;
+		left: 1.25rem;
+		right: 1.25rem;
+		z-index: 100;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+		pointer-events: none;
+	}
+
+	.blog-back,
+	.blog-mark {
+		pointer-events: auto;
+		background: rgba(19, 19, 24, 0.72);
+		backdrop-filter: blur(20px) saturate(180%);
+		-webkit-backdrop-filter: blur(20px) saturate(180%);
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 20px 40px -20px rgba(0, 0, 0, 0.6);
+	}
+
+	.blog-back {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.55rem;
+		padding: 0.6rem 1.05rem 0.6rem 0.9rem;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.04em;
+		color: var(--text-dim);
+		transition: color 0.25s, border-color 0.25s, transform 0.25s;
+	}
+	.blog-back:hover {
+		color: var(--text);
+		border-color: var(--line-strong);
+	}
+	.blog-back svg {
+		transition: transform 0.35s var(--ease-out-expo);
+	}
+	.blog-back:hover svg {
+		transform: translateX(-3px);
+	}
+
+	.blog-mark {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.15rem;
+		padding: 0.5rem 0.85rem;
+		font-family: var(--font-mono);
+		font-size: 13px;
+		font-weight: 500;
+		letter-spacing: 0.04em;
+		color: var(--text);
+	}
+	.blog-mark .mark-bracket {
+		color: var(--acid);
+	}
+
+	@media (max-width: 560px) {
+		.blog-mark {
+			display: none;
+		}
+	}
+</style>
