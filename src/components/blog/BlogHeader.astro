@@ -8,9 +8,10 @@ interface Props {
 	tags?: readonly string[];
 	cover?: string | null;
 	coverAlt?: string | null;
+	readingMinutes?: number;
 }
 
-const { title, date, tags = [], cover, coverAlt } = Astro.props;
+const { title, date, tags = [], cover, coverAlt, readingMinutes } = Astro.props;
 
 const formattedDate = date
 	? new Date(date).toLocaleDateString("es-ES", {
@@ -45,6 +46,12 @@ const coverImg = resolveCover(cover);
 			<time datetime={date}>{formattedDate}</time>
 			<span aria-hidden="true">·</span>
 			<span>Kilian Sánchez</span>
+			{readingMinutes && (
+				<>
+					<span aria-hidden="true">·</span>
+					<span>{readingMinutes} min de lectura</span>
+				</>
+			)}
 		</div>
 	)}
 

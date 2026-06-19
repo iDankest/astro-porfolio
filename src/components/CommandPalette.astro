@@ -11,7 +11,7 @@ const navItems = [
 	<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 		<circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
 	</svg>
-	<span class="cmdk-trigger-keys"><kbd>⌘</kbd><kbd>K</kbd></span>
+	<span class="cmdk-trigger-keys"><kbd data-cmd-key>⌘</kbd><kbd>K</kbd></span>
 </button>
 
 <div class="cmdk" id="cmdk" role="dialog" aria-modal="true" aria-label="Buscar secciones" aria-hidden="true">
@@ -53,6 +53,58 @@ const navItems = [
 					</a>
 				</li>
 			))}
+
+			<li class="cmdk-group" role="presentation">Preferencias</li>
+			<li role="option">
+				<button type="button" class="cmdk-item" data-action="theme-dim" data-keywords="tema atenuado dim gris carbon oscuro suave">
+					<span class="cmdk-ico" aria-hidden="true">◐</span>
+					<span class="cmdk-text">
+						<span class="cmdk-label">Tema atenuado</span>
+						<span class="cmdk-hint">Oscuro suave (gris carbón)</span>
+					</span>
+					<span class="cmdk-go" aria-hidden="true">↵</span>
+				</button>
+			</li>
+			<li role="option">
+				<button type="button" class="cmdk-item" data-action="theme-dark" data-keywords="tema oscuro dark modo oscuro">
+					<span class="cmdk-ico" aria-hidden="true">☾</span>
+					<span class="cmdk-text">
+						<span class="cmdk-label">Tema oscuro</span>
+						<span class="cmdk-hint">Cambia a modo oscuro</span>
+					</span>
+					<span class="cmdk-go" aria-hidden="true">↵</span>
+				</button>
+			</li>
+			<li role="option">
+				<button type="button" class="cmdk-item" data-action="theme-light" data-keywords="tema claro refresh azul light modo claro">
+					<span class="cmdk-ico" aria-hidden="true">☀</span>
+					<span class="cmdk-text">
+						<span class="cmdk-label">Refresh</span>
+						<span class="cmdk-hint">Tema claro azulado</span>
+					</span>
+					<span class="cmdk-go" aria-hidden="true">↵</span>
+				</button>
+			</li>
+			<li role="option">
+				<button type="button" class="cmdk-item" data-action="toggle-motion" data-keywords="animaciones movimiento reduce motion">
+					<span class="cmdk-ico" aria-hidden="true">✦</span>
+					<span class="cmdk-text">
+						<span class="cmdk-label">Animaciones</span>
+						<span class="cmdk-hint" data-state="motion">—</span>
+					</span>
+					<span class="cmdk-go" aria-hidden="true">↵</span>
+				</button>
+			</li>
+			<li role="option">
+				<button type="button" class="cmdk-item" data-action="toggle-cursor" data-keywords="cursor puntero personalizado">
+					<span class="cmdk-ico" aria-hidden="true">✲</span>
+					<span class="cmdk-text">
+						<span class="cmdk-label">Cursor personalizado</span>
+						<span class="cmdk-hint" data-state="cursor">—</span>
+					</span>
+					<span class="cmdk-go" aria-hidden="true">↵</span>
+				</button>
+			</li>
 		</ul>
 
 		<p class="cmdk-empty" id="cmdkEmpty" hidden>Sin resultados</p>
@@ -76,7 +128,7 @@ const navItems = [
 		align-items: center;
 		gap: 0.5rem;
 		padding: 0.55rem 0.7rem 0.55rem 0.8rem;
-		background: rgba(19, 19, 24, 0.72);
+		background: var(--glass);
 		backdrop-filter: blur(20px) saturate(180%);
 		-webkit-backdrop-filter: blur(20px) saturate(180%);
 		border: 1px solid var(--line);
@@ -195,15 +247,27 @@ const navItems = [
 		display: flex;
 		align-items: center;
 		gap: 0.85rem;
+		width: 100%;
 		padding: 0.7rem 0.7rem;
 		border-radius: 10px;
 		color: var(--text-dim);
 		cursor: pointer;
 		scroll-margin: 0.5rem;
+		font-family: inherit;
+		font-size: inherit;
+		text-align: left;
+		background: none;
+		border: none;
+		border-left: 2px solid transparent;
 	}
 	.cmdk-item.is-active {
-		background: rgba(255, 255, 255, 0.04);
+		background: var(--acid-soft);
+		border-left-color: var(--acid);
 		color: var(--text);
+	}
+	.cmdk-item.is-active .cmdk-ico {
+		border-color: var(--acid);
+		color: var(--acid);
 	}
 	.cmdk-ico {
 		display: grid;
@@ -293,6 +357,23 @@ const navItems = [
 </style>
 
 <script>
+	import {
+		applyTheme,
+		isMotionOn,
+		setMotion,
+		isCursorOn,
+		setCursor,
+		onPrefChange,
+	} from "../lib/prefs";
+
+	// Atajo según plataforma: ⌘ en Mac, Ctrl en el resto
+	const isMac = /Mac|iPhone|iPad|iPod/.test(
+		navigator.platform || navigator.userAgent || "",
+	);
+	document.querySelectorAll("[data-cmd-key]").forEach((el) => {
+		el.textContent = isMac ? "⌘" : "Ctrl";
+	});
+
 	const cmdk = document.getElementById("cmdk");
 	const trigger = document.getElementById("cmdkTrigger");
 	const input = document.getElementById("cmdkInput") as HTMLInputElement | null;
@@ -354,6 +435,7 @@ const navItems = [
 			cmdk.setAttribute("aria-hidden", "false");
 			input.value = "";
 			filter("");
+			refreshPrefItems();
 			requestAnimationFrame(() => input.focus());
 		};
 
@@ -372,6 +454,22 @@ const navItems = [
 			if (next >= vis.length) next = 0;
 			setActive(vis[next]);
 		};
+
+		const refreshPrefItems = () => {
+			const m = list.querySelector('[data-state="motion"]');
+			if (m) m.textContent = isMotionOn() ? "Activadas" : "Desactivadas";
+			const c = list.querySelector('[data-state="cursor"]');
+			if (c) c.textContent = isCursorOn() ? "Activado" : "Desactivado";
+		};
+		const runAction = (action: string) => {
+			if (action === "theme-dim") applyTheme("dim");
+			else if (action === "theme-dark") applyTheme("dark");
+			else if (action === "theme-light") applyTheme("light");
+			else if (action === "toggle-motion") setMotion(!isMotionOn());
+			else if (action === "toggle-cursor") setCursor(!isCursorOn());
+		};
+		onPrefChange(refreshPrefItems);
+		refreshPrefItems();
 
 		trigger?.addEventListener("click", open);
 
@@ -393,7 +491,11 @@ const navItems = [
 				move(-1);
 			} else if (e.key === "Enter") {
 				const active = list.querySelector<HTMLElement>(".cmdk-item.is-active");
-				if (active) {
+				if (!active) return;
+				if (active.dataset.action) {
+					runAction(active.dataset.action);
+					refreshPrefItems();
+				} else {
 					close();
 					active.click();
 				}
@@ -405,7 +507,18 @@ const navItems = [
 			const it = (e.target as Element).closest<HTMLElement>(".cmdk-item");
 			if (it) setActive(it);
 		});
-		list.addEventListener("click", () => close());
+		list.addEventListener("click", (e) => {
+			const item =
+				e.target instanceof Element
+					? e.target.closest<HTMLElement>(".cmdk-item")
+					: null;
+			if (item && item.dataset.action) {
+				runAction(item.dataset.action);
+				refreshPrefItems();
+				return;
+			}
+			close();
+		});
 		cmdk
 			.querySelectorAll("[data-cmdk-close]")
 			.forEach((el) => el.addEventListener("click", close));

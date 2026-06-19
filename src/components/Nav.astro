@@ -14,6 +14,9 @@ const links = [
 ];
 
 const resolve = (href: string) => (href.startsWith("#") ? `${base}${href}` : href);
+
+// En móvil el botón "blog" del header se oculta; lo añadimos al menú hamburguesa.
+const mobileLinks = [...links, { href: "/blog", label: "Blog", num: "08" }];
 ---
 
 <nav class="nav-floating">
@@ -52,7 +55,7 @@ const resolve = (href: string) => (href.startsWith("#") ? `${base}${href}` : hre
 
 	<div class="nav-mobile" id="nav-mobile" hidden>
 		<ul class="nav-mobile-links">
-			{links.map((l) => (
+			{mobileLinks.map((l) => (
 				<li>
 					<a href={resolve(l.href)} class="nav-mobile-link">
 						<span class="nav-num">{l.num}</span>
@@ -82,7 +85,7 @@ const resolve = (href: string) => (href.startsWith("#") ? `${base}${href}` : hre
 		justify-content: space-between;
 		gap: 1rem;
 		padding: 0.5rem 0.6rem 0.5rem 1rem;
-		background: rgba(19, 19, 24, 0.72);
+		background: var(--glass);
 		backdrop-filter: blur(20px) saturate(180%);
 		-webkit-backdrop-filter: blur(20px) saturate(180%);
 		border: 1px solid var(--line);
@@ -128,7 +131,7 @@ const resolve = (href: string) => (href.startsWith("#") ? `${base}${href}` : hre
 
 	.nav-link:hover {
 		color: var(--text);
-		background: rgba(255, 255, 255, 0.04);
+		background: var(--hover);
 	}
 
 	.nav-num {
@@ -193,7 +196,7 @@ const resolve = (href: string) => (href.startsWith("#") ? `${base}${href}` : hre
 		display: none;
 		pointer-events: auto;
 		margin-top: 0.6rem;
-		background: rgba(19, 19, 24, 0.92);
+		background: var(--glass-strong);
 		backdrop-filter: blur(20px) saturate(180%);
 		-webkit-backdrop-filter: blur(20px) saturate(180%);
 		border: 1px solid var(--line);
@@ -223,12 +226,13 @@ const resolve = (href: string) => (href.startsWith("#") ? `${base}${href}` : hre
 	.nav-mobile-link:hover,
 	.nav-mobile-link:focus-visible {
 		color: var(--text);
-		background: rgba(255, 255, 255, 0.04);
+		background: var(--hover);
 	}
 	.nav-mobile-link .nav-num { min-width: 1.4rem; }
 
 	@media (max-width: 820px) {
 		.nav-links { display: none; }
+		.nav-cta { display: none; }
 		.nav-inner { padding: 0.4rem 0.4rem 0.4rem 0.7rem; }
 		.nav-burger { display: flex; }
 	}

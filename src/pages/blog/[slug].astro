@@ -234,9 +234,15 @@ const coverUrl = ogImg ? new URL(ogImg.src, Astro.site).href : undefined;
 	@media (max-width: 900px) {
 		.post-layout {
 			grid-template-columns: 1fr;
+			margin-top: 1.5rem;
 		}
 		.post-toc {
 			display: none;
+		}
+	}
+	@media (max-width: 640px) {
+		.post {
+			padding: 6.5rem 0 3rem;
 		}
 	}
 </style>

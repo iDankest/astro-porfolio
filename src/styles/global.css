@@ -25,6 +25,11 @@
   --ember: #ff6b35;
   --rust: #d4a574;
 
+  /* Glass (navs y controles flotantes) */
+  --glass: rgba(19, 19, 24, 0.72);
+  --glass-strong: rgba(19, 19, 24, 0.92);
+  --hover: rgba(255, 255, 255, 0.06);
+
   /* Type */
   --font-display: "Instrument Serif", "Times New Roman", serif;
   --font-sans: "Manrope", system-ui, sans-serif;
@@ -33,6 +38,120 @@
   /* Motion */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* ==========================================================================
+   TEMA ATENUADO (dim)
+   Oscuro suave en gris carbón. Conserva el verde neón y el carácter del sitio,
+   solo baja la dureza del negro puro.
+   ========================================================================== */
+html[data-theme="dim"] {
+  --ink: #1c1d21;        /* fondo: gris carbón (más suave que el negro) */
+  --ink-2: #25262b;      /* superficies/tarjetas */
+  --ink-3: #2f3036;
+  --ink-4: #3a3b43;
+
+  --line: #393a42;
+  --line-strong: #4c4d57;
+
+  --text: #f0ece3;
+  --text-dim: #9b978f;
+  --text-faint: #6a6760;
+
+  --acid: #c8ff00;
+  --acid-soft: #c8ff0022;
+  --ember: #ff6b35;
+  --rust: #d4a574;
+
+  --glass: rgba(37, 38, 43, 0.72);
+  --glass-strong: rgba(37, 38, 43, 0.92);
+}
+
+/* ==========================================================================
+   TEMA CLARO (identidad propia)
+   Azul frío suave: ni blanco ni negro. Fondo cielo apagado, texto pizarra
+   profundo, acento índigo y un toque coral. Mismo carácter minimalista.
+   ========================================================================== */
+html[data-theme="light"] {
+  --ink: #e7ecf3;        /* fondo: azul-gris frío suave (no blanco) */
+  --ink-2: #f1f5fb;      /* superficies/tarjetas: azul muy claro */
+  --ink-3: #dce3ee;
+  --ink-4: #ccd5e3;
+
+  --line: #d2dae6;
+  --line-strong: #b6c0d2;
+
+  --text: #1c2533;       /* azul pizarra profundo (no negro) */
+  --text-dim: #586374;
+  --text-faint: #8892a3;
+
+  --acid: #3a55e0;       /* acento índigo vibrante */
+  --acid-soft: #3a55e01f;
+  --ember: #f06542;      /* coral cálido (hilo de la marca) */
+  --rust: #bf8a3e;
+
+  --glass: rgba(241, 245, 251, 0.82);
+  --glass-strong: rgba(241, 245, 251, 0.94);
+  --hover: rgba(28, 37, 51, 0.07);
+}
+html[data-theme="light"] body::before {
+  opacity: 0.018;
+}
+html[data-theme="light"] body::after {
+  background: none;
+}
+
+/* ==========================================================================
+   PREFERENCIA: ANIMACIONES DESACTIVADAS (réplica de prefers-reduced-motion)
+   ========================================================================== */
+html[data-motion="off"] {
+  scroll-behavior: auto;
+}
+html[data-motion="off"] .reveal,
+html[data-motion="off"] .marquee-track,
+html[data-motion="off"] .blink,
+html[data-motion="off"] .float-y,
+html[data-motion="off"] .heart,
+html[data-motion="off"] .status-dot,
+html[data-motion="off"] .dot-pulse,
+html[data-motion="off"] .progress-fill {
+  animation: none !important;
+}
+html[data-motion="off"] .reveal {
+  opacity: 1;
+  transform: none;
+}
+html[data-motion="off"] .projects-grid.js .project-card {
+  opacity: 1 !important;
+  transform: none !important;
+}
+html[data-motion="off"] *,
+html[data-motion="off"] *::before,
+html[data-motion="off"] *::after {
+  transition-duration: 0.01ms !important;
+}
+
+/* ==========================================================================
+   PREFERENCIA: CURSOR PERSONALIZADO DESACTIVADO
+   ========================================================================== */
+html[data-cursor="off"] .cursor-dot,
+html[data-cursor="off"] .cursor-ring {
+  display: none !important;
+}
+html[data-cursor="off"],
+html[data-cursor="off"] body {
+  cursor: auto !important;
+}
+html[data-cursor="off"] a,
+html[data-cursor="off"] button,
+html[data-cursor="off"] select,
+html[data-cursor="off"] [role="button"],
+html[data-cursor="off"] [data-cursor="hover"] {
+  cursor: pointer !important;
+}
+html[data-cursor="off"] input,
+html[data-cursor="off"] textarea {
+  cursor: text !important;
 }
 
 /* ==========================================================================

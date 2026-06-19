@@ -32,4 +32,5 @@ export const techs = {
     rust: { name: "Rust", icon: "devicon:rust" },
     python: { name: "Python", icon: "devicon:python" },
     docker: { name: "Docker", icon: "devicon:docker" },
+    go: { name: "Go", icon: "devicon:go" },
 };

@@ -1,5 +1,6 @@
 ---
 import CommandPalette from '../components/CommandPalette.astro';
+import Preferences from '../components/Preferences.astro';
 
 interface Props {
 	title?: string;
@@ -9,6 +10,9 @@ interface Props {
 	publishedDate?: string | null;
 	modifiedDate?: string | null;
 	tags?: string[];
+	section?: string;
+	wordCount?: number;
+	readingMinutes?: number;
 }
 
 const {
@@ -19,6 +23,9 @@ const {
 	publishedDate,
 	modifiedDate,
 	tags = [],
+	section,
+	wordCount,
+	readingMinutes,
 } = Astro.props;
 
 const isArticle = type === "article";
@@ -73,6 +80,9 @@ if (isArticle) {
 		mainEntityOfPage: canonical.href,
 		inLanguage: "es",
 		keywords: tags.join(", "),
+		...(section ? { articleSection: section } : {}),
+		...(wordCount ? { wordCount } : {}),
+		...(readingMinutes ? { timeRequired: `PT${readingMinutes}M` } : {}),
 	});
 	graph.push({
 		"@type": "BreadcrumbList",
@@ -96,6 +106,21 @@ const jsonLd = JSON.stringify({
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script is:inline>
+		// Aplica las preferencias (tema/animaciones/cursor) antes del primer paint.
+		(function () {
+			try {
+				var root = document.documentElement;
+				var t = localStorage.getItem('pref-theme') || 'dark';
+				var prefersLight = matchMedia('(prefers-color-scheme: light)').matches;
+				root.dataset.theme = t === 'system' ? (prefersLight ? 'light' : 'dark') : t;
+				if (localStorage.getItem('pref-motion') === 'off') root.dataset.motion = 'off';
+				if (localStorage.getItem('pref-cursor') === 'off') root.dataset.cursor = 'off';
+			} catch (e) {}
+		})();
+	</script>
+
 	<meta name="description" content={description}>
 	<meta name="author" content="Kilian Sánchez">
 	<meta name="theme-color" content="#0a0a0c">
@@ -259,6 +284,7 @@ const jsonLd = JSON.stringify({
 	</div>
 
 	<CommandPalette />
+	<Preferences />
 
 	<slot />
 

@@ -1,0 +1,263 @@
+---
+// Panel de preferencias: tema (claro/oscuro/sistema), animaciones y cursor.
+// Las preferencias se aplican vía data-attrs en <html> (ver script inline del
+// Layout, que las restaura antes del paint) y se guardan en localStorage.
+---
+
+<div class="prefs">
+	<button
+		class="prefs-trigger"
+		id="prefsTrigger"
+		type="button"
+		aria-label="Preferencias"
+		aria-expanded="false"
+		aria-controls="prefsPanel"
+	>
+		<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+			<circle cx="12" cy="12" r="3" />
+			<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+		</svg>
+	</button>
+
+	<div class="prefs-panel" id="prefsPanel" role="dialog" aria-label="Preferencias" hidden>
+		<p class="prefs-title">Preferencias</p>
+
+		<div class="prefs-row prefs-theme-row">
+			<span class="prefs-label">Tema</span>
+			<div class="prefs-themes" role="group" aria-label="Tema">
+				<button type="button" data-theme-set="dark">Oscuro</button>
+				<button type="button" data-theme-set="dim">Atenuado</button>
+				<button type="button" data-theme-set="light">Refresh</button>
+				<button type="button" data-theme-set="system">Sistema</button>
+			</div>
+		</div>
+
+		<div class="prefs-row">
+			<span class="prefs-label">Animaciones</span>
+			<button type="button" class="prefs-switch" id="prefMotion" role="switch" aria-checked="true">
+				<span class="knob"></span>
+			</button>
+		</div>
+
+		<div class="prefs-row">
+			<span class="prefs-label">Cursor personalizado</span>
+			<button type="button" class="prefs-switch" id="prefCursor" role="switch" aria-checked="true">
+				<span class="knob"></span>
+			</button>
+		</div>
+	</div>
+</div>
+
+<style>
+	.prefs {
+		position: fixed;
+		right: 1.25rem;
+		bottom: 4.85rem;
+		z-index: 95;
+	}
+
+	.prefs-trigger {
+		display: grid;
+		place-items: center;
+		width: 38px;
+		height: 38px;
+		background: var(--glass);
+		backdrop-filter: blur(20px) saturate(180%);
+		-webkit-backdrop-filter: blur(20px) saturate(180%);
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		color: var(--text-dim);
+		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 20px 40px -20px rgba(0, 0, 0, 0.6);
+		transition: color 0.25s, border-color 0.25s, transform 0.4s var(--ease-out-expo);
+	}
+	.prefs-trigger:hover {
+		color: var(--text);
+		border-color: var(--line-strong);
+	}
+	.prefs-trigger[aria-expanded="true"] {
+		color: var(--acid);
+		border-color: var(--acid);
+	}
+	.prefs-trigger[aria-expanded="true"] svg {
+		transform: rotate(60deg);
+	}
+	.prefs-trigger svg {
+		transition: transform 0.5s var(--ease-out-expo);
+	}
+
+	.prefs-panel {
+		position: absolute;
+		right: 0;
+		bottom: calc(100% + 0.7rem);
+		width: 260px;
+		padding: 1rem;
+		background: var(--ink-2);
+		border: 1px solid var(--line-strong);
+		border-radius: 14px;
+		box-shadow: 0 30px 60px -25px rgba(0, 0, 0, 0.7);
+		display: flex;
+		flex-direction: column;
+		gap: 0.9rem;
+	}
+	.prefs-panel[hidden] {
+		display: none;
+	}
+
+	.prefs-title {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--text-faint);
+		margin: 0;
+		padding-bottom: 0.7rem;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.prefs-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.8rem;
+	}
+	.prefs-label {
+		font-size: 0.85rem;
+		color: var(--text);
+	}
+
+	.prefs-theme-row {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 0.65rem;
+	}
+	.prefs-themes {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+	}
+	.prefs-themes button {
+		flex: 1 1 auto;
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.04em;
+		padding: 0.4rem 0.5rem;
+		color: var(--text-dim);
+		background: var(--ink);
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		transition: color 0.2s, background 0.2s, border-color 0.2s;
+	}
+	.prefs-themes button:hover {
+		color: var(--text);
+		border-color: var(--line-strong);
+	}
+	.prefs-themes button[aria-pressed="true"] {
+		color: var(--ink);
+		background: var(--acid);
+		border-color: var(--acid);
+	}
+
+	.prefs-switch {
+		position: relative;
+		width: 40px;
+		height: 22px;
+		flex-shrink: 0;
+		border-radius: 999px;
+		border: 1px solid var(--line-strong);
+		background: var(--ink);
+		transition: background 0.25s, border-color 0.25s;
+	}
+	.prefs-switch .knob {
+		position: absolute;
+		top: 2px;
+		left: 2px;
+		width: 16px;
+		height: 16px;
+		border-radius: 50%;
+		background: var(--text-dim);
+		transition: transform 0.25s var(--ease-out-expo), background 0.25s;
+	}
+	.prefs-switch[aria-checked="true"] {
+		background: var(--acid);
+		border-color: var(--acid);
+	}
+	.prefs-switch[aria-checked="true"] .knob {
+		transform: translateX(18px);
+		background: var(--ink);
+	}
+
+	@media (max-width: 560px) {
+		.prefs {
+			bottom: 4.6rem;
+		}
+	}
+</style>
+
+<script>
+	import {
+		applyTheme,
+		getThemePref,
+		isMotionOn,
+		setMotion,
+		isCursorOn,
+		setCursor,
+		onPrefChange,
+	} from "../lib/prefs";
+
+	const trigger = document.getElementById("prefsTrigger");
+	const panel = document.getElementById("prefsPanel");
+
+	if (trigger && panel) {
+		const setOpen = (open: boolean) => {
+			panel.hidden = !open;
+			trigger.setAttribute("aria-expanded", String(open));
+		};
+
+		trigger.addEventListener("click", (e) => {
+			e.stopPropagation();
+			setOpen(panel.hidden);
+		});
+		document.addEventListener("click", (e) => {
+			if (
+				!panel.hidden &&
+				e.target instanceof Node &&
+				!panel.contains(e.target) &&
+				!trigger.contains(e.target)
+			) {
+				setOpen(false);
+			}
+		});
+		document.addEventListener("keydown", (e) => {
+			if (e.key === "Escape" && !panel.hidden) setOpen(false);
+		});
+
+		const themeBtns = Array.from(
+			panel.querySelectorAll<HTMLButtonElement>("[data-theme-set]"),
+		);
+		const motion = document.getElementById("prefMotion");
+		const cursor = document.getElementById("prefCursor");
+		const mq = matchMedia("(prefers-color-scheme: light)");
+
+		// Sincroniza la UI del panel con el estado actual de las preferencias.
+		const refresh = () => {
+			const cur = getThemePref();
+			themeBtns.forEach((b) =>
+				b.setAttribute("aria-pressed", String(b.dataset.themeSet === cur)),
+			);
+			if (motion) motion.setAttribute("aria-checked", String(isMotionOn()));
+			if (cursor) cursor.setAttribute("aria-checked", String(isCursorOn()));
+		};
+
+		themeBtns.forEach((b) =>
+			b.addEventListener("click", () => applyTheme(b.dataset.themeSet || "dark")),
+		);
+		if (motion) motion.addEventListener("click", () => setMotion(!isMotionOn()));
+		if (cursor) cursor.addEventListener("click", () => setCursor(!isCursorOn()));
+		mq.addEventListener("change", () => {
+			if (getThemePref() === "system") applyTheme("system");
+		});
+
+		onPrefChange(refresh);
+		refresh();
+	}
+</script>

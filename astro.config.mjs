@@ -40,6 +40,7 @@ export default defineConfig({
 					'rust',
 					'python',
 					'docker',
+					'go',
 				],
 				'simple-icons': [
 					'axios',

@@ -8,6 +8,7 @@ import adminGastos from '../assets/projects/admin-gastos.png';
 import guitarra from '../assets/projects/guitarra.png';
 import orbix from '../assets/projects/orbix.png';
 import prismacrawler from '../assets/projects/prismacrawler.png';
+import prismacrawler2 from '../assets/projects/prismacrawler-2.png';
 import reelify from '../assets/projects/reelify.png';
 import voiceprompt from '../assets/projects/voiceprompt.png';
 
@@ -39,6 +40,17 @@ export const projects = [
         tech: ["swift", "rust", "astro", "tailwind"],
         description: "Grabadora de pantalla, capturas y editor nativo para macOS. Swift para la experiencia nativa, Rust para el servicio local, y una IA que escribe el post de LinkedIn y X mientras exporta tu demo.",
         featured: true,
+    },
+    {
+        name: "PrismaCrawler 2.0",
+        tag: "Full Stack · IA · Game",
+        tagline: "Roguelike de acción + jardín idle, ahora con IA, Go y automatizaciones",
+        cover: prismacrawler2,
+        coverAlt: "Pantalla de Prisma Protocol (PrismaCrawler 2.0): roguelike de acción y jardín idle en pixel-art",
+        kind: "web",
+        tech: ["nuxt", "go", "phaser", "gemini", "vue", "ts", "python", "postgresql", "tailwind", "docker"],
+        description: "Continuación de PrismaCrawler hecha ecosistema: frontend Nuxt 4 + Vue 3 + Phaser 4 con dos juegos —el roguelike y el nuevo jardín idle The Garden— y un hub; backend en Go (Gin, GORM, PostgreSQL) y un backend de IA en Python/FastAPI con Gemini, RAG, bot de Discord y automatizaciones n8n.",
+        url: "https://prismacrawler-garden.vercel.app",
     },
     {
         name: "VoicePrompt",
