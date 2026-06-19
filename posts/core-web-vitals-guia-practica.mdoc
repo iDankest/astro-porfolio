@@ -1,0 +1,115 @@
+---
+title: "Core Web Vitals en 2025: La guía práctica para desarrolladores frontend"
+publishedDate: 2026-06-19
+description: "Aprende qué son LCP, INP y CLS, cómo medirlos con herramientas reales y qué cambios concretos en tu código frontend mejorarán tus métricas de Google."
+category: seo
+cover: core-web-vitals-cover.png
+coverAlt: "Ilustración de métricas LCP, INP y CLS en un dashboard oscuro de rendimiento web"
+tags:
+  - seo
+  - rendimiento
+  - core-web-vitals
+  - frontend
+draft: false
+---
+
+Si has abierto alguna vez Google Search Console y has visto una sección llamada "Experiencia en la página", sabrás que Google mide algo más que las palabras clave de tu sitio. Mide cómo se **siente** usarlo. Esas métricas de experiencia tienen un nombre: **Core Web Vitals**.
+
+En este artículo te explico qué significan de verdad, cómo medir en qué punto estás y, lo más importante, qué líneas de código puedes cambiar hoy para mejorarlos.
+
+## Las tres métricas que importan en 2025
+
+Google abandonó la métrica FID (First Input Delay) en 2024 y la sustituyó por **INP**. A día de hoy, las tres señales que conforman los Core Web Vitals son:
+
+| Métrica | ¿Qué mide? | Objetivo |
+|---|---|---|
+| **LCP** — Largest Contentful Paint | Cuándo aparece el elemento principal de la página | ≤ 2,5 s |
+| **INP** — Interaction to Next Paint | Qué tan rápido responde la página a clics y toques | ≤ 200 ms |
+| **CLS** — Cumulative Layout Shift | Si el contenido "salta" mientras carga | ≤ 0,1 |
+
+Que los tres estén en verde en **datos de campo reales** (no solo en Lighthouse) es lo que Google usa como señal de ranking.
+
+---
+
+## LCP: haz que lo importante cargue primero
+
+El LCP es casi siempre tu imagen hero, el titular grande o el video de portada. El error más común es tratarlo como cualquier otra imagen.
+
+**Lo que debes hacer:**
+
+```html
+<!-- ❌ Incorrecto: el hero se carga "cuando le toca" -->
+<img src="/hero.webp" loading="lazy" alt="Hero">
+
+<!-- ✅ Correcto: avisas al navegador que es prioritaria -->
+<link rel="preload" as="image" href="/hero.webp">
+<img src="/hero.webp" fetchpriority="high" alt="Hero">
+```
+
+Además, asegúrate de que el formato sea **WebP o AVIF** y de que el servidor responda en menos de 200 ms (TTFB). Si usas Astro, el componente `<Image>` hace esto automáticamente por ti: convierte a WebP, genera varios tamaños y añade lazy loading donde corresponde.
+
+---
+
+## INP: el hilo principal es el cuello de botella
+
+El INP se dispara cuando tienes tareas largas de JavaScript bloqueando el hilo principal. Google considera "tarea larga" cualquiera que supere los 50 ms.
+
+**Las causas más frecuentes:**
+
+- Librerías de terceros (analytics, chats en vivo, A/B testing) que se ejecutan al hacer clic.
+- Manejadores de eventos `click` que hacen demasiado trabajo síncrono.
+- Animaciones con `setInterval` en lugar de `requestAnimationFrame`.
+
+**La solución de fondo** es dividir el trabajo con `scheduler.yield()` (o su polyfill) para ceder el control al navegador entre tareas:
+
+```javascript
+// ✅ Cede el hilo entre operaciones costosas
+async function procesarDatos(items) {
+  for (const item of items) {
+    procesarItem(item);
+    // Permite que el navegador pinte y responda al usuario
+    await scheduler.yield();
+  }
+}
+```
+
+---
+
+## CLS: reserva el espacio antes de que llegue el contenido
+
+El CLS ocurre cuando una imagen sin dimensiones definidas, un banner de cookies o una fuente web que cambia el texto "empujan" el contenido al cargarse.
+
+**La corrección es sencilla:** define siempre `width` y `height` en tus imágenes, aunque uses CSS para que sean responsive:
+
+```html
+<!-- ✅ El navegador reserva el espacio correcto desde el inicio -->
+<img src="/foto.webp" width="1200" height="630" alt="Foto" style="width:100%;height:auto">
+```
+
+Para las fuentes, usa `font-display: optional` si el texto puede aparecer con la fuente del sistema, o `font-display: swap` si quieres que salga antes con fallback.
+
+---
+
+## Cómo medir: las herramientas reales
+
+Las métricas de laboratorio (Lighthouse) son útiles para detectar problemas, pero Google solo usa **datos de campo reales**:
+
+1. **Google Search Console** → Experiencia en la página → Core Web Vitals: te da los datos de usuarios reales de tu sitio.
+2. **PageSpeed Insights**: combina datos de campo (CrUX) con diagnóstico técnico.
+3. **web-vitals npm package**: mide en tiempo real en el navegador de tus usuarios.
+
+```javascript
+import { onLCP, onINP, onCLS } from 'web-vitals';
+
+onLCP(console.log);
+onINP(console.log);
+onCLS(console.log);
+```
+
+---
+
+## El ciclo de mejora
+
+Un detalle importante: los cambios que hagas tardan **28 días** en reflejarse en los datos de campo de Google Search Console, porque se promedian sobre ese periodo. No esperes resultados inmediatos, pero sí verás en PageSpeed Insights el impacto en métricas de laboratorio antes.
+
+El truco no es conseguir 100 en Lighthouse una vez, sino mantener los tres indicadores en verde de forma sostenida. Eso sí mueve el ranking.

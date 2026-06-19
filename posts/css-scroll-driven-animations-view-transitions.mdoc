@@ -1,0 +1,180 @@
+---
+title: "Animaciones CSS sin JavaScript: Scroll-driven animations y View Transitions"
+publishedDate: 2026-06-19
+description: "Aprende a crear efectos de parallax, revelados en scroll y transiciones entre páginas usando solo CSS moderno. Sin librerías, sin JavaScript, y sin sacrificar rendimiento."
+category: frontend
+cover: css-animations-cover.png
+coverAlt: "Ilustración de elementos animados con scroll y transiciones entre páginas en CSS"
+tags:
+  - css
+  - animaciones
+  - frontend
+  - rendimiento
+draft: false
+---
+
+Durante años, para hacer que un elemento apareciera al hacer scroll o para animar la transición entre páginas, necesitabas una librería de JavaScript: GSAP, AOS, Framer Motion, o escribir tu propio `IntersectionObserver`. En 2024 eso cambió. El navegador ya sabe hacer todo eso solo, con CSS puro.
+
+Estas son las dos especificaciones que lo hacen posible: **Scroll-Driven Animations** y **View Transitions API**.
+
+## Scroll-Driven Animations: anima con el scroll, no con el tiempo
+
+La idea central es simple: en lugar de decirle a una animación "dura 1 segundo", le dices "progresa mientras este elemento está visible en la pantalla". El scroll sustituye al reloj.
+
+Se consigue con dos propiedades CSS nuevas: `animation-timeline` y `animation-range`.
+
+### El efecto de revelado al scroll (scroll-reveal)
+
+Este es el caso de uso más común. Un elemento aparece suavemente cuando entra en el viewport:
+
+```css
+@keyframes aparece {
+  from {
+    opacity: 0;
+    translate: 0 2rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.card {
+  animation: aparece linear both;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
+}
+```
+
+- `animation-timeline: view()` → la animación progresa según la visibilidad del elemento.
+- `animation-range: entry 0% cover 30%` → empieza cuando el elemento comienza a entrar (0%) y termina cuando cubre el 30% del viewport.
+
+### La barra de progreso de lectura
+
+Un caso que los lectores aprecian: una barra que crece a medida que bajan por el artículo.
+
+```css
+#barra-progreso {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--accent);
+  transform-origin: left;
+  animation: crecer linear both;
+  animation-timeline: scroll(root);
+}
+
+@keyframes crecer {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+```
+
+`scroll(root)` vincula la animación al scroll de la página completa. Sin un solo evento JavaScript.
+
+### Compatibilidad
+
+Scroll-driven animations funciona en Chrome y Edge desde 2023, y en Firefox desde 2025. Para Safari y versiones antiguas, la forma correcta de degradar es usar `@supports`:
+
+```css
+/* Fallback: el elemento siempre visible sin animación */
+.card { opacity: 1; }
+
+@supports (animation-timeline: view()) {
+  .card {
+    opacity: 0;
+    animation: aparece linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+  }
+}
+```
+
+---
+
+## View Transitions API: transiciones entre páginas sin SPA
+
+La View Transitions API resuelve el problema clásico: cuando navegas de una página a otra en un sitio estático, hay un parpadeo brusco. Antes la única solución era convertir tu sitio en una Single Page Application (SPA). Ahora no.
+
+### Activarla en todo el sitio (Astro / MPA)
+
+En sitios de múltiples páginas solo necesitas esto en tu CSS:
+
+```css
+@view-transition {
+  navigation: auto;
+}
+```
+
+Con esa única línea, el navegador capturará una foto de la página actual y la nueva, y aplicará un crossfade suave entre ellas. Sin JavaScript, sin configuración.
+
+### Animar un elemento concreto entre páginas
+
+Lo realmente poderoso es que puedes decirle al navegador que "rastree" un elemento específico y lo anime de su posición en la página origen a su posición en la página destino. Esto se llama "shared element transition".
+
+En la página de listado de posts:
+
+```css
+.post-card img {
+  view-transition-name: var(--slug); /* nombre único por card */
+}
+```
+
+En la página del artículo:
+
+```css
+.article-hero-image {
+  view-transition-name: var(--slug); /* el mismo nombre */
+}
+```
+
+El navegador hace el resto: la imagen de la tarjeta vuela suavemente hasta ocupar el lugar de la imagen hero del artículo. El efecto es el de una app nativa, conseguido con dos líneas de CSS.
+
+### Personalizar la animación del crossfade
+
+Por defecto es un fade de 400ms. Puedes modificarlo con pseudoelementos especiales:
+
+```css
+::view-transition-old(root) {
+  animation: salida 0.3s ease-in both;
+}
+
+::view-transition-new(root) {
+  animation: entrada 0.3s ease-out both;
+}
+
+@keyframes salida {
+  to { opacity: 0; transform: translateY(-1rem); }
+}
+
+@keyframes entrada {
+  from { opacity: 0; transform: translateY(1rem); }
+}
+```
+
+---
+
+## Respeta a los usuarios con `prefers-reduced-motion`
+
+Cualquier animación que implementes, sea de scroll o de transición entre páginas, debe desactivarse para usuarios que han indicado en su sistema operativo que prefieren menos movimiento. Es tanto una buena práctica de accesibilidad como un requisito para cumplir WCAG:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+---
+
+## Rendimiento: por qué estas APIs son seguras
+
+Una preocupación legítima con las animaciones es el rendimiento. La buena noticia es que ambas APIs animan en la capa de composición del navegador (el GPU), sin tocar el hilo principal donde vive tu JavaScript. Animar `opacity` y `transform` con estas técnicas tiene un coste cercano a cero en CPU.
+
+El resultado: interfaces que se sienten premium, con el coste de rendimiento de una web estática.
