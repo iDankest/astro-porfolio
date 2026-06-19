@@ -51,15 +51,6 @@ export default config({
 					multiline: true,
 					validation: { isRequired: true, length: { min: 1, max: 200 } },
 				}),
-				cover: fields.image({
-					label: 'Imagen de portada',
-					directory: 'src/assets/blog',
-					publicPath: '/src/assets/blog/',
-				}),
-				coverAlt: fields.text({
-					label: 'Texto alternativo de la portada',
-					description: 'Describe la imagen para accesibilidad y SEO.',
-				}),
 				category: fields.select({
 					label: 'Categoría',
 					description: 'Sección del blog a la que pertenece el artículo.',

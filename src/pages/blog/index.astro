@@ -10,6 +10,23 @@ import { blogCategories } from "../../data/blog-categories";
 import "../../styles/global.css";
 
 const posts = await getPublishedPosts();
+
+// Reparto del bento: el primero es el destacado (2×2); del resto, cada tercero
+// es ancho (2×1) y los demás son cuadrados (1×1). Da un mosaico asimétrico.
+type Variant = "featured" | "wide" | "default";
+const tiles = posts.map((post, i) => {
+	if (i === 0) return { post, variant: "featured" as Variant, size: "featured" };
+	const j = i - 1;
+	const wide = j % 3 === 2;
+	return {
+		post,
+		variant: (wide ? "wide" : "default") as Variant,
+		size: wide ? "wide" : "sm",
+	};
+});
+
+const usedCategories = new Set(posts.map((p) => p.entry.category ?? "otros"));
+const catCount = usedCategories.size;
 ---
 
 <Layout
@@ -29,6 +46,13 @@ const posts = await getPublishedPosts();
 				Desarrollo web, rendimiento y <em>SEO técnico</em>. Lo que voy
 				aprendiendo construyendo interfaces rápidas y bien posicionadas.
 			</p>
+			{posts.length > 0 && (
+				<p class="blog-stat">
+					<span>{posts.length} artículos</span>
+					<span aria-hidden="true">·</span>
+					<span>{catCount} secciones</span>
+				</p>
+			)}
 		</header>
 
 		{posts.length === 0 ? (
@@ -37,14 +61,18 @@ const posts = await getPublishedPosts();
 			<>
 				<div class="blog-filters" id="blogFilters" aria-label="Filtrar por sección">
 					<button class="blog-chip is-active" data-cat="all" type="button">Todos</button>
-					{blogCategories.map((c) => (
-						<button class="blog-chip" data-cat={c.value} type="button">{c.label}</button>
-					))}
+					{blogCategories
+						.filter((c) => usedCategories.has(c.value))
+						.map((c) => (
+							<button class="blog-chip" data-cat={c.value} type="button">{c.label}</button>
+						))}
 				</div>
 
-				<div class="blog-grid" id="blogGrid">
-					{posts.map((post) => (
-						<ArticleCard post={post} />
+				<div class="blog-bento" id="blogGrid">
+					{tiles.map((t) => (
+						<div class={`bento-tile tile--${t.size}`}>
+							<ArticleCard post={t.post} variant={t.variant} />
+						</div>
 					))}
 				</div>
 
@@ -85,9 +113,7 @@ const posts = await getPublishedPosts();
 		letter-spacing: -0.03em;
 		color: var(--text);
 	}
-	.blog-title span {
-		display: block;
-	}
+	.blog-title span { display: block; }
 	.blog-title em {
 		font-style: italic;
 		color: var(--acid);
@@ -106,11 +132,38 @@ const posts = await getPublishedPosts();
 		color: var(--text);
 	}
 
-	.blog-grid {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 1.5rem;
+	.blog-stat {
+		display: flex;
+		gap: 0.7rem;
+		margin: 0.2rem 0 0;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--text-faint);
 	}
+
+	/* ===== Bento ===== */
+	.blog-bento {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		grid-auto-flow: dense;
+		gap: 1.25rem;
+	}
+	.bento-tile {
+		min-width: 0;
+	}
+	.tile--featured {
+		grid-column: span 2;
+		grid-row: span 2;
+	}
+	.tile--wide {
+		grid-column: span 2;
+	}
+	.tile--sm {
+		grid-column: span 1;
+	}
+	.bento-tile[hidden] { display: none; }
 
 	.blog-empty {
 		font-family: var(--font-mono);
@@ -118,11 +171,7 @@ const posts = await getPublishedPosts();
 		color: var(--text-dim);
 	}
 
-	@media (max-width: 980px) {
-		.blog-grid {
-			grid-template-columns: repeat(2, 1fr);
-		}
-	}
+	/* ===== Filtros ===== */
 	.blog-filters {
 		display: flex;
 		flex-wrap: wrap;
@@ -158,6 +207,20 @@ const posts = await getPublishedPosts();
 		padding: 2rem 0;
 	}
 
+	/* ===== Responsive ===== */
+	@media (max-width: 980px) {
+		.blog-bento {
+			grid-template-columns: repeat(2, 1fr);
+		}
+		.tile--featured {
+			grid-column: span 2;
+			grid-row: span 1;
+		}
+		.tile--wide {
+			grid-column: span 2;
+		}
+	}
+
 	@media (max-width: 640px) {
 		.blog-index {
 			padding: 6.5rem 0 3rem;
@@ -166,33 +229,65 @@ const posts = await getPublishedPosts();
 			padding-bottom: 2rem;
 			margin-bottom: 2rem;
 		}
-		.blog-grid {
+		.blog-bento {
 			grid-template-columns: 1fr;
+		}
+		.tile--featured,
+		.tile--wide,
+		.tile--sm {
+			grid-column: span 1;
+			grid-row: span 1;
 		}
 	}
 </style>
 
 <script>
+	import { isMotionOn } from "../../lib/prefs";
+
 	const grid = document.getElementById("blogGrid");
 	const filters = document.getElementById("blogFilters");
 	const emptyFilter = document.getElementById("blogEmptyFilter");
 
 	if (grid && filters) {
 		const chips = Array.from(filters.querySelectorAll<HTMLElement>(".blog-chip"));
-		const cards = Array.from(grid.querySelectorAll<HTMLElement>(".post-card"));
+		const tiles = Array.from(grid.querySelectorAll<HTMLElement>(".bento-tile"));
+		const cardCat = (tile: HTMLElement) =>
+			tile.querySelector<HTMLElement>(".post-card")?.dataset.category ?? "otros";
 
-		const apply = (cat: string) => {
+		const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+		const motion = isMotionOn() && !reduce;
+
+		// GSAP solo se carga si el usuario quiere animaciones. Si no, las tarjetas
+		// se quedan visibles tal cual (cero JS de animación, CWV intactos).
+		type GsapMod = typeof import("gsap");
+		let gsap: GsapMod["gsap"] | null = null;
+
+		const showVisible = (els: HTMLElement[]) => {
+			if (gsap) {
+				gsap.to(els, {
+					opacity: 1,
+					y: 0,
+					duration: 0.5,
+					stagger: 0.06,
+					ease: "power3.out",
+					overwrite: true,
+				});
+			}
+		};
+
+		const apply = (cat: string, animate = false) => {
 			const c = cat || "all";
-			let visible = 0;
-			cards.forEach((card) => {
-				const match = c === "all" || card.dataset.category === c;
-				card.hidden = !match;
-				if (match) visible++;
+			const visible: HTMLElement[] = [];
+			tiles.forEach((tile) => {
+				const match = c === "all" || cardCat(tile) === c;
+				tile.hidden = !match;
+				if (match) visible.push(tile);
 			});
 			chips.forEach((chip) =>
 				chip.classList.toggle("is-active", chip.dataset.cat === c),
 			);
-			if (emptyFilter) emptyFilter.hidden = visible !== 0;
+			if (emptyFilter) emptyFilter.hidden = visible.length !== 0;
+			if (animate) showVisible(visible);
 		};
 
 		const fromHash = () => apply(location.hash.slice(1) || "all");
@@ -205,11 +300,58 @@ const posts = await getPublishedPosts();
 					"",
 					cat === "all" ? location.pathname : `#${cat}`,
 				);
-				apply(cat);
+				apply(cat, true);
 			});
 		});
 
 		window.addEventListener("hashchange", fromHash);
 		fromHash();
+
+		// --- Animación de entrada con GSAP (diferida) ---
+		if (motion) {
+			(async () => {
+				const mod = await import("gsap");
+				const stMod = await import("gsap/ScrollTrigger");
+				gsap = mod.gsap;
+				const ScrollTrigger = stMod.ScrollTrigger;
+				gsap.registerPlugin(ScrollTrigger);
+
+				const visibleTiles = tiles.filter((t) => !t.hidden);
+				gsap.set(visibleTiles, { opacity: 0, y: 40 });
+
+				ScrollTrigger.batch(visibleTiles, {
+					start: "top 90%",
+					once: true,
+					onEnter: (batch) =>
+						gsap!.to(batch, {
+							opacity: 1,
+							y: 0,
+							duration: 0.7,
+							stagger: 0.09,
+							ease: "power3.out",
+							overwrite: true,
+						}),
+				});
+
+				// Parallax sutil del arte del destacado para dar profundidad.
+				const featuredArt = grid.querySelector<HTMLElement>(
+					'.tile--featured .cover-art-svg',
+				);
+				if (featuredArt) {
+					gsap.to(featuredArt, {
+						yPercent: 8,
+						ease: "none",
+						scrollTrigger: {
+							trigger: featuredArt.closest(".tile--featured"),
+							start: "top bottom",
+							end: "bottom top",
+							scrub: true,
+						},
+					});
+				}
+
+				ScrollTrigger.refresh();
+			})();
+		}
 	}
 </script>

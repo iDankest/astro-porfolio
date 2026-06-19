@@ -3,8 +3,6 @@ title: "Animaciones CSS sin JavaScript: Scroll-driven animations y View Transiti
 publishedDate: 2026-06-19
 description: "Aprende a crear efectos de parallax, revelados en scroll y transiciones entre páginas usando solo CSS moderno. Sin librerías, sin JavaScript, y sin sacrificar rendimiento."
 category: frontend
-cover: css-animations-cover.png
-coverAlt: "Ilustración de elementos animados con scroll y transiciones entre páginas en CSS"
 tags:
   - css
   - animaciones
@@ -175,6 +173,6 @@ Cualquier animación que implementes, sea de scroll o de transición entre pági
 
 ## Rendimiento: por qué estas APIs son seguras
 
-Una preocupación legítima con las animaciones es el rendimiento. La buena noticia es que ambas APIs animan en la capa de composición del navegador (el GPU), sin tocar el hilo principal donde vive tu JavaScript. Animar `opacity` y `transform` con estas técnicas tiene un coste cercano a cero en CPU.
+Una preocupación legítima con las animaciones es el rendimiento. La buena noticia es que ambas APIs animan en la capa de composición del navegador (el GPU), sin tocar el hilo principal donde vive tu JavaScript. Animar `opacity` y `transform` con estas técnicas tiene un coste cercano a cero en CPU: no penaliza tu INP ni el resto de tus [Core Web Vitals](/blog/core-web-vitals-guia-practica).
 
 El resultado: interfaces que se sienten premium, con el coste de rendimiento de una web estática.

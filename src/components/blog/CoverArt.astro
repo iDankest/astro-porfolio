@@ -1,0 +1,235 @@
+---
+import {
+	seedFrom,
+	rngFrom,
+	MOTIF_COUNT,
+	accentForCategory,
+	wordmarkForCategory,
+	COVER_BRAND,
+} from "../../lib/cover-art";
+
+interface Props {
+	category?: string | null;
+	/** Semilla (normalmente el slug). Mismo valor → mismo dibujo. */
+	seed: string;
+	/** Mostrar la etiqueta "// CATEGORÍA" en la esquina. */
+	label?: boolean;
+	class?: string;
+}
+
+const { category, seed, label = true, class: className = "" } = Astro.props;
+
+const accent = accentForCategory(category);
+const wordmark = wordmarkForCategory(category);
+const s = seedFrom(seed);
+const motif = s % MOTIF_COUNT;
+const rng = rngFrom(s);
+const pick = <T,>(arr: T[]): T => arr[Math.floor(rng() * arr.length)];
+
+const round = (n: number) => Math.round(n * 100) / 100;
+
+// --- Generadores de motivos (viewBox 0 0 200 200, se recorta al contenedor) ---
+function diagonals(): string {
+	const step = pick([16, 20, 24]);
+	const out: string[] = [];
+	for (let d = -200; d <= 200; d += step) {
+		out.push(`<line x1="${d}" y1="0" x2="${d + 200}" y2="200" />`);
+	}
+	const k = Math.floor(rng() * out.length);
+	return `<g class="m-faint">${out.join("")}</g>
+		<g class="m-strong"><line x1="${-200 + k * step}" y1="0" x2="${k * step}" y2="200" /></g>`;
+}
+
+function arcs(): string {
+	const cx = pick([0, 200]);
+	const cy = pick([0, 200]);
+	const step = pick([22, 28, 34]);
+	const out: string[] = [];
+	for (let r = step; r <= 280; r += step) {
+		out.push(`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" />`);
+	}
+	const rr = step * (2 + Math.floor(rng() * 3));
+	return `<g class="m-faint">${out.join("")}</g>
+		<g class="m-strong"><circle cx="${cx}" cy="${cy}" r="${rr}" fill="none" /></g>`;
+}
+
+function dots(): string {
+	const gap = pick([22, 26, 30]);
+	const out: string[] = [];
+	const fx = Math.floor(rng() * 7);
+	const fy = Math.floor(rng() * 7);
+	let i = 0;
+	for (let y = gap; y < 200; y += gap) {
+		let j = 0;
+		for (let x = gap; x < 200; x += gap) {
+			const strong = i === fy && j === fx;
+			out.push(
+				strong
+					? `<circle class="m-node" cx="${x}" cy="${y}" r="5" />`
+					: `<circle cx="${x}" cy="${y}" r="2" />`,
+			);
+			j++;
+		}
+		i++;
+	}
+	return `<g class="m-mid">${out.join("")}</g>`;
+}
+
+function frames(): string {
+	const out: string[] = [];
+	const rot = round(-12 + rng() * 24);
+	for (let i = 0; i < 6; i++) {
+		const inset = 12 + i * 15;
+		out.push(
+			`<rect x="${inset}" y="${inset}" width="${200 - inset * 2}" height="${200 - inset * 2}" fill="none" />`,
+		);
+	}
+	return `<g class="m-faint" transform="rotate(${rot} 100 100)">${out.join("")}</g>
+		<g class="m-strong" transform="rotate(${rot} 100 100)"><rect x="72" y="72" width="56" height="56" fill="none" /></g>`;
+}
+
+function waves(): string {
+	const rows = pick([5, 6, 7]);
+	const amp = pick([10, 14, 18]);
+	const phase = rng() * Math.PI * 2;
+	const out: string[] = [];
+	const gap = 200 / (rows + 1);
+	for (let r = 1; r <= rows; r++) {
+		const y0 = r * gap;
+		let d = `M -10 ${round(y0)}`;
+		for (let x = 0; x <= 210; x += 10) {
+			const y = y0 + Math.sin(x / 28 + phase + r * 0.5) * amp;
+			d += ` L ${x} ${round(y)}`;
+		}
+		out.push(`<path d="${d}" fill="none" />`);
+	}
+	return `<g class="m-mid">${out.join("")}</g>`;
+}
+
+function orbit(): string {
+	const cx = round(60 + rng() * 80);
+	const cy = round(60 + rng() * 80);
+	const r = round(50 + rng() * 30);
+	const a = rng() * Math.PI * 2;
+	const nx = round(cx + Math.cos(a) * r);
+	const ny = round(cy + Math.sin(a) * r);
+	const rot = round(rng() * 180);
+	return `<g class="m-faint">
+			<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" />
+			<ellipse cx="${cx}" cy="${cy}" rx="${round(r * 1.4)}" ry="${round(r * 0.5)}" fill="none" transform="rotate(${rot} ${cx} ${cy})" />
+		</g>
+		<g class="m-strong"><circle cx="${cx}" cy="${cy}" r="3" /></g>
+		<g class="m-node"><circle cx="${nx}" cy="${ny}" r="6" /></g>`;
+}
+
+const generators = [diagonals, arcs, dots, frames, waves, orbit];
+const inner = generators[motif]();
+---
+
+<div class={`cover-art ${className}`} data-cat={category ?? "otros"} aria-hidden="true" style={`--accent:${accent}`}>
+	<svg class="cover-art-svg" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" role="presentation" set:html={inner}></svg>
+	<span class="cover-art-mark">{wordmark}</span>
+	{label && <span class="cover-art-brand">{COVER_BRAND}</span>}
+</div>
+
+<style>
+	.cover-art {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		container-type: inline-size;
+		background:
+			radial-gradient(120% 120% at 100% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 55%),
+			linear-gradient(135deg, var(--ink-2), var(--ink-3));
+		color: var(--accent);
+		isolation: isolate;
+	}
+
+	/* Logotipo tipográfico de la sección: la identidad fuerte de la portada.
+	   Escala con el ancho del contenedor (cqi) y se recorta a propósito. */
+	.cover-art-mark {
+		position: absolute;
+		right: 0.04em;
+		bottom: -0.12em;
+		z-index: 1;
+		margin: 0;
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: 42cqi;
+		line-height: 0.78;
+		letter-spacing: -0.03em;
+		color: var(--accent);
+		opacity: 0.17;
+		white-space: nowrap;
+		user-select: none;
+		pointer-events: none;
+	}
+	.cover-art[data-cat="desarrollo"] .cover-art-mark,
+	.cover-art[data-cat="otros"] .cover-art-mark {
+		color: var(--text);
+		opacity: 0.1;
+	}
+
+	.cover-art-svg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+	.cover-art-svg :global(line),
+	.cover-art-svg :global(circle),
+	.cover-art-svg :global(rect),
+	.cover-art-svg :global(ellipse),
+	.cover-art-svg :global(path) {
+		stroke: currentColor;
+		stroke-width: 1.1;
+		vector-effect: non-scaling-stroke;
+	}
+	.cover-art-svg :global(.m-faint) { opacity: 0.16; }
+	.cover-art-svg :global(.m-mid) { opacity: 0.34; }
+	.cover-art-svg :global(.m-strong) { opacity: 0.85; }
+	.cover-art-svg :global(.m-node) {
+		opacity: 0.95;
+		fill: currentColor;
+		stroke: none;
+	}
+
+	/* Cuando el acento es el color de texto (desarrollo) bajamos la intensidad
+	   para que no compita con el contenido. */
+	.cover-art[data-cat="desarrollo"],
+	.cover-art[data-cat="otros"] {
+		color: var(--text-dim);
+	}
+
+	.cover-art-brand {
+		position: absolute;
+		left: 0.9rem;
+		top: 0.8rem;
+		z-index: 2;
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.1em;
+		color: var(--accent);
+		opacity: 0.85;
+	}
+	.cover-art-brand::before {
+		content: "// ";
+		opacity: 0.6;
+	}
+	.cover-art[data-cat="desarrollo"] .cover-art-brand,
+	.cover-art[data-cat="otros"] .cover-art-brand {
+		color: var(--text-dim);
+	}
+
+	/* Brillo sutil sobre el motivo para dar profundidad */
+	.cover-art::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		pointer-events: none;
+		background: radial-gradient(80% 60% at 20% 110%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 60%);
+	}
+</style>

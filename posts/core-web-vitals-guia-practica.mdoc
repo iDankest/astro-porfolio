@@ -3,8 +3,6 @@ title: "Core Web Vitals en 2025: La guía práctica para desarrolladores fronten
 publishedDate: 2026-06-19
 description: "Aprende qué son LCP, INP y CLS, cómo medirlos con herramientas reales y qué cambios concretos en tu código frontend mejorarán tus métricas de Google."
 category: seo
-cover: core-web-vitals-cover.png
-coverAlt: "Ilustración de métricas LCP, INP y CLS en un dashboard oscuro de rendimiento web"
 tags:
   - seo
   - rendimiento
@@ -73,6 +71,8 @@ async function procesarDatos(items) {
 }
 ```
 
+Y siempre que puedas, saca el trabajo del hilo principal: las [animaciones dirigidas por scroll en CSS puro](/blog/css-scroll-driven-animations-view-transitions) corren en la GPU y no compiten con tu JavaScript, así que mejoran el INP en lugar de empeorarlo.
+
 ---
 
 ## CLS: reserva el espacio antes de que llegue el contenido
@@ -113,3 +113,5 @@ onCLS(console.log);
 Un detalle importante: los cambios que hagas tardan **28 días** en reflejarse en los datos de campo de Google Search Console, porque se promedian sobre ese periodo. No esperes resultados inmediatos, pero sí verás en PageSpeed Insights el impacto en métricas de laboratorio antes.
 
 El truco no es conseguir 100 en Lighthouse una vez, sino mantener los tres indicadores en verde de forma sostenida. Eso sí mueve el ranking.
+
+Y si tu objetivo es que ese rendimiento trabaje a tu favor profesionalmente, el sitio donde más rinde es tu propio portfolio: te cuento [qué debe tener un portfolio de desarrollador que sí convierte](/blog/portfolio-desarrollador-web-que-convierte).
