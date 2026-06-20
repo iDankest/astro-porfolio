@@ -10,18 +10,20 @@ export async function getStaticPaths() {
 	return posts.map((p) => ({
 		params: { slug: p.slug },
 		props: {
-			title: p.entry.title,
 			category: p.entry.category ?? "otros",
 			date: p.entry.publishedDate ?? "",
+			description: p.entry.description ?? "",
+			tech: [...(p.entry.tech ?? [])],
 		},
 	}));
 }
 
 export const GET: APIRoute = async ({ props }) => {
-	const { title, category, date } = props as {
-		title: string;
+	const { category, date, description, tech } = props as {
 		category: string;
 		date: string;
+		description: string;
+		tech: string[];
 	};
 	const dateStr = date
 		? new Date(date).toLocaleDateString("es-ES", {
@@ -31,7 +33,7 @@ export const GET: APIRoute = async ({ props }) => {
 			})
 		: "";
 
-	const png = await renderOgPng({ title, category, date: dateStr });
+	const png = await renderOgPng({ category, date: dateStr, description, tech });
 
 	return new Response(new Uint8Array(png), {
 		headers: {
