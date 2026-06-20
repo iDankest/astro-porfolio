@@ -1,5 +1,6 @@
 import { config, collection, fields } from '@keystatic/core';
 import { blogCategories, DEFAULT_CATEGORY } from './src/data/blog-categories';
+import { techs } from './src/data/techs';
 
 // Repo donde el panel desplegado (modo GitHub) edita el contenido.
 // El contenido vive en este mismo repo (carpeta posts/ + src/assets/blog/).
@@ -60,6 +61,11 @@ export default config({
 				tags: fields.array(fields.text({ label: 'Tag' }), {
 					label: 'Tags',
 					itemLabel: (props) => props.value,
+				}),
+				tech: fields.multiselect({
+					label: 'Tecnologías (iconos de la portada)',
+					description: 'Tecnologías que toca el artículo; aparecen como iconos en la portada generada.',
+					options: Object.entries(techs).map(([value, t]) => ({ label: t.name, value })),
 				}),
 				draft: fields.checkbox({
 					label: 'Borrador',

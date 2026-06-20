@@ -33,4 +33,8 @@ export const techs = {
     python: { name: "Python", icon: "devicon:python" },
     docker: { name: "Docker", icon: "devicon:docker" },
     go: { name: "Go", icon: "devicon:go" },
+    wordpress: { name: "WordPress", icon: "devicon:wordpress" },
+    strapi: { name: "Strapi", icon: "simple-icons:strapi" },
+    sass: { name: "Sass", icon: "devicon:sass" },
+    figma: { name: "Figma", icon: "devicon:figma" },
 };
