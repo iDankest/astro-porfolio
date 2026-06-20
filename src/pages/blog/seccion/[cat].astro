@@ -1,0 +1,272 @@
+---
+export const prerender = true;
+
+import Layout from "../../../layouts/Layout.astro";
+import BlogNav from "../../../components/blog/BlogNav.astro";
+import Footer from "../../../components/Footer.astro";
+import ArticleCard from "../../../components/blog/ArticleCard.astro";
+import { getPublishedPosts } from "../../../lib/reader";
+import { blogCategories } from "../../../data/blog-categories";
+import "../../../styles/global.css";
+
+export async function getStaticPaths() {
+	const posts = await getPublishedPosts();
+	const used = new Set(posts.map((p) => p.entry.category ?? "otros"));
+	const cats = blogCategories.filter((c) => used.has(c.value));
+	return [
+		{ params: { cat: "todos" }, props: { value: "all", label: "Todos", hint: "Todos los artículos del blog, de lo más reciente a lo más antiguo." } },
+		...cats.map((c) => ({ params: { cat: c.value }, props: { value: c.value, label: c.label, hint: c.hint } })),
+	];
+}
+
+const { value, label, hint } = Astro.props;
+
+const allPosts = await getPublishedPosts();
+const posts = value === "all" ? allPosts : allPosts.filter((p) => (p.entry.category ?? "otros") === value);
+
+const vtCat = value; // "all" para Todos → casa con el tile vt-cat-all
+const pageTitle = value === "all" ? "Todos los artículos" : `Artículos de ${label}`;
+---
+
+<Layout
+	title={`${pageTitle} — Blog de Kilian Sánchez`}
+	description={hint}
+>
+	<BlogNav />
+
+	<main class="sec" id="inicio">
+		<a class="sec-back" href="/blog" data-cursor="hover">
+			<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+			Secciones
+		</a>
+
+		<header class="sec-head">
+			<div class="sec-title-row">
+				<h1 class="sec-title" style={`view-transition-name: vt-cat-${vtCat}`}>{label}</h1>
+				<div class="sec-pager" id="secPager" hidden>
+					<button class="pager-btn" id="pagerPrev" type="button" aria-label="Más recientes">
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+					</button>
+					<span class="pager-info" id="pagerInfo">1 / 1</span>
+					<button class="pager-btn" id="pagerNext" type="button" aria-label="Anteriores">
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+					</button>
+				</div>
+			</div>
+			<p class="sec-desc">{hint}</p>
+			<span class="sec-count">{posts.length} {posts.length === 1 ? "artículo" : "artículos"}</span>
+		</header>
+
+		<ul class="posts-bento" id="secBento">
+			{posts.map((post) => (
+				<li class="pb-tile" data-category={post.entry.category ?? "otros"}>
+					<ArticleCard post={post} variant="default" />
+				</li>
+			))}
+		</ul>
+	</main>
+
+	<Footer />
+</Layout>
+
+<style>
+	.sec {
+		width: min(1280px, 100% - 3rem);
+		margin: 0 auto;
+		padding: 8.5rem 0 4rem;
+		position: relative;
+		z-index: 5;
+	}
+
+	.sec-back {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--text-dim);
+		transition: color 0.25s;
+	}
+	.sec-back svg { transition: transform 0.4s var(--ease-out-expo); }
+	.sec-back:hover { color: var(--acid); }
+	.sec-back:hover svg { transform: translateX(-4px); }
+
+	.sec-head {
+		display: flex;
+		flex-direction: column;
+		gap: 0.7rem;
+		padding: 1.4rem 0 1.8rem;
+		margin-bottom: 2.2rem;
+		border-bottom: 1px solid var(--line);
+	}
+	.sec-title-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+	.sec-title {
+		margin: 0;
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: clamp(2.6rem, 7vw, 5rem);
+		line-height: 0.92;
+		letter-spacing: -0.03em;
+		color: var(--text);
+	}
+	.sec-desc {
+		margin: 0;
+		font-size: 1rem;
+		line-height: 1.6;
+		color: var(--text-dim);
+		max-width: 56ch;
+	}
+	.sec-count {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--text-faint);
+	}
+
+	.sec-pager {
+		display: flex;
+		align-items: center;
+		gap: 0.7rem;
+		flex-shrink: 0;
+	}
+	.sec-pager[hidden] { display: none; }
+	.pager-info {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.1em;
+		color: var(--text-faint);
+		min-width: 3ch;
+		text-align: center;
+	}
+	.pager-btn {
+		display: grid;
+		place-items: center;
+		width: 36px;
+		height: 36px;
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		background: var(--ink-2);
+		color: var(--text-dim);
+		transition: color 0.25s, border-color 0.25s, opacity 0.25s;
+	}
+	.pager-btn:hover:not(:disabled) {
+		color: var(--text);
+		border-color: var(--line-strong);
+	}
+	.pager-btn:disabled { opacity: 0.3; cursor: default; }
+
+	/* Bento de posts */
+	.posts-bento {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		grid-auto-flow: dense;
+		gap: 1.25rem;
+	}
+	.pb-tile { min-width: 0; }
+	.pb-tile[hidden] { display: none; }
+	.pb--featured {
+		grid-column: span 2;
+		grid-row: span 2;
+	}
+	.pb--wide { grid-column: span 2; }
+	.pb--sm { grid-column: span 1; }
+
+	@media (max-width: 980px) {
+		.posts-bento { grid-template-columns: repeat(2, 1fr); }
+		.pb--featured { grid-column: span 2; grid-row: span 1; }
+		.pb--wide { grid-column: span 2; }
+	}
+	@media (max-width: 640px) {
+		.sec { padding: 6.5rem 0 3rem; }
+		.posts-bento { grid-template-columns: 1fr; }
+		.pb--featured, .pb--wide, .pb--sm { grid-column: span 1; grid-row: span 1; }
+	}
+</style>
+
+<script>
+	import { isMotionOn } from "../../../lib/prefs";
+
+	const PAGE_SIZE = 6;
+	const grid = document.getElementById("secBento");
+	const pager = document.getElementById("secPager");
+	const pagerInfo = document.getElementById("pagerInfo");
+	const prevBtn = document.getElementById("pagerPrev") as HTMLButtonElement | null;
+	const nextBtn = document.getElementById("pagerNext") as HTMLButtonElement | null;
+
+	if (grid) {
+		const items = Array.from(grid.querySelectorAll<HTMLElement>(".pb-tile"));
+		const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+		const motion = isMotionOn() && !reduce;
+		let gsap: typeof import("gsap")["gsap"] | null = null;
+		let page = 0;
+		const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
+
+		const sizeClasses = ["pb--featured", "pb--wide", "pb--sm"];
+		const applySize = (el: HTMLElement, i: number) => {
+			el.classList.remove(...sizeClasses);
+			if (i === 0) el.classList.add("pb--featured");
+			else if ((i - 1) % 3 === 2) el.classList.add("pb--wide");
+			else el.classList.add("pb--sm");
+		};
+
+		const render = (animate = false) => {
+			page = Math.min(Math.max(0, page), totalPages - 1);
+			const start = page * PAGE_SIZE;
+			const pageItems = items.slice(start, start + PAGE_SIZE);
+			items.forEach((it) => {
+				it.hidden = true;
+				it.classList.remove(...sizeClasses);
+			});
+			pageItems.forEach((it, i) => {
+				it.hidden = false;
+				applySize(it, i);
+			});
+			if (pager) pager.hidden = totalPages <= 1;
+			if (pagerInfo) pagerInfo.textContent = `${page + 1} / ${totalPages}`;
+			if (prevBtn) prevBtn.disabled = page === 0;
+			if (nextBtn) nextBtn.disabled = page >= totalPages - 1;
+			if (animate && gsap) {
+				gsap.fromTo(
+					pageItems,
+					{ opacity: 0, y: 24 },
+					{ opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: "power3.out", overwrite: true },
+				);
+			}
+		};
+
+		prevBtn?.addEventListener("click", () => { if (page > 0) { page--; render(true); window.scrollTo({ top: 0, behavior: "smooth" }); } });
+		nextBtn?.addEventListener("click", () => { page++; render(true); window.scrollTo({ top: 0, behavior: "smooth" }); });
+
+		render(false);
+
+		if (motion) {
+			(async () => {
+				const mod = await import("gsap");
+				const stMod = await import("gsap/ScrollTrigger");
+				gsap = mod.gsap;
+				gsap.registerPlugin(stMod.ScrollTrigger);
+				const visible = items.filter((it) => !it.hidden);
+				gsap.from(visible, {
+					opacity: 0,
+					y: 26,
+					duration: 0.6,
+					stagger: 0.07,
+					ease: "power3.out",
+					scrollTrigger: { trigger: grid, start: "top 88%", once: true },
+				});
+				stMod.ScrollTrigger.refresh();
+			})();
+		}
+	}
+</script>

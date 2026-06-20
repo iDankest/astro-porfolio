@@ -1,0 +1,128 @@
+---
+import CoverArt from "./CoverArt.astro";
+
+interface Props {
+	/** Valor de la categoría, o "all" para el tile "Todos". */
+	cat: string;
+	label: string;
+	count: number;
+	/** Si es el tile destacado (Todos) → más grande. */
+	featured?: boolean;
+}
+
+const { cat, label, count, featured = false } = Astro.props;
+const countText = `${count} ${count === 1 ? "artículo" : "artículos"}`;
+const href = cat === "all" ? "/blog/seccion/todos" : `/blog/seccion/${cat}`;
+---
+
+<a
+	class={`cat-tile${featured ? " is-featured" : ""}`}
+	href={href}
+	data-cursor="hover"
+	aria-label={`Ver artículos de ${label}`}
+>
+	<span class="cat-art" aria-hidden="true">
+		<CoverArt category={cat} seed={`cat-${cat}`} label={false} />
+	</span>
+	<span class="cat-body">
+		<span class="cat-label" style={`view-transition-name: vt-cat-${cat}`}>{label}</span>
+		<span class="cat-count">{countText}</span>
+	</span>
+	<span class="cat-arrow" aria-hidden="true">
+		<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+	</span>
+</a>
+
+<style>
+	.cat-tile {
+		position: relative;
+		display: block;
+		width: 100%;
+		height: 100%;
+		min-height: 180px;
+		text-align: left;
+		background: var(--ink-2);
+		border: 1px solid var(--line);
+		overflow: hidden;
+		isolation: isolate;
+		transition: border-color 0.35s, transform 0.35s var(--ease-out-expo), box-shadow 0.35s;
+	}
+	.cat-tile:hover {
+		transform: translateY(-3px);
+		border-color: var(--line-strong);
+		box-shadow: 0 18px 40px -28px rgba(0, 0, 0, 0.6);
+	}
+
+	.cat-art {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+	}
+	.cat-art :global(.cover-art-svg) {
+		transition: transform 0.6s var(--ease-out-expo);
+	}
+	.cat-tile:hover .cat-art :global(.cover-art-svg) {
+		transform: scale(1.06);
+	}
+	.cat-art::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg, transparent 28%, color-mix(in srgb, var(--ink-2) 80%, transparent));
+	}
+
+	.cat-body {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+		height: 100%;
+		justify-content: flex-end;
+		padding: 1.4rem 1.5rem;
+	}
+	.cat-label {
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: clamp(1.8rem, 2.6vw, 2.6rem);
+		line-height: 1;
+		letter-spacing: -0.02em;
+		color: var(--text);
+	}
+	.cat-count {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--text-dim);
+	}
+
+	.cat-arrow {
+		position: absolute;
+		top: 1.2rem;
+		right: 1.2rem;
+		z-index: 1;
+		display: grid;
+		place-items: center;
+		width: 34px;
+		height: 34px;
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		color: var(--text-dim);
+		background: color-mix(in srgb, var(--ink) 45%, transparent);
+		backdrop-filter: blur(4px);
+		transition: color 0.3s, border-color 0.3s, transform 0.4s var(--ease-out-expo);
+	}
+	.cat-tile:hover .cat-arrow {
+		color: var(--acid);
+		border-color: var(--acid);
+		transform: translate(3px, -3px);
+	}
+
+	.cat-tile.is-featured .cat-label {
+		font-size: clamp(2.6rem, 5vw, 4rem);
+	}
+	.cat-tile.is-featured .cat-body {
+		padding: 2rem 2.1rem;
+	}
+</style>

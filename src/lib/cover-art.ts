@@ -33,6 +33,7 @@ export const MOTIF_COUNT = 6;
 // Cada categoría toma el rol de un token de acento del tema (no un hex fijo),
 // así el color se adapta solo entre temas y nunca choca con el fondo.
 const CATEGORY_ACCENT: Record<string, string> = {
+	all: "var(--acid)",
 	frontend: "var(--acid)",
 	diseno: "var(--ember)",
 	seo: "var(--rust)",
@@ -48,11 +49,12 @@ export function accentForCategory(category?: string | null): string {
 // Es la identidad fuerte de cada sección; el motivo geométrico aporta la
 // variación por artículo.
 const CATEGORY_WORDMARK: Record<string, string> = {
+	all: "TODOS",
 	frontend: "FRONT",
 	diseno: "DISEÑO",
 	seo: "SEO",
 	desarrollo: "DEV",
-	otros: "NOTAS",
+	otros: "OTROS",
 };
 
 export function wordmarkForCategory(category?: string | null): string {
