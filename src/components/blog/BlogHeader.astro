@@ -1,6 +1,4 @@
 ---
-import CoverArt from "./CoverArt.astro";
-
 interface Props {
 	title: string;
 	date?: string | null;
@@ -10,7 +8,7 @@ interface Props {
 	readingMinutes?: number;
 }
 
-const { title, date, tags = [], category, slug, readingMinutes } = Astro.props;
+const { title, date, tags = [], slug, readingMinutes } = Astro.props;
 
 const formattedDate = date
 	? new Date(date).toLocaleDateString("es-ES", {
@@ -36,7 +34,7 @@ const formattedDate = date
 		</ul>
 	)}
 
-	<h1 class="post-title">{title}</h1>
+	<h1 class="post-title" style={`view-transition-name: vt-post-${slug}`}>{title}</h1>
 
 	{formattedDate && (
 		<div class="post-meta">
@@ -51,10 +49,6 @@ const formattedDate = date
 			)}
 		</div>
 	)}
-
-	<div class="post-cover">
-		<CoverArt category={category} seed={slug} />
-	</div>
 </header>
 
 <style>
@@ -123,17 +117,5 @@ const formattedDate = date
 		font-size: 12px;
 		letter-spacing: 0.05em;
 		color: var(--text-dim);
-	}
-
-	.post-cover {
-		margin-top: 1rem;
-		border: 1px solid var(--line);
-		overflow: hidden;
-		aspect-ratio: 1200 / 420;
-	}
-	@media (max-width: 640px) {
-		.post-cover {
-			aspect-ratio: 16 / 10;
-		}
 	}
 </style>

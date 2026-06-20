@@ -74,6 +74,7 @@ const sectionLabel = blogCategories.find((c) => c.value === post.category)?.labe
 	title={`${post.title} — Kilian Sánchez`}
 	description={post.description}
 	type="article"
+	image={`/blog/og/${slug}.png`}
 	publishedDate={post.publishedDate}
 	modifiedDate={post.publishedDate}
 	tags={[...(post.tags ?? [])]}

@@ -87,3 +87,27 @@
 		}
 	}
 </style>
+
+<!-- View Transitions nativas, SOLO entre páginas del blog (ambas declaran la regla).
+     El portfolio no la tiene, así que la cortina portfolio↔blog queda intacta. -->
+<style is:global>
+	@view-transition { navigation: auto; }
+
+	::view-transition-old(root) { animation: blogVtFadeOut 0.28s ease both; }
+	::view-transition-new(root) { animation: blogVtFadeIn 0.36s var(--ease-out-expo) both; }
+	@keyframes blogVtFadeOut { to { opacity: 0; } }
+	@keyframes blogVtFadeIn { from { opacity: 0; } }
+
+	/* Los elementos compartidos (view-transition-name: vt-cat-*, vt-post-*) usan el
+	   grupo por defecto, que interpola posición y tamaño solo → efecto "vuelo". */
+
+	/* Respeta prefers-reduced-motion y el toggle de animaciones del sitio. */
+	@media (prefers-reduced-motion: reduce) {
+		::view-transition-group(*),
+		::view-transition-old(*),
+		::view-transition-new(*) { animation: none !important; }
+	}
+	:root[data-motion="off"]::view-transition-group(*),
+	:root[data-motion="off"]::view-transition-old(*),
+	:root[data-motion="off"]::view-transition-new(*) { animation: none !important; }
+</style>

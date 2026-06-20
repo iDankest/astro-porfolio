@@ -1,6 +1,5 @@
 ---
 import type { Post } from "../../lib/reader";
-import CoverArt from "./CoverArt.astro";
 import { blogCategories } from "../../data/blog-categories";
 
 interface Props {
@@ -28,7 +27,14 @@ const sectionLabel =
 <article class="post-card" data-category={category} data-variant={variant}>
 	<a class="post-card-link" href={`/blog/${slug}`} data-cursor="hover">
 		<div class="post-card-art">
-			<CoverArt category={category} seed={slug} />
+			<img
+				src={`/blog/og/${slug}.png`}
+				alt={entry.title}
+				width="1200"
+				height="630"
+				loading="lazy"
+				decoding="async"
+			/>
 		</div>
 		<div class="post-card-body">
 			<div class="post-card-meta">
@@ -37,7 +43,7 @@ const sectionLabel =
 					<time class="post-card-date" datetime={entry.publishedDate}>{date}</time>
 				)}
 			</div>
-			<h3 class="post-card-title">{entry.title}</h3>
+			<h3 class="post-card-title" style={`view-transition-name: vt-post-${slug}`}>{entry.title}</h3>
 			<p class="post-card-desc">{entry.description}</p>
 			<span class="post-card-cta">
 				Leer artículo
@@ -74,11 +80,16 @@ const sectionLabel =
 		aspect-ratio: 16 / 10;
 		overflow: hidden;
 		border-bottom: 1px solid var(--line);
+		background: var(--ink);
 	}
-	.post-card-art :global(.cover-art-svg) {
+	.post-card-art img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
 		transition: transform 0.6s var(--ease-out-expo);
 	}
-	.post-card:hover .post-card-art :global(.cover-art-svg) {
+	.post-card:hover .post-card-art img {
 		transform: scale(1.05);
 	}
 
