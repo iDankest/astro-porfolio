@@ -1,0 +1,61 @@
+---
+title: "De Figma a Código: Mejores prácticas para un handoff perfecto"
+publishedDate: 2026-06-24
+description: "Cómo cerrar la brecha entre diseño y desarrollo web. Sistemas de diseño, tokens y metodologías para un flujo de trabajo fluido desde Figma al código."
+category: diseno
+tags:
+  - figma
+  - diseno
+  - css
+tech:
+  - figma
+  - css
+  - html
+draft: false
+---
+
+El "Handoff" (la entrega del diseño visual por parte del diseñador al equipo de desarrollo) suele ser el punto de mayor fricción en la construcción de productos digitales. El diseñador se frustra porque "eso no se parece en nada a lo que diseñé", y el desarrollador se desespera porque "esos márgenes no tienen ninguna lógica matemática".
+
+Para arreglar este puente roto, necesitamos un idioma común. Y en 2026, ese idioma son los **Design Tokens** (Tokens de Diseño).
+
+## ¿Qué son los Design Tokens?
+
+En lugar de que el diseñador diga "ponle al botón el color `#3B82F6`" y el programador escriba ese hexadecimal 40 veces a lo largo del código (creando deuda técnica), ambos equipos acuerdan un diccionario semántico.
+
+El diseñador define un color en Figma y lo llama `color-primary-500`. En CSS, el desarrollador transforma eso en una variable nativa:
+
+```css
+:root {
+  --color-primary-500: #3b82f6;
+  --spacing-md: 1rem;
+  --radius-sm: 4px;
+}
+```
+
+Si mañana el equipo de marketing decide que la marca ahora debe ser violeta, el diseñador actualiza el token maestro en Figma, se sincroniza con el código mediante integraciones automatizadas (o cambiando simplemente la variable en CSS), y la aplicación entera cambia de piel en segundos.
+
+## El problema del espaciado (Spacing)
+
+Uno de los errores más comunes es diseñar interfaces moviendo los elementos "a ojo" hasta que se ven bien. Esto resulta en márgenes de `13px`, `17px`, `22px` que vuelven loco a cualquier desarrollador que intenta mantener consistencia.
+
+**La Regla del 8 (o del 4):**
+Tanto en Figma como en código (Tailwind CSS, por ejemplo, usa esta escala por defecto), todo espaciado, margen y tamaño debería ser múltiplo de 4 u 8. 
+
+- Espaciado pequeño: `8px` (`0.5rem`)
+- Medio: `16px` (`1rem`)
+- Grande: `24px` (`1.5rem`)
+
+Si diseñas atado a esta cuadrícula invisible, el frontend puede sistematizar los layouts. Cuando el desarrollador usa `gap-4` en Tailwind, sabe matemáticamente que está aplicando `16px`, clavando el diseño píxel por píxel sin medir.
+
+## Componentes y Variantes: El lenguaje de React/Vue en Figma
+
+Figma ha evolucionado hasta parecerse mucho a un framework frontend. Cuando un diseñador usa *Variants* o *Auto Layout* en Figma, está pensando en código.
+
+- **Auto Layout:** Es literalmente CSS Flexbox. Si el diseño está construido con Auto Layout, el desarrollador solo tiene que replicar las propiedades de flex (dirección, alineación, gap).
+- **Variantes:** Si un botón tiene variante *Primary*, *Secondary*, estado *Hover* y estado *Disabled* en Figma, el frontend creará un único componente React que reciba props (`<Button variant="primary" disabled />`).
+
+## La documentación visual
+
+Para que la entrega sea perfecta, el archivo de Figma debe tener una página explícitamente dedicada a la "Librería de Componentes" (UI Kit), donde se documenten todos los botones, inputs, tipografías y sombras, independientes de las páginas de la aplicación.
+
+Como Frontend, antes de montar una sola pantalla, deberías replicar ese UI Kit en código (quizá usando Storybook). Una vez tienes las piezas de Lego perfectas, ensamblar la interfaz de la web es un proceso rápido y predecible.

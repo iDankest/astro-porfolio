@@ -1,0 +1,93 @@
+---
+title: "CI/CD para Frontend: Automatiza despliegues estáticos con GitHub Actions"
+publishedDate: 2026-06-24
+description: "Tutorial paso a paso para configurar pipelines de integración continua y despliegue automático de aplicaciones frontend (Astro, Vue, React) usando GitHub Actions."
+category: desarrollo
+tags:
+  - devops
+  - automatizacion
+  - github
+tech:
+  - github
+  - git
+draft: false
+---
+
+Uno de los momentos de mayor madurez profesional para cualquier desarrollador frontend es cuando deja de arrastrar archivos por FTP (o ejecutar comandos manuales en la terminal para desplegar) y empieza a confiar en sistemas automatizados de **CI/CD** (Integración Continua y Despliegue Continuo).
+
+Si estás construyendo aplicaciones estáticas (SSG) o servidas en el Edge (con Astro, Next.js, Vite/Vue), automatizar tu flujo de trabajo con **GitHub Actions** es más sencillo de lo que parece, y te salvará de muchos dolores de cabeza.
+
+## ¿Por qué necesitamos CI/CD en el Frontend?
+
+1. **Confianza absoluta:** Nunca más dirás "en mi máquina funcionaba". Si el build se compila en los servidores de GitHub de forma limpia, funcionará en producción.
+2. **Chequeos de calidad:** Puedes forzar que el código pase el linter (ESLint), el formateo (Prettier) y las pruebas unitarias (Vitest/Jest) automáticamente antes de permitir que el código llegue a la rama principal (main).
+3. **Agilidad:** Haces un `git push` y te vas a tomar un café. El sistema compila el HTML, optimiza las imágenes y las sube a Netlify, Vercel o tu VPS en cuestión de minutos sin intervención humana.
+
+## Configurando un Pipeline básico para Astro/Vite
+
+Un Action de GitHub no es más que un archivo YAML que vive dentro de tu proyecto en la carpeta secreta `.github/workflows/`. 
+
+Vamos a crear un archivo llamado `despliegue.yml` que instale nuestras dependencias, ejecute la compilación y compruebe que no hemos roto nada.
+
+```yaml
+name: Deploy Frontend Pipeline
+
+# 1. ¿Cuándo se ejecuta esto?
+on:
+  push:
+    branches: ["main"] # Cada vez que hay nuevo código en main
+  pull_request:
+    branches: ["main"] # Y en los PRs apuntando a main (para testear antes de integrar)
+
+# 2. ¿Qué trabajo se va a hacer?
+jobs:
+  build:
+    runs-on: ubuntu-latest # Una máquina virtual de Linux en la nube
+
+    steps:
+      # A. Clonar el repositorio
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      # B. Preparar el entorno de Node.js
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # C. Instalar dependencias (con pnpm, mucho más rápido)
+      - name: Instalar pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      # D. Validación y Compilación
+      - name: Ejecutar Linter
+        run: pnpm run lint
+
+      - name: Compilar sitio para Producción
+        run: pnpm run build
+```
+
+## El paso mágico: El Despliegue (CD)
+
+El archivo anterior solo asegura que la aplicación se compila correctamente (CI). Si quisieras desplegar ese resultado a, por ejemplo, Cloudflare Pages o un servidor FTP moderno, simplemente añadirías un paso más al final alimentado por los secretos criptográficos de tu repositorio (Tokens de API que GitHub esconde de forma segura).
+
+Por ejemplo, si despliegas a través del CLI en la nube:
+
+```yaml
+      - name: Desplegar a Producción
+        if: github.ref == 'refs/heads/main' # Solo despliega si estamos en la rama main
+        env:
+          TOKEN_DESPLIEGUE: ${{ secrets.PROD_API_TOKEN }}
+        run: pnpm run deploy --token=$TOKEN_DESPLIEGUE
+```
+
+## Conclusión
+
+Sistemas como Vercel o Netlify han democratizado esto conectándose directamente a tu repo sin necesidad de escribir YAMLs. Sin embargo, saber configurar tus propios flujos de trabajo con GitHub Actions te da un control total. Podrás añadir auditorías de Lighthouse obligatorias, avisar por Slack cuando un despliegue termine o correr tests end-to-end con Playwright antes de aceptar un Pull Request.
+
+El frontend moderno no solo es el código que escribe el navegador, es la ingeniería de cómo llega de tu ordenador al mundo.

@@ -1,0 +1,86 @@
+---
+title: "Cómo optimizar imágenes y WebP en Astro para un Core Web Vitals perfecto"
+publishedDate: 2026-06-24
+description: "Aprende a configurar el componente Image de Astro, servir formatos WebP/AVIF y priorizar la carga del LCP para maximizar tu puntuación SEO."
+category: seo
+tags:
+  - astro
+  - seo
+  - rendimiento
+tech:
+  - astro
+  - html
+draft: false
+---
+
+Si hay algo que penaliza agresivamente el SEO y la puntuación de Google PageSpeed Insights, son las **imágenes pesadas y mal optimizadas**. Afortunadamente, si utilizas **Astro**, tienes a tu disposición una de las herramientas más potentes del ecosistema frontend para resolver este problema casi en piloto automático.
+
+En este artículo, te enseñaré cómo usar el módulo de imágenes de Astro para clavar el **LCP (Largest Contentful Paint)** y conseguir un Core Web Vitals perfecto.
+
+## 1. Usa el componente nativo `<Image />`
+
+El error más común es seguir usando la etiqueta `<img>` estándar de HTML. Astro proporciona un componente propio (basado internamente en Sharp) que optimiza, redimensiona y transforma las imágenes en tiempo de compilación.
+
+```astro
+---
+// Importa el componente y la imagen local
+import { Image } from 'astro:assets';
+import miFoto from '../assets/mi-foto.png';
+---
+
+<!-- Astro convertirá esto a WebP y añadirá width/height automáticamente -->
+<Image src={miFoto} alt="Descripción para SEO y accesibilidad" width="800" />
+```
+
+Astro calculará el ratio de aspecto, inyectará los atributos `width` y `height` correctos (evitando el CLS o "salto" de contenido) y la convertirá al formato moderno más óptimo.
+
+## 2. El poder del formato AVIF y WebP
+
+Por defecto, Astro sirve imágenes en formato WebP, lo que reduce el peso hasta en un 50% frente a JPEG/PNG sin pérdida perceptible de calidad. 
+
+Si quieres ir un paso más allá, puedes configurar el formato `avif`, que ofrece compresiones aún más agresivas, ideales para redes móviles lentas.
+
+```astro
+<Image src={miFoto} alt="Hero image" format="avif" />
+```
+
+## 3. Prioriza el LCP (Largest Contentful Paint)
+
+El LCP mide cuánto tarda en renderizarse el bloque visual más grande de tu página (casi siempre, la imagen de cabecera o *Hero*). 
+
+Si a la imagen principal le aplicas *lazy loading* (carga diferida), estás saboteando tu propio rendimiento porque el navegador esperará demasiado para descargarla. Para la imagen principal, **debes hacer lo contrario**:
+
+```astro
+<!-- ❌ MAL: Lazy loading en la imagen del LCP -->
+<Image src={heroImg} alt="Hero" loading="lazy" />
+
+<!-- ✅ BIEN: Alta prioridad y carga "eager" -->
+<Image 
+  src={heroImg} 
+  alt="Hero" 
+  loading="eager" 
+  fetchpriority="high" 
+/>
+```
+
+El atributo `fetchpriority="high"` le susurra al navegador: *"Deja todo lo que estés haciendo y descarga esta imagen inmediatamente"*.
+
+## 4. Imágenes Responsive con el componente `<Picture />`
+
+Cuando una imagen se ve enorme en desktop pero pequeña en el móvil, no tiene sentido enviar el archivo de alta resolución al teléfono. El componente `<Picture />` de Astro permite generar versiones `srcset` automáticas:
+
+```astro
+import { Picture } from 'astro:assets';
+
+<Picture 
+  src={miFoto} 
+  alt="Imagen responsive" 
+  formats={['avif', 'webp']} 
+  widths={[400, 800, 1200]} 
+  sizes="(max-width: 800px) 100vw, 800px" 
+/>
+```
+
+## Conclusión
+
+El SEO técnico de hoy penaliza los tiempos de carga lentos más que nunca. Integrar el componente de imágenes de Astro no es opcional si quieres competir en las SERPs. Con solo cambiar tus etiquetas `<img>` por `<Image />` y ajustar el `fetchpriority` de tu LCP, verás un salto dramático en tus auditorías de Lighthouse.

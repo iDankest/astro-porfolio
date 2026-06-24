@@ -1,0 +1,108 @@
+---
+title: "Accesibilidad Web Básica (a11y): Errores que todo frontend comete"
+publishedDate: 2026-06-24
+description: "Guía práctica para evitar los errores de accesibilidad más comunes en desarrollo frontend y cumplir con los estándares WCAG sin dolor."
+category: frontend
+tags:
+  - a11y
+  - frontend
+  - ui
+tech:
+  - html
+  - css
+draft: false
+---
+
+La accesibilidad web (conocida como **a11y** porque hay 11 letras entre la 'a' y la 'y' en *accessibility*) suele tratarse como una idea de último minuto en el ciclo de desarrollo de software. 
+
+A menudo pensamos: "Lo añadiré al final cuando acabe el rediseño". Spoiler: el final nunca llega. Construir interfaces inaccesibles no solo discrimina a un 15% de la población mundial que vive con algún tipo de discapacidad, sino que también empeora tu SEO y te expone a riesgos legales.
+
+A continuación, repaso los errores más comunes que cometemos como desarrolladores frontend y cómo solucionarlos hoy mismo.
+
+## 1. "Divs" como botones (El antipatrón definitivo)
+
+El error número uno en React/Vue. Necesitas algo cliqueable, así que creas un `<div>` y le pones un `onClick`.
+
+```jsx
+// ❌ ERROR GRAVE: Un div no es interactivo para lectores de pantalla
+<div onClick={abrirModal} className="btn">
+  Abrir menú
+</div>
+```
+
+El problema es que un div **no puede recibir foco** con el teclado (`Tab`) y un lector de pantalla (VoiceOver, NVDA) no sabe que es interactivo. 
+
+**La solución:** Usa HTML semántico.
+```jsx
+// ✅ CORRECTO
+<button onClick={abrirModal} className="btn">
+  Abrir menú
+</button>
+```
+
+Si por arquitectura *debes* usar un elemento no interactivo (no recomendado), tienes que añadir `role="button"`, `tabIndex={0}` y manejar el evento del teclado (`Enter` / `Espacio`).
+
+## 2. Iconos sin alternativas de texto
+
+Los SVGs son increíbles para el rendimiento y el diseño visual, pero para un lector de pantalla, un icono flotante no significa nada. Si tienes un botón que solo es una lupa, tienes un problema grave de usabilidad.
+
+**La solución:** El atributo `aria-label` es tu mejor amigo.
+
+```html
+<!-- ❌ Un lector de pantalla leerá la palabra "Botón" y nada más -->
+<button>
+  <svg class="icon-lupa">...</svg>
+</button>
+
+<!-- ✅ Ahora dirá: "Botón, Buscar" -->
+<button aria-label="Buscar">
+  <svg class="icon-lupa" aria-hidden="true">...</svg>
+</button>
+```
+Nota cómo agregamos `aria-hidden="true"` al SVG para decirle al lector de pantalla que ignore el gráfico, ya que el significado está en el `aria-label` del botón.
+
+## 3. Eliminar el `outline` del focus
+
+Los diseñadores a veces odian el anillo azul (o negro) que aparece alrededor de los elementos cuando haces clic o navegas con el teclado. La reacción instintiva es destruirlo en el CSS global:
+
+```css
+/* ❌ Prohibido: Arruina la navegación por teclado */
+* {
+  outline: none; 
+}
+```
+
+Si haces esto, un usuario que navega sin ratón no tiene forma de saber en qué parte de la página está.
+
+**La solución:** Sustituye el focus, no lo mates. O usa la pseudoclase `:focus-visible` que solo muestra el outline cuando se detecta navegación por teclado, pero lo oculta si el usuario hace clic con el ratón.
+
+```css
+/* ✅ Mejor UX visual y 100% accesible */
+button:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 4px;
+}
+```
+
+## 4. Contraste de colores insuficiente
+
+Ese texto gris claro sobre fondo gris más claro puede verse genial en el monitor 4K calibrado del diseñador, pero será ilegible para alguien con astigmatismo, daltonismo, o simplemente para cualquiera usando su móvil al sol de mediodía.
+
+**La regla de oro:** Según las WCAG AA, el ratio de contraste entre texto y fondo debe ser de al menos **4.5:1** para texto normal y **3:1** para texto grande.
+
+Usa herramientas como *Coolors Contrast Checker* o las DevTools integradas de Chrome para asegurar que tus variables CSS cumplen el estándar.
+
+## 5. Falta de jerarquía en los Headings (H1 a H6)
+
+Los lectores de pantalla no leen la página de arriba a abajo secuencialmente. Los usuarios expertos navegan saltando de un título a otro para hacerse un mapa mental del contenido.
+
+Saltarse niveles (pasar de un `<h1>` a un `<h3>` porque el h3 tiene el tamaño de fuente que te gusta) destruye ese mapa mental.
+
+**La solución:** Usa los tags por su valor semántico, no por su tamaño. Si necesitas un subtítulo que parezca un `h3` visualmente pero estructuralmente debe ser un `h2`, sepáralo con CSS:
+
+```html
+<!-- ✅ Semántica correcta, estilo separado -->
+<h2 class="text-xl font-bold">Subtítulo</h2>
+```
+
+Hacer la web accesible no requiere magia ni frameworks extraños. Requiere empatía, usar el HTML para lo que fue diseñado, y pulsar la tecla `Tab` de tu teclado de vez en cuando.

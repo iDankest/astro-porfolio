@@ -1,0 +1,56 @@
+---
+title: "Tailwind CSS vs CSS Nativo en 2026: ¿Qué deberías elegir?"
+publishedDate: 2026-06-24
+description: "Una comparativa técnica entre Tailwind CSS y el CSS moderno nativo. Descubre cuál es la mejor opción para tus proyectos en rendimiento y DX."
+category: frontend
+tags:
+  - css
+  - tailwind
+  - frontend
+tech:
+  - tailwind
+  - css
+draft: false
+---
+
+El debate sobre cómo estilizar aplicaciones web nunca termina. Hace años la discusión era Sass contra Less; hoy, la batalla se libra entre los frameworks de utilidad como **Tailwind CSS** y las nuevas capacidades del **CSS nativo**.
+
+En 2026, ambas herramientas han evolucionado enormemente. ¿Cuál deberías elegir para tu próximo proyecto? Vamos a analizarlo con detalle.
+
+## El ascenso imparable de Tailwind CSS
+
+Tailwind cambió el paradigma pasando del "CSS semántico" a un enfoque de "utilidades primero". 
+
+### Las grandes ventajas de Tailwind
+- **Velocidad de desarrollo:** No tienes que inventar nombres de clases (el famoso problema de nombrar cosas en programación).
+- **Mantenimiento predecible:** Cambiar el estilo de un botón en Tailwind no rompe accidentalmente el estilo de una tarjeta en la otra punta de la aplicación, porque no hay cascada global.
+- **Rendimiento optimizado:** Con su compilador JIT (Just-In-Time), tu CSS en producción solo incluye las clases exactas que has utilizado, resultando en archivos minúsculos de apenas unos kilobytes.
+- **Sistemas de diseño por defecto:** Obliga al equipo a usar una paleta de colores y espaciados consistente.
+
+## El renacimiento del CSS Nativo
+
+Mientras Tailwind dominaba, el CSS estándar no se quedó atrás. Los navegadores modernos han implementado características que antes requerían preprocesadores o JavaScript.
+
+### Novedades que cambian las reglas del juego
+- **CSS Nesting (Anidamiento):** Ya es nativo en todos los navegadores. Adiós a la obligación de usar Sass para escribir código limpio.
+- **Container Queries (`@container`):** El mayor avance desde Flexbox. Ahora los componentes pueden adaptar su diseño basándose en el espacio del contenedor padre, no en el tamaño de la pantalla. Esto hace que los componentes sean verdaderamente modulares.
+- **La pseudoclase `:has()`:** El "selector padre" que hemos pedido durante décadas ya está aquí, permitiendo estilos condicionales complejos sin necesidad de JavaScript.
+- **Custom Properties y funciones matemáticas:** `calc()`, `min()`, `max()` y `clamp()` hacen que el diseño fluido y tipográfico sea nativo.
+
+## ¿Cuál deberías elegir?
+
+La respuesta, como siempre en ingeniería de software, es: **depende**.
+
+### Elige Tailwind si...
+- Trabajas en un **equipo grande** o en una aplicación que requiere escalar rápido.
+- Utilizas arquitecturas basadas en componentes (React, Vue, Astro) de forma estricta.
+- Quieres evitar la deuda técnica del CSS heredado y evitar el "append-only CSS".
+
+### Elige CSS Nativo (con módulos) si...
+- Estás creando una **librería de componentes genérica** donde no quieres forzar a tus usuarios a instalar Tailwind.
+- Quieres exprimir al máximo las **nuevas APIs del navegador** como Container Queries y View Transitions desde el minuto cero.
+- Prefieres mantener tu HTML limpio de cientos de clases de utilidad.
+
+## Conclusión
+
+El "mejor" enfoque en 2026 ya no es un dogma. Puedes incluso usar Tailwind para el layout general y los tokens de diseño, y reservar CSS nativo para interacciones complejas o Container Queries avanzados. La verdadera victoria es que hoy, independientemente de la ruta que elijas, las herramientas frontend nunca han sido tan potentes.

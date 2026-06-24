@@ -1,0 +1,111 @@
+---
+title: "Vue 3 Composition API: Patrones avanzados para componentes limpios"
+publishedDate: 2026-06-24
+description: "Escala tus aplicaciones Vue implementando los mejores patrones arquitectónicos con Composition API y composables reutilizables."
+category: frontend
+tags:
+  - vue
+  - patrones
+  - frontend
+tech:
+  - vue
+  - js
+draft: false
+---
+
+El ecosistema Vue vivió un momento de ruptura con la transición de Options API a **Composition API**. Aunque al principio hubo dudas por parte de la comunidad sobre la adopción (y sobre el parecido con los React Hooks), los resultados a lo largo de los años han hablado por sí mismos.
+
+La API de composición ha demostrado ser superior a la hora de organizar el código por responsabilidades y a la hora de compartir lógica entre múltiples componentes. Hoy vamos a desgranar cómo aprovecharla al máximo.
+
+## El problema del 'This' y los Mixins rotos
+
+En Vue 2 (Options API), si querías compartir funcionalidad entre dos componentes, solías recurrir a los **Mixins**. 
+
+El problema de los Mixins es el acoplamiento implícito: colisionan entre sí, sobrescriben propiedades que no sabías que existían y al abrir un archivo, no tienes ni idea de dónde vienen las variables mágicas que estás usando en el template. Esto convertía el mantenimiento de proyectos grandes en una pesadilla.
+
+## La revolución: Composables (Hooks a la Vue)
+
+En Vue 3 usamos funciones JavaScript regulares (conocidas convencionalmente como *composables* y nombradas con el prefijo `use`) que aprovechan la reactividad nativa.
+
+Veamos un patrón común: tener un botón de cargando cuando pedimos datos.
+
+```javascript
+// useFetchUsuario.js
+import { ref, onMounted } from 'vue';
+
+export function useFetchUsuario(id) {
+  const data = ref(null);
+  const error = ref(null);
+  const loading = ref(true);
+
+  const cargar = async () => {
+    loading.value = true;
+    try {
+      const res = await fetch(`/api/usuarios/${id}`);
+      data.value = await res.json();
+    } catch (err) {
+      error.value = err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  // Se ejecuta al montar, clásico
+  onMounted(cargar);
+
+  // Retornamos el estado como referencias reactivas, 
+  // dejando que el componente consuma lo que necesite.
+  return { data, error, loading, recargar: cargar };
+}
+```
+
+Ahora, en cualquier componente que lo requiera (por ejemplo con `script setup`), el código es exquisito:
+
+```vue
+<script setup>
+import { useFetchUsuario } from './useFetchUsuario'
+
+// Transparencia total. Sabes perfectamente de dónde vienen.
+const { data: usuario, loading, error } = useFetchUsuario(42)
+</script>
+
+<template>
+  <div v-if="loading">Cargando perfil...</div>
+  <div v-else-if="error">Error: {{ error.message }}</div>
+  <div v-else>
+    <h1>{{ usuario.nombre }}</h1>
+  </div>
+</template>
+```
+
+## Patrones Avanzados
+
+### 1. Desestructuración de Reactividad (toRefs)
+
+Si pasas props a tu composable y necesitas reaccionar a sus cambios, corres el riesgo de perder la reactividad si desestructuras los parámetros imprudentemente en el setup. Usa `toRefs` (o `toRef` en Vue 3.3+) para asegurar el enlace reactivo.
+
+### 2. Estado Global Ligero sin Pinia
+
+Aunque Pinia es el estándar oficial para el estado masivo, a veces es matar moscas a cañonazos. Debido a cómo funciona el motor reactivo de Vue 3, puedes exportar una referencia reactiva directamente en un archivo JS, y cualquiera que la importe compartirá *el mismo estado* en la misma instancia de la app.
+
+```javascript
+// theme.js
+import { ref } from 'vue'
+
+// Instanciado fuera del hook = Estado compartido globalmente
+const isDarkMode = ref(false)
+
+export function useTheme() {
+  const toggleTheme = () => {
+    isDarkMode.value = !isDarkMode.value
+  }
+  
+  return { isDarkMode, toggleTheme }
+}
+```
+
+Esta es una forma inmensamente limpia de resolver estados simples de UI sin añadir tiendas formales al ecosistema.
+
+## El veredicto
+
+La API de composición te obliga a pensar en **qué hace el código** (lógica de negocio o UI state) en lugar de en **dónde colocarlo** (methods, computed, data). Al principio, en archivos muy pequeños, puede parecer más desorganizado que Options API, pero a medida que el componente crece de las 100 a las 500 líneas, la posibilidad de abstraer dominios de lógica en funciones externas es un salvavidas invaluable.
