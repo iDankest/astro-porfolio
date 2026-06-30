@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import perfil from '../assets/perfil.png';
 
 const socials = [
-	{ href: "https://www.canva.com/design/DAGBi4AizY4/SWyFJnvqjXieGiF--ubLig/view", label: "CV", target: "_blank" },
+	{ href: "/cv", label: "CV", featured: true },
 	{ href: "https://github.com/idankest", label: "GitHub", target: "_blank" },
 	{ href: "https://www.linkedin.com/in/dankest/", label: "LinkedIn", target: "_blank" },
 ];
@@ -83,7 +83,7 @@ const socials = [
 			</p>
 			<div class="hero-socials">
 				{socials.map((s) => (
-					<a href={s.href} target={s.target} rel="noopener" class="social">
+					<a href={s.href} target={s.target} rel={s.target ? "noopener" : undefined} class={`social ${s.featured ? "social-featured" : ""}`}>
 						<span>{s.label}</span>
 						<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
 					</a>
@@ -358,6 +358,20 @@ const socials = [
 		color: var(--ink);
 		border-color: var(--text);
 		transform: translateY(-2px);
+	}
+
+	.social-featured {
+		background: var(--acid);
+		border-color: var(--acid);
+		color: var(--ink);
+		font-weight: 700;
+		box-shadow: 0 0 0 1px var(--acid-soft), 0 14px 34px -18px var(--acid);
+	}
+
+	.social-featured:hover {
+		background: var(--text);
+		border-color: var(--text);
+		color: var(--ink);
 	}
 
 	.hero-scroll {

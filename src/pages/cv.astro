@@ -1,0 +1,585 @@
+---
+export const prerender = true;
+
+import Layout from "../layouts/Layout.astro";
+import { projects } from "../data/proyects.js";
+import { techs } from "../data/techs.js";
+import "../styles/global.css";
+
+const featuredNames = ["Reelify", "PrismaCrawler 2.0", "VoicePrompt", "Orbix"];
+const featuredProjects = featuredNames
+	.map((name) => projects.find((project) => project.name === name))
+	.filter(Boolean);
+
+const contacts = [
+	{ label: "Email", value: "kilijes@gmail.com", href: "mailto:kilijes@gmail.com" },
+	{ label: "LinkedIn", value: "linkedin.com/in/dankest", href: "https://www.linkedin.com/in/dankest/" },
+	{ label: "GitHub", value: "github.com/idankest", href: "https://github.com/idankest" },
+	{ label: "Web", value: "idankest.dev", href: "https://idankest.dev" },
+	{ label: "Location", value: "Canarias, Espana", href: null },
+];
+
+const skills = [
+	{
+		label: "Front-End",
+		items: ["Astro", "Vue", "React", "Nuxt", "TypeScript", "JavaScript", "Tailwind CSS", "Framer Motion"],
+	},
+	{
+		label: "Back-End",
+		items: ["Node.js", "Express", "PHP", "Symfony", "Go", "PostgreSQL", "MySQL", "REST APIs"],
+	},
+	{
+		label: "Tools & IA",
+		items: ["Git", "Docker", "Python", "Gemini AI", "Swift", "Rust", "Figma"],
+	},
+];
+
+const experience = [
+	{
+		period: "Dic 2025 - Mar 2026",
+		role: "Tecnico en reparaciones y ventas",
+		company: "iServices",
+		points: [
+			"Diagnostico tecnico, reparacion de dispositivos moviles y atencion directa al cliente.",
+			"Trabajo con incidencias reales, comunicacion clara y resolucion bajo presion.",
+		],
+	},
+	{
+		period: "Ago 2024 - Sep 2024",
+		role: "Desarrollador Web",
+		company: "ISLASSEM",
+		points: [
+			"Mantenimiento de paginas web, WordPress, politicas de cookies y proteccion de datos.",
+			"Apoyo en tareas web orientadas a cumplimiento, contenido y mejoras operativas.",
+		],
+	},
+	{
+		period: "Mar 2019 - Nov 2019",
+		role: "Tecnico IT",
+		company: "BitBox S.L",
+		points: [
+			"Soporte HelpDesk, instalacion de sistemas y mantenimiento de equipos informaticos.",
+			"Intervenciones en hardware, racks y resolucion de incidencias de usuario.",
+		],
+	},
+];
+
+const education = [
+	{
+		period: "2026 - En curso",
+		title: "Desarrollo Web Full Stack + IA",
+		center: "Ironhack",
+	},
+	{
+		period: "2025",
+		title: "Piscina de programacion",
+		center: "42 Malaga",
+	},
+	{
+		period: "2024 - 2025",
+		title: "Bootcamp E-commerce",
+		center: "Reboot Academy",
+	},
+	{
+		period: "2023 - 2024",
+		title: "Desarrollador de Aplicaciones Web",
+		center: "Fuerteventura 2000",
+	},
+];
+---
+
+<Layout
+	title="CV - Kilian Sanchez | Front-End Developer"
+	description="Curriculum de Kilian Sanchez, Front-End Developer en Canarias. Astro, Vue, React, TypeScript y proyectos con IA."
+>
+	<main class="cv-page">
+		<div class="cv-toolbar" aria-label="Acciones del curriculum">
+			<a class="toolbar-link" href="/">Portfolio</a>
+			<a class="download-btn" href="/Kilian-Sanchez-CV.pdf" download>
+				<span>Descargar PDF</span>
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+					<path d="M7 10l5 5 5-5" />
+					<path d="M12 15V3" />
+				</svg>
+			</a>
+		</div>
+
+		<section class="cv-sheet" id="cv-document" aria-label="Curriculum Vitae de Kilian Sanchez">
+			<header class="cv-header">
+				<div>
+					<p class="eyebrow-line">Disponible para roles Front-End / Available for Front-End roles</p>
+					<h1>Kilian Sanchez</h1>
+					<p class="role">Front-End Developer / Desarrollador Web Front-End</p>
+				</div>
+				<p class="summary">
+					Desarrollador front-end con foco en interfaces cuidadas, rendimiento, accesibilidad y producto.
+					I build clean, maintainable user interfaces with strong visual judgement and practical full-stack context.
+				</p>
+			</header>
+
+			<ul class="contact-list" aria-label="Datos de contacto">
+				{contacts.map((item) => (
+					<li>
+						<span>{item.label}</span>
+						{item.href ? (
+							<a href={item.href} target={item.href.startsWith("http") ? "_blank" : undefined} rel="noopener">
+								{item.value}
+							</a>
+						) : (
+							<strong>{item.value}</strong>
+						)}
+					</li>
+				))}
+			</ul>
+
+			<div class="cv-layout">
+				<section class="main-column" aria-label="Experiencia y proyectos">
+					<section class="cv-section">
+						<h2>Experiencia</h2>
+						<div class="entry-list">
+							{experience.map((item) => (
+								<article class="entry">
+									<div class="entry-meta">
+										<strong>{item.role}</strong>
+										<span>{item.company} · {item.period}</span>
+									</div>
+									<ul>
+										{item.points.map((point) => <li>{point}</li>)}
+									</ul>
+								</article>
+							))}
+						</div>
+					</section>
+
+					<section class="cv-section">
+						<h2>Proyectos destacados</h2>
+						<div class="project-list">
+							{featuredProjects.map((project) => (
+								<article class="project">
+									<div class="project-copy">
+										<h3>{project.name}</h3>
+										<p>{project.description}</p>
+									</div>
+									<p class="project-tech">
+										{project.tech.slice(0, 6).map((key) => techs[key]?.name ?? key).join(" · ")}
+									</p>
+								</article>
+							))}
+						</div>
+					</section>
+				</section>
+
+				<aside class="side-column" aria-label="Competencias y formacion">
+					<section class="cv-section">
+						<h2>Competencias</h2>
+						<div class="skill-list">
+							{skills.map((group) => (
+								<div class="skill-group">
+									<h3>{group.label}</h3>
+									<p>{group.items.join(" · ")}</p>
+								</div>
+							))}
+						</div>
+					</section>
+
+					<section class="cv-section">
+						<h2>Formacion</h2>
+						<div class="education-list">
+							{education.map((item) => (
+								<article>
+									<strong>{item.title}</strong>
+									<span>{item.center} · {item.period}</span>
+								</article>
+							))}
+						</div>
+					</section>
+
+					<section class="cv-section">
+						<h2>Perfil</h2>
+						<p class="profile-note">
+							Me interesa trabajar en equipos donde el front-end importe de verdad: interfaces claras,
+							buen rendimiento, jerarquia visual, accesibilidad y codigo mantenible.
+						</p>
+					</section>
+				</aside>
+			</div>
+		</section>
+	</main>
+</Layout>
+
+<style>
+	:global(body) {
+		background: #11100f;
+	}
+
+	:global(body::after) {
+		display: none;
+	}
+
+	.cv-page {
+		position: relative;
+		z-index: 4;
+		width: 100%;
+		min-height: 100vh;
+		padding: 5.5rem 1.2rem 3rem;
+		display: flex;
+		justify-content: center;
+		background:
+			linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+			linear-gradient(0deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+			radial-gradient(circle at 18% 6%, rgba(200, 255, 0, 0.12), transparent 32rem),
+			#11100f;
+		background-size: 28px 28px, 28px 28px, auto, auto;
+	}
+
+	.cv-toolbar {
+		position: fixed;
+		top: 1rem;
+		right: 1rem;
+		z-index: 50;
+		display: flex;
+		gap: 0.65rem;
+	}
+
+	.toolbar-link,
+	.download-btn {
+		min-height: 42px;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		border-radius: 999px;
+		border: 1px solid rgba(247, 240, 229, 0.18);
+		padding: 0 1rem;
+		background: rgba(17, 16, 15, 0.78);
+		color: #f7f0e5;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.03em;
+		backdrop-filter: blur(18px);
+		-webkit-backdrop-filter: blur(18px);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+	}
+
+	.download-btn {
+		background: #c8ff00;
+		border-color: #c8ff00;
+		color: #11100f;
+		font-weight: 700;
+	}
+
+	.cv-sheet {
+		width: min(210mm, calc(100vw - 2.4rem));
+		min-height: 297mm;
+		padding: 16mm 17mm;
+		background: #fbfaf6;
+		color: #161616;
+		box-shadow: 0 34px 80px rgba(0, 0, 0, 0.44);
+		font-family: var(--font-sans);
+	}
+
+	.cv-header {
+		display: grid;
+		grid-template-columns: 1fr 74mm;
+		gap: 12mm;
+		padding-bottom: 6mm;
+		border-bottom: 2px solid #161616;
+	}
+
+	.eyebrow-line {
+		margin: 0 0 4mm;
+		font-family: var(--font-mono);
+		font-size: 8px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: #4d6500;
+	}
+
+	.cv-header h1 {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: 38px;
+		line-height: 0.95;
+		font-weight: 400;
+		letter-spacing: 0;
+	}
+
+	.role {
+		margin: 2.5mm 0 0;
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		letter-spacing: 0.03em;
+		color: #333;
+	}
+
+	.summary {
+		margin: 0;
+		align-self: end;
+		font-size: 10.8px;
+		line-height: 1.45;
+		color: #333;
+	}
+
+	.contact-list {
+		list-style: none;
+		margin: 4mm 0 6mm;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.8mm 5mm;
+		font-size: 9.4px;
+		line-height: 1.35;
+	}
+
+	.contact-list li {
+		display: inline-flex;
+		gap: 1.5mm;
+		align-items: baseline;
+		white-space: nowrap;
+	}
+
+	.contact-list span {
+		font-family: var(--font-mono);
+		font-size: 7.5px;
+		letter-spacing: 0.11em;
+		text-transform: uppercase;
+		color: #666;
+	}
+
+	.contact-list a,
+	.contact-list strong {
+		color: #161616;
+		font-weight: 650;
+		text-decoration: none;
+	}
+
+	.cv-layout {
+		display: grid;
+		grid-template-columns: 1.5fr 0.82fr;
+		gap: 10mm;
+	}
+
+	.main-column,
+	.side-column {
+		display: flex;
+		flex-direction: column;
+		gap: 5.5mm;
+		min-width: 0;
+	}
+
+	.cv-section {
+		break-inside: avoid;
+	}
+
+	.cv-section h2 {
+		margin: 0 0 2.8mm;
+		padding-bottom: 1.8mm;
+		border-bottom: 1px solid #cfc9bd;
+		font-family: var(--font-mono);
+		font-size: 9px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: #4d6500;
+	}
+
+	.entry-list,
+	.project-list,
+	.skill-list,
+	.education-list {
+		display: flex;
+		flex-direction: column;
+		gap: 3mm;
+	}
+
+	.entry,
+	.project,
+	.skill-group,
+	.education-list article {
+		break-inside: avoid;
+	}
+
+	.entry-meta {
+		display: flex;
+		justify-content: space-between;
+		gap: 4mm;
+		align-items: baseline;
+	}
+
+	.entry-meta strong,
+	.project h3,
+	.skill-group h3,
+	.education-list strong {
+		margin: 0;
+		font-size: 11px;
+		line-height: 1.2;
+		font-weight: 800;
+		color: #161616;
+	}
+
+	.entry-meta span,
+	.education-list span,
+	.project-tech {
+		font-family: var(--font-mono);
+		font-size: 7.6px;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		color: #666;
+	}
+
+	.entry ul {
+		margin: 1.2mm 0 0;
+		padding-left: 4mm;
+	}
+
+	.entry li,
+	.project p,
+	.skill-group p,
+	.profile-note {
+		margin: 0;
+		font-size: 9.4px;
+		line-height: 1.42;
+		color: #333;
+	}
+
+	.entry li + li {
+		margin-top: 0.8mm;
+	}
+
+	.project {
+		display: grid;
+		grid-template-columns: 1fr 37mm;
+		gap: 4mm;
+		padding-bottom: 2.8mm;
+		border-bottom: 1px solid #ded8cc;
+	}
+
+	.project:last-child {
+		padding-bottom: 0;
+		border-bottom: 0;
+	}
+
+	.project h3 {
+		margin-bottom: 1mm;
+	}
+
+	.project-tech {
+		margin: 0;
+		text-align: right;
+		line-height: 1.45;
+	}
+
+	.skill-group h3 {
+		margin-bottom: 0.8mm;
+	}
+
+	.education-list article {
+		display: flex;
+		flex-direction: column;
+		gap: 0.6mm;
+	}
+
+	.profile-note {
+		padding: 3mm;
+		border-left: 2px solid #c8ff00;
+		background: #f1eddc;
+	}
+
+	@media screen and (max-width: 900px) {
+		.cv-page {
+			justify-content: center;
+			overflow-x: hidden;
+			padding: 5rem 0.8rem 2rem;
+		}
+
+		.cv-toolbar {
+			left: 0.8rem;
+			right: 0.8rem;
+			justify-content: space-between;
+		}
+
+		.cv-sheet {
+			width: min(210mm, calc(100vw - 1.6rem));
+			min-height: auto;
+			padding: 12mm;
+		}
+	}
+
+	@media screen and (max-width: 900px) {
+		.cv-header,
+		.cv-layout,
+		.project {
+			grid-template-columns: 1fr;
+		}
+
+		.cv-header {
+			gap: 4mm;
+		}
+
+		.summary {
+			align-self: start;
+		}
+
+		.project-tech {
+			text-align: left;
+		}
+
+		.entry-meta {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.6mm;
+		}
+
+		.contact-list {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 2.2mm 4mm;
+		}
+
+		.contact-list li {
+			white-space: normal;
+		}
+
+		.cv-header h1 {
+			font-size: clamp(2.6rem, 9vw, 38px);
+		}
+
+		.role,
+		.eyebrow-line {
+			line-height: 1.35;
+		}
+	}
+
+	@page {
+		size: A4;
+		margin: 0;
+	}
+
+	@media print {
+		:global(html),
+		:global(body) {
+			width: 210mm;
+			min-height: 297mm;
+			margin: 0 !important;
+			background: #fbfaf6 !important;
+		}
+
+		:global(body::before),
+		.cv-toolbar {
+			display: none !important;
+		}
+
+		.cv-page {
+			display: block;
+			padding: 0;
+			background: #fbfaf6 !important;
+			min-height: auto;
+		}
+
+		.cv-sheet {
+			width: 210mm;
+			min-height: 297mm;
+			box-shadow: none;
+			padding: 14mm 15mm;
+		}
+	}
+</style>
