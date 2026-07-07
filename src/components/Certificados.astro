@@ -32,7 +32,7 @@ const certificados = [
 		{certificados.map((c, i) => (
 			<a href={c.link} target="_blank" rel="noopener" class="cert-card" style={`--i:${i}`}>
 				<div class="cert-image">
-					<img src={c.img} alt={c.title} loading="lazy" />
+					<img src={c.img} width="400" height="300" alt={c.title} loading="lazy" />
 					<span class="cert-tag">{c.tag}</span>
 				</div>
 				<div class="cert-body">

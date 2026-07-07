@@ -1,7 +1,14 @@
 ---
+import { Image } from 'astro:assets';
+import logoIservices from '../assets/exp/0x0.png';
+import logoIslassem from '../assets/exp/islas.jpg';
+import logoBitbox from '../assets/exp/bitbox_it_logo.jpg';
+import logoIronhack from '../assets/exp/ironhack_logo.jpeg';
+import logo42Malaga from '../assets/exp/42malaga.jpg';
+
 const exp = [
 	{
-		img: "/assets/0x0.png",
+		img: logoIservices,
 		empresa: "iServices",
 		cargo: "Técnico en reparaciones y ventas",
 		periodo: "Dic 2025 — Mar 2026",
@@ -9,7 +16,7 @@ const exp = [
 		tareas: ["Diagnósticos", "Reparaciones", "Atención al cliente"],
 	},
 	{
-		img: "/assets/islas.jpg",
+		img: logoIslassem,
 		empresa: "ISLASSEM",
 		cargo: "Desarrollador Web",
 		periodo: "Ago 2024 — Sep 2024",
@@ -17,7 +24,7 @@ const exp = [
 		tareas: ["WordPress", "Protección de datos", "Cookies"],
 	},
 	{
-		img: "/assets/bitbox_it_logo.jpg",
+		img: logoBitbox,
 		empresa: "BitBox S.L",
 		cargo: "Técnico IT",
 		periodo: "Mar 2019 — Nov 2019",
@@ -28,7 +35,7 @@ const exp = [
 
 const edu = [
 	{
-		img: "/assets/ironhack_logo.jpeg",
+		img: logoIronhack,
 		centro: "Ironhack",
 		titulo: "Desarrollo Web Full Stack + IA",
 		periodo: "2026 — En curso",
@@ -36,7 +43,7 @@ const edu = [
 		tareas: ["IA aplicada", "Full Stack", "Prácticas en empresa"],
 	},
 	{
-		img: "/assets/42malaga.jpg",
+		img: logo42Malaga,
 		centro: "42 Málaga",
 		titulo: "Piscina · Escuela de Elite de Programación",
 		periodo: "Oct 2025 — Nov 2025",
@@ -92,7 +99,7 @@ const edu = [
 									{e.tareas.map((t) => <li>{t}</li>)}
 								</ul>
 							</div>
-							<img class="entry-img" src={e.img} alt={e.empresa} loading="lazy" />
+							<Image class="entry-img" src={e.img} width={140} height={140} alt={e.empresa} loading="lazy" format="webp" quality={75} />
 						</div>
 					</div>
 				))}
@@ -119,7 +126,11 @@ const edu = [
 									{e.tareas.map((t) => <li>{t}</li>)}
 								</ul>
 							</div>
-							<img class="entry-img" src={e.img} alt={e.centro} loading="lazy" />
+							{typeof e.img === "string" ? (
+								<img class="entry-img" src={e.img} width="140" height="140" alt={e.centro} loading="lazy" />
+							) : (
+								<Image class="entry-img" src={e.img} width={140} height={140} alt={e.centro} loading="lazy" format="webp" quality={75} />
+							)}
 						</div>
 					</div>
 				))}

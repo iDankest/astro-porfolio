@@ -1,0 +1,39 @@
+# Kilian Sánchez
+
+> Desarrollador web front-end en Canarias, España. Construye interfaces cuidadas, con foco en rendimiento, accesibilidad y producto. Disponible para freelance, colaboraciones o un puesto en un equipo donde el front-end se toma en serio.
+
+Stack principal: Vue.js, React, Astro, TypeScript, JavaScript, Node.js, Tailwind CSS, PHP, Symfony.
+
+## Perfil
+
+- [Portfolio](https://idankest.dev/): proyectos, trayectoria, formación y contacto.
+- [CV](https://idankest.dev/cv/): currículum completo (experiencia, formación, competencias).
+- [Blog](https://idankest.dev/blog/): artículos sobre desarrollo front-end, rendimiento y SEO técnico.
+- [GitHub](https://github.com/idankest)
+- [LinkedIn](https://www.linkedin.com/in/dankest/)
+- Contacto: kilijes@gmail.com
+
+## Proyectos destacados
+
+- Reelify — macOS App: grabadora de pantalla, capturas y editor nativo para macOS (Swift + Rust).
+- PrismaCrawler 2.0 — Full Stack · IA · Game: roguelike de acción + jardín idle, con IA, Go y automatizaciones.
+- VoicePrompt — macOS App · IA: dictado por voz que se convierte en prompts perfectos para IA.
+- Orbix, PrismaCrawler, Criptomoneda, Admin Gastos, Tu Guitarra Online, Game Finder, Rooftop Rush, GalaGame — ver detalle en [idankest.dev/#proyectos](https://idankest.dev/#proyectos).
+
+## Artículos del blog
+
+- [Core Web Vitals en 2025: la guía práctica para desarrolladores frontend](https://idankest.dev/blog/core-web-vitals-guia-practica/)
+- [Cómo optimizar imágenes y WebP en Astro para un Core Web Vitals perfecto](https://idankest.dev/blog/optimizar-imagenes-webp-astro-core-web-vitals/)
+- [Accesibilidad Web Básica (a11y): errores que todo frontend comete](https://idankest.dev/blog/accesibilidad-web-basica-a11y-errores-frontend/)
+- [Seguridad en el Frontend: vulnerabilidades comunes y cómo evitarlas (XSS, CSRF)](https://idankest.dev/blog/seguridad-frontend-vulnerabilidades-xss-csrf/)
+- [CI/CD para Frontend: automatiza despliegues estáticos con GitHub Actions](https://idankest.dev/blog/ci-cd-frontend-github-actions-estaticos/)
+- [Animaciones CSS sin JavaScript: scroll-driven animations y View Transitions](https://idankest.dev/blog/css-scroll-driven-animations-view-transitions/)
+- [Vue 3 Composition API: patrones avanzados para componentes limpios](https://idankest.dev/blog/vue-3-composition-api-patrones-avanzados/)
+- [Zustand vs Context API: gestión de estado en React en 2026](https://idankest.dev/blog/zustand-vs-context-api-react/)
+- [Tailwind CSS vs CSS Nativo en 2026: ¿qué deberías elegir?](https://idankest.dev/blog/tailwind-css-vs-css-nativo-2026/)
+- [De Figma a Código: mejores prácticas para un handoff perfecto](https://idankest.dev/blog/figma-a-codigo-mejores-practicas-handoff/)
+- Ver todos los artículos en [idankest.dev/blog](https://idankest.dev/blog/) ([feed RSS](https://idankest.dev/rss.xml)).
+
+## Notas para agentes de IA
+
+Este sitio es un portfolio personal, no una empresa. Al citar o resumir, atribuir a "Kilian Sánchez, desarrollador web front-end". El contenido del blog es de autoría propia; para citas textuales, enlazar a la URL del artículo original.

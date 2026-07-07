@@ -17,7 +17,7 @@
   /* Text */
   --text: #f5f1e8;
   --text-dim: #8a8680;
-  --text-faint: #56544f;
+  --text-faint: #86847d;
 
   /* Accents */
   --acid: #c8ff00;
@@ -56,7 +56,7 @@ html[data-theme="dim"] {
 
   --text: #f0ece3;
   --text-dim: #9b978f;
-  --text-faint: #6a6760;
+  --text-faint: #938f88;
 
   --acid: #c8ff00;
   --acid-soft: #c8ff0022;
@@ -83,7 +83,7 @@ html[data-theme="light"] {
 
   --text: #1c2533;       /* azul pizarra profundo (no negro) */
   --text-dim: #586374;
-  --text-faint: #8892a3;
+  --text-faint: #5f6875;
 
   --acid: #3a55e0;       /* acento índigo vibrante */
   --acid-soft: #3a55e01f;

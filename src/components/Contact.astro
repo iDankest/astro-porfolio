@@ -70,7 +70,7 @@ const channels = [
 					</span>
 				</button>
 
-				<div class="collapsible" id="form-collapsible" aria-hidden="true">
+				<div class="collapsible" id="form-collapsible" aria-hidden="true" inert>
 					<div class="collapsible-inner">
 						<form class="contact-form" id="contact-form" novalidate>
 							<div class="form-row form-row-2">
@@ -142,6 +142,7 @@ const channels = [
 		card.dataset.state = 'open';
 		toggle.setAttribute('aria-expanded', 'true');
 		collapsible.setAttribute('aria-hidden', 'false');
+		collapsible.removeAttribute('inert');
 	};
 
 	const closeForm = () => {
@@ -149,6 +150,7 @@ const channels = [
 		card.dataset.state = card.dataset.state === 'sent' ? 'sent' : 'idle';
 		toggle.setAttribute('aria-expanded', 'false');
 		collapsible.setAttribute('aria-hidden', 'true');
+		collapsible.setAttribute('inert', '');
 	};
 
 	const showSuccess = () => {
